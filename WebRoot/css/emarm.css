@@ -1,0 +1,47 @@
+.feedback-tip {display: none;}
+
+a{cursor:pointer;}
+
+.tblToolbar{padding-left: 15px; margin-top: 15px;}
+
+.mt30{margin-top:50px;}
+.ml10{margin-left:10px;}
+
+.detailContent{margin: 0 auto; max-width: 960px;}
+
+.detailContent p{
+    font-family: 'Microsoft YaHei';
+}
+
+.detailContent .detailInfo-light {
+    color: #919191;
+}
+
+.detailContent .table {
+    font-family: '黑体';
+}
+
+.productSummary {
+    text-indent: 2em;
+}
+
+.detail-footer {
+    margin-left: 0;
+}
+
+.txt-indent {text-indent: 2em;}
+
+.evaItem{padding: 8px 8px;}
+.table .evaItemTitle {margin-right:15px; font-family: '黑体'; color: #231815;}
+.evaItemText {margin-left:5px;}
+
+.main-header .logo .logo-lg {
+    text-align: left;
+}
+
+.main-header .logo .logo-lg img {
+    margin-left: 10px;
+    margin-top: -2px;
+}
+
+.info-box-number {font-size: 30px;}
