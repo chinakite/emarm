@@ -196,16 +196,6 @@
                   </div>
                 </div>
                 <div class="form-group">
-                  <label for="inputGender" class="col-sm-2 control-label">性别</label>
-                  <div class="col-sm-10">
-                      <select id="inputGender" class="form-control">
-                          <option value="9">未知</option>
-                          <option value="1">男</option>
-                          <option value="0">女</option>
-                      </select>
-                  </div>
-                </div>
-                <div class="form-group">
                   <label class="col-sm-2 control-label">角色</label>
                   <div class="col-sm-10">
                       <div class="col-sm-4 checkbox">
@@ -219,6 +209,21 @@
                       </div>
                       <div class="col-sm-4 checkbox">
                           <label for="outEvaRole"><input id="outEvaRole" name="role" type="checkbox" value="51"/>外部评价人员</label>
+                      </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="copyrightOprRole"><input id="copyrightOprRole" name="role" type="checkbox" value="11"/>版权专员</label>
+                      </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="copyrightDirectorRole"><input id="copyrightDirectorRole" name="role" type="checkbox" value="12"/>版权主管</label>
+                      </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="copyrightManagerRole"><input id="copyrightManagerRole" name="role" type="checkbox" value="13"/>版权经理</label>
+                      </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="ceoRole"><input id="ceoRole" name="role" type="checkbox" value="90"/>总经理</label>
+                      </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="lawyerRole"><input id="lawyerRole" name="role" type="checkbox" value="80"/>法务人员</label>
                       </div>
                   </div>
                 </div>
@@ -333,7 +338,6 @@
                           'email': userEmail,
                           'mobile': $('#inputMobile').val(),
                           'honorific': $('#inputHonorific').val(),
-                          'gender': $('#inputGender').val(),
                           'role': roles
                       },
                       function(json) {
@@ -355,7 +359,6 @@
                           'email': userEmail,
                           'mobile': $('#inputMobile').val(),
                           'honorific': $('#inputHonorific').val(),
-                          'gender': $('#inputGender').val(),
                           'role': roles
                       },
                       function(json) {
@@ -379,7 +382,6 @@
           $('#inputEmail').val('');
           $('#inputMobile').val('');
           $('#inputHonorific').val('');
-          $('#inputGender')[0].selectedIndex = 0;
           $('input[name=role]').each(function(){
               var o = $(this);
               if(o.val() != '01') {
@@ -402,14 +404,6 @@
                       $('#inputEmail').val(user.email);
                       $('#inputMobile').val(user.mobile);
                       $('#inputHonorific').val(user.honorific);
-                      var gender = user.gender;
-                      if(gender == '1') {
-                          $('#inputGender')[0].selectedIndex = 1;
-                      }else if(gender == '0'){
-                          $('#inputGender')[0].selectedIndex = 2;
-                      }else{
-                          $('#inputGender')[0].selectedIndex = 0;
-                      }
                       
                       $('input[name=role]').each(function(){
                           var o = $(this);

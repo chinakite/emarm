@@ -195,6 +195,9 @@ public class User extends HistoriableEntity{
     }
     
     public String getRoleText() {
+        if(role == null) {
+            return "";
+        }
         return this.role.replace("01", RoleType.NORMAL_TEXT)
                         .replace("03", RoleType.EVALUATOR_MGR_TEXT)
                         .replace("99", RoleType.SUPER_ADMIN_TEXT)

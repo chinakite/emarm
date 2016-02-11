@@ -66,9 +66,8 @@ public class UserAction {
                                String email,
                                String mobile,
                                String honorific,
-                               String gender,
                                String role) {
-        User user = userService.createUser(account, name, email, mobile, honorific, gender, role);
+        User user = userService.createUser(account, name, email, mobile, honorific, role);
         return JsonData.SUCCESS;
     }
     
@@ -79,9 +78,8 @@ public class UserAction {
                                String email,
                                String mobile,
                                String honorific,
-                               String gender,
                                String role) {
-        int r = userService.updateUser(id, account, name, email, mobile, honorific, gender, role);
+        int r = userService.updateUser(id, account, name, email, mobile, honorific, role);
         return JsonData.SUCCESS;
     }
     

@@ -4,6 +4,7 @@
 package com.ideamoment.emarm.evaluation.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.mail.HtmlEmail;
@@ -16,11 +17,15 @@ import com.ideamoment.emarm.evaluation.EvaluationExceptionCode;
 import com.ideamoment.emarm.evaluation.dao.EvaluationDao;
 import com.ideamoment.emarm.model.Author;
 import com.ideamoment.emarm.model.Evaluation;
+import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
+import com.ideamoment.emarm.model.enumeration.RoleType;
+import com.ideamoment.ideadp.exception.IdeaDataException;
+import com.ideamoment.ideadp.exception.IdeaDataExceptionCode;
 import com.ideamoment.ideadp.usercontext.UserContext;
 import com.ideamoment.ideajdbc.IdeaJdbc;
 import com.ideamoment.ideajdbc.action.Page;
@@ -67,13 +72,34 @@ public class EvaluationService {
     }
 
     @IdeaJdbcTx
-    public Page<Product> pageProducts(int curPage, int pageSize) {
-        return evaluationDao.pageProducts(curPage, pageSize);
+    public Page<Product> pageProducts(int curPage, int pageSize, HashMap condition) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        String userRole = curUser.getRole();
+        String role = null;
+        if(userRole.indexOf(RoleType.SUPER_ADMIN) > -1) {
+            role = RoleType.SUPER_ADMIN;
+        }else if(userRole.indexOf(RoleType.EVALUATOR_MGR) > -1) {
+            role = RoleType.EVALUATOR_MGR;
+        }else if(userRole.indexOf(RoleType.EVALUATOR_OPR) > -1){
+            role = RoleType.EVALUATOR_OPR;
+        }else{
+            role = RoleType.NORMAL;
+        }
+        
+        return evaluationDao.pageProducts(curPage, pageSize, role, userId, condition);
     }
 
     @IdeaJdbcTx
     public Product findProduct(String id) {
         return evaluationDao.findProduct(id);
+    }
+    
+    @IdeaJdbcTx
+    public Product findProductById(String id) {
+        return IdeaJdbc.find(Product.class, id);
     }
 
     @IdeaJdbcTx
@@ -90,6 +116,7 @@ public class EvaluationService {
         try {
             for(String userId : userIdArray) {
                 User user = IdeaJdbc.find(User.class, userId);
+                Product product = IdeaJdbc.find(Product.class, id);
                 String emailAddr = user.getEmail();
                 HtmlEmail email = new HtmlEmail(); 
                 
@@ -106,7 +133,7 @@ public class EvaluationService {
                 // 要发送的邮件主题  
                 email.setSubject("邀请您评价");  
                 // 要发送的信息，由于使用了HtmlEmail，可以在邮件内容中使用HTML标签  
-                email.setMsg("<p>请您评价：</p><a href='http://localhost:8080" + contextPath + "evalogin?productId=" + id + "'>侯卫东官场笔记</a>");  
+                email.setMsg("<p>请您评价：</p><a href='http://www.6wanr.com" + contextPath + "evalogin?productId=" + id + "'>" + product.getName() + "</a>");  
                 // 发送  
                 email.send();  
             }
@@ -121,7 +148,82 @@ public class EvaluationService {
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         
         if("1".equals(submit)) {
+            String name = product.getName();
+            if(name == null || "".equals(name.trim())) {
+                throw nameRequired();
+            }
             
+            Date curTime = new Date();
+            
+            Author author = product.getAuthor();
+            String authorName = author.getName();
+            Author existsAuthor = authorDao.queryAuthor(authorName, null);
+            if(existsAuthor != null) {
+                product.setAuthorId(existsAuthor.getId());
+            }else{
+                author.setCreateTime(curTime);
+                author.setCreator(curUser.getId());
+                author.setModifier(curUser.getId());
+                author.setModifyTime(curTime);
+                
+                IdeaJdbc.save(author);
+                product.setAuthorId(author.getId());
+            }
+            
+            product.setModifier(curUser.getId());
+            product.setModifyTime(curTime);
+            
+            product.setType(ProductType.TEXT);
+            product.setState(ProductState.APPROVE_WAITING);
+            
+            if(product.getId() != null) {
+                IdeaJdbc.update(product);
+            }else{
+                product.setCreateTime(curTime);
+                product.setCreator(curUser.getId());
+                IdeaJdbc.save(product);
+            }
+            
+            List<ProductSample> samples = product.getSamples();
+            for(ProductSample sample : samples) {
+                sample.setProductId(product.getId());
+                IdeaJdbc.save(sample);
+            }
+        }else if("2".equals(submit)) {
+            String name = product.getName();
+            if(name == null || "".equals(name.trim())) {
+                throw nameRequired();
+            }
+            
+            Date curTime = new Date();
+            
+            Author author = product.getAuthor();
+            String authorName = author.getName();
+            Author existsAuthor = authorDao.queryAuthor(authorName, null);
+            if(existsAuthor != null) {
+                product.setAuthorId(existsAuthor.getId());
+            }else{
+                author.setCreateTime(curTime);
+                author.setCreator(curUser.getId());
+                author.setModifier(curUser.getId());
+                author.setModifyTime(curTime);
+                
+                IdeaJdbc.save(author);
+                product.setAuthorId(author.getId());
+            }
+            
+            product.setModifier(curUser.getId());
+            product.setModifyTime(curTime);
+            
+            product.setType(ProductType.TEXT);
+            
+            IdeaJdbc.update(product);
+            
+            List<ProductSample> samples = product.getSamples();
+            for(ProductSample sample : samples) {
+                sample.setProductId(product.getId());
+                IdeaJdbc.save(sample);
+            }
         }else{
             String name = product.getName();
             if(name == null || "".equals(name.trim())) {
@@ -145,15 +247,19 @@ public class EvaluationService {
                 product.setAuthorId(author.getId());
             }
             
-            product.setCreateTime(curTime);
-            product.setCreator(curUser.getId());
             product.setModifier(curUser.getId());
             product.setModifyTime(curTime);
             
             product.setType(ProductType.TEXT);
             product.setState(ProductState.DRAFT);
             
-            IdeaJdbc.save(product);
+            if(product.getId() != null) {
+                IdeaJdbc.update(product);
+            }else{
+                product.setCreateTime(curTime);
+                product.setCreator(curUser.getId());
+                IdeaJdbc.save(product);
+            }
             
             List<ProductSample> samples = product.getSamples();
             for(ProductSample sample : samples) {
@@ -163,7 +269,7 @@ public class EvaluationService {
             
         }
         
-        return null;
+        return product;
     }
     
     private EvaluationException nameRequired() {
@@ -188,5 +294,103 @@ public class EvaluationService {
         IdeaJdbc.update(Product.class, eva.getProductId())
                 .setProperty("state", ProductState.EVALUATED)
                 .execute();
+    }
+
+    @IdeaJdbcTx
+    public int passProduct(String id) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        Product product = IdeaJdbc.find(Product.class, id);
+        
+        if(product == null) {
+            throw dataNotFoundException(id);
+        }else{
+            return IdeaJdbc.update(Product.class, id)
+                            .setProperty("state", ProductState.EVALUATE_WAITING)
+                            .setProperty("modifier", curUser.getId())
+                            .setProperty("modifyTime", new Date())
+                            .execute();
+        }
+    }
+    
+    @IdeaJdbcTx
+    public int rejectProduct(String id) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        Product product = IdeaJdbc.find(Product.class, id);
+        
+        if(product == null) {
+            throw dataNotFoundException(id);
+        }else{
+            return IdeaJdbc.update(Product.class, id)
+                            .setProperty("state", ProductState.APPROVE_REJECT)
+                            .setProperty("modifier", curUser.getId())
+                            .setProperty("modifyTime", new Date())
+                            .execute();
+        }
+    }
+    
+    private IdeaDataException dataNotFoundException(String id) {
+        return new IdeaDataException(IdeaDataExceptionCode.DATA_NOU_FOUND, String.format("Product[%s] is not found.", id));
+    }
+
+    @IdeaJdbcTx
+    public int deleteProduct(String id) {
+        IdeaJdbc.delete(Product.class, id);
+        return 1;
+    }
+
+    @IdeaJdbcTx
+    public List<Evaluation> listEvaluations(String productId) {
+        List<Evaluation> evaluations = evaluationDao.listEvaluations(productId);
+        return evaluations;
+    }
+
+    @IdeaJdbcTx
+    public void finishEvaluation(FinalEvaluation finalEva) {
+        String productId = finalEva.getProductId();
+        
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        Product product = IdeaJdbc.find(Product.class, productId);
+        
+        if(product == null) {
+            throw dataNotFoundException(productId);
+        }else{
+            //更新作家等级
+            String authorId = product.getAuthorId();
+            IdeaJdbc.update(Author.class, authorId)
+                    .setProperty("famous", finalEva.getAuthorLevel())
+                    .execute();
+            
+            finalEva.setCreator(curUser.getId());
+            finalEva.setCreateTime(new Date());
+            
+            IdeaJdbc.save(finalEva);
+            
+            IdeaJdbc.update(Product.class, productId)
+                    .setProperty("state", ProductState.EVALUATE_FINISH)
+                    .execute();
+        }
+        
+    }
+
+    @IdeaJdbcTx
+    public FinalEvaluation findFinalEvaluation(String productId) {
+        FinalEvaluation finalEva = evaluationDao.findFinalEvaluation(productId);
+        return finalEva;
+    }
+
+    @IdeaJdbcTx
+    public Page<Product> pageMyProducts(int curPage, int pageSize, HashMap<String, String> condition) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        String userId = curUser.getId();
+        
+        return evaluationDao.pageProductsByUser(curPage, pageSize, userId, condition);
     }
 }

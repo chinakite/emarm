@@ -10,21 +10,49 @@
               </a>
             </li>
             <li id="menu_evaluation">
-              <a href='<idp:url value="/evaluation/productPage"/>'>
+              <a href='#'>
                 <i class="fa fa-tag"></i>
                 <span>评价管理</span>
+                <i class="fa fa-angle-left pull-right"></i>
               </a>
+              <ul class="treeview-menu">
+                <li id="menu_eva_myproduct"><a href='<idp:url value="/evaluation/myProductPage"/>'><i class="fa fa-angle-double-right f10"></i> 我的作品</a></li>
+                <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1}">
+                <li id="menu_eva_prodmgr"><a href='<idp:url value="/evaluation/productPage"/>'><i class="fa fa-angle-double-right f10"></i> 评价 & 审核</a></li>
+                </c:if>
+              </ul>
             </li>
-            <li>
-              <a href='<idp:url value="/comingsoon"/>'>
-                <i class="fa fa-book"></i> <span>版权管理</span>
+            <li id="menu_copyright">
+              <a href='#'>
+                <i class="fa fa-book"></i> <span>版权管理</span><i class="fa fa-angle-left pull-right"></i>
               </a>
+              <ul class="treeview-menu">
+                <li id="menu_eva_myproduct"><a href='<idp:url value="/copyright/productPage"/>'><i class="fa fa-angle-double-right f10"></i> 作品维度</a></li>
+                <li id="menu_cc_contract">
+                    <a href='<idp:url value="/copyright/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同维度<i class="fa fa-angle-left pull-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li id="menu_cc_mycontract"><a href='<idp:url value="/copyright/myContractPage"/>'><i class="fa fa-angle-double-right f10"></i> 我的合同</a></li>
+                        <li id="menu_cc_auditcontract"><a href='<idp:url value="/copyright/auditContractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同审批</a></li>
+                        <li id="menu_eva_prodmgr"><a href='<idp:url value="/copyright/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同管理</a></li>
+                    </ul>
+                </li>
+              </ul>
             </li>
-            <li>
-              <a href='<idp:url value="/comingsoon"/>'>
-                <i class="fa fa-th"></i>
-                <span>媒资管理</span>
+            <li id="menu_mediares">
+              <a href='#'>
+                <i class="fa fa-th"></i> <span>媒资管理</span><i class="fa fa-angle-left pull-right"></i>
               </a>
+              <ul class="treeview-menu">
+                <li id="menu_mr_product"><a href='<idp:url value="/mediares/productPage"/>'><i class="fa fa-angle-double-right f10"></i> 作品维度</a></li>
+                <li id="menu_cc_contract">
+                    <a href='<idp:url value="/copyright/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同维度<i class="fa fa-angle-left pull-right"></i></a>
+                    <ul class="treeview-menu">
+                        <li id="menu_cc_mycontract"><a href='<idp:url value="/copyright/myContractPage"/>'><i class="fa fa-angle-double-right f10"></i> 我的合同</a></li>
+                        <li id="menu_cc_auditcontract"><a href='<idp:url value="/copyright/auditContractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同审批</a></li>
+                        <li id="menu_eva_prodmgr"><a href='<idp:url value="/copyright/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同管理</a></li>
+                    </ul>
+                </li>
+              </ul>
             </li>
             <li class="treeview">
               <a href="#">

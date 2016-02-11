@@ -85,7 +85,6 @@ public class UserService {
                            String email,
                            String mobile,
                            String honorific,
-                           String gender,
                            String role)
     {
         checkExists(account, email, mobile, null);
@@ -98,7 +97,6 @@ public class UserService {
         user.setCreateTime(new Date());
         user.setCreator(optUser.getId());
         user.setEmail(email);
-        user.setGender(gender);
         user.setHonorific(honorific);
         user.setLogoUrl(Constants.DEFAULT_USER_LOGO_URL);
         user.setMobile(mobile);
@@ -106,6 +104,8 @@ public class UserService {
         user.setPassword(Constants.DEFAULT_PASSWORD);
         user.setRole(role);
         user.setStatus(UserState.ENABLED);
+        
+        user.setPassword("96e79218965eb72c92a549dd5a330112");
         
         IdeaJdbc.save(user);
         
@@ -139,7 +139,6 @@ public class UserService {
                           String email,
                           String mobile,
                           String honorific,
-                          String gender,
                           String role)
     {
         UserContext uc = UserContext.getCurrentContext();
@@ -156,7 +155,6 @@ public class UserService {
             user.setModifyTime(new Date());
             user.setModifier(optUser.getId());
             user.setEmail(email);
-            user.setGender(gender);
             user.setHonorific(honorific);
             user.setMobile(mobile);
             user.setName(name);

@@ -3,12 +3,10 @@
  */
 package com.emarm;
 
-import com.ideamoment.emarm.model.Author;
-import com.ideamoment.emarm.model.Evaluation;
-import com.ideamoment.emarm.model.Product;
-import com.ideamoment.emarm.model.ProductSample;
-import com.ideamoment.emarm.model.Subject;
-import com.ideamoment.emarm.model.User;
+import com.ideamoment.emarm.model.CopyrightContractAudit;
+import com.ideamoment.emarm.model.CopyrightContractDoc;
+import com.ideamoment.emarm.model.ProductAudio;
+import com.ideamoment.emarm.model.ProductImage;
 import com.ideamoment.ideajdbc.configuration.IdeaJdbcConfiguration;
 import com.ideamoment.ideajdbc.tool.mysql.entity2ddl.MySqlEntity2Ddl;
 
@@ -31,7 +29,14 @@ public class GenerateDb {
 //                Author.class,
 //                Product.class,
 //                ProductSample.class,
-                Evaluation.class
+//                Evaluation.class,
+//                FinalEvaluation.class,
+//                CopyrightContract.class,
+//                CopyrightContractProduct.class,
+//                  CopyrightContractAudit.class,
+//                  CopyrightContractDoc.class,
+//                  ProductImage.class,
+                  ProductAudio.class
                 };
         
         for(Class clz : cls) {

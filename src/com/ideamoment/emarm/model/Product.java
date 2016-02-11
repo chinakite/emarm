@@ -85,6 +85,24 @@ public class Product extends HistoriableEntity {
     @Ref
     private Subject subject;
     
+    @Ref
+    private CopyrightContractProduct crcProduct;
+    
+    /**
+     * @return the crcProduct
+     */
+    public CopyrightContractProduct getCrcProduct() {
+        return crcProduct;
+    }
+
+    
+    /**
+     * @param crcProduct the crcProduct to set
+     */
+    public void setCrcProduct(CopyrightContractProduct crcProduct) {
+        this.crcProduct = crcProduct;
+    }
+
     /**
      * @return the name
      */

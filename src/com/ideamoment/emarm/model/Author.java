@@ -3,7 +3,7 @@
  */
 package com.ideamoment.emarm.model;
 
-import com.ideamoment.emarm.model.enumeration.YesOrNo;
+import com.ideamoment.emarm.model.enumeration.AuthorLevel;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
@@ -24,8 +24,11 @@ public class Author extends HistoriableEntity {
     private String desc;
     
     @Property(dataItem="C_FAMOUS", type=DataItemType.VARCHAR, length=1)
-    private String famous = YesOrNo.NO;
+    private String famous = AuthorLevel.NORMAL;
 
+    @Property(dataItem="C_IDCARD", type=DataItemType.VARCHAR, length=20)
+    private String idcard;
+    
     /**
      * @return the name
      */
@@ -81,4 +84,22 @@ public class Author extends HistoriableEntity {
     public void setPseudonym(String pseudonym) {
         this.pseudonym = pseudonym;
     }
+
+    
+    /**
+     * @return the idcard
+     */
+    public String getIdcard() {
+        return idcard;
+    }
+
+    
+    /**
+     * @param idcard the idcard to set
+     */
+    public void setIdcard(String idcard) {
+        this.idcard = idcard;
+    }
+    
+    
 }

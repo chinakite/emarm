@@ -144,9 +144,9 @@
                                       </div>
                                   </div>
                                   <div class="form-group">
-                                      <label class="col-sm-2 control-label">受众人群</label>
+                                      <label for="storyTarget" class="col-sm-2 control-label">受众人群</label>
                                       <div class="col-sm-10">
-                                          
+                                          <textarea id="storyTarget" class="form-control" rows="3" placeholder="受众人群 ..."></textarea>
                                       </div>
                                   </div>
                                   <div class="form-group">
@@ -291,9 +291,7 @@
           var storyFrame = $('input[name=storyframe]:checked').val();
           var storyText = $('input[name=storytext]:checked').val();
           var storyRole = $('input[name=storyrole]:checked').val();
-          var targetGender = $('#targetGender').val();
-          var targetAge = $('#targetAge').val();
-          var targetPosition = $('#targetPosition').val();
+          var target = $('#storyTarget').val();
           var storySuggest = $('#storySuggest').val();
           var audioEdit = $('input[name=audioEdit]:checked').val();
           var playTypeEle = $('input[name=playType]:checked');
@@ -321,9 +319,7 @@
                   'storyFrame': storyFrame ,
                   'storyText': storyText ,
                   'storyRole': storyRole ,
-                  'targetGender': targetGender ,
-                  'targetAge': targetAge ,
-                  'targetPosition': targetPosition ,
+                  'target': target ,
                   'storySuggest': storySuggest,
                   'audioEdit': audioEdit ,
                   'playType': playtype ,

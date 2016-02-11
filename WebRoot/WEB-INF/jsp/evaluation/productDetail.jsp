@@ -51,7 +51,17 @@
       <div class="content-wrapper detailContent">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1 class="detailTitle">${product.name}</h1>
+            <h1 class="detailTitle col-xs-6">${product.name}</h1>
+            <c:if test="${product.state == '0' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '02') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1'}">
+                <button class="btn btn-default pull-right ml10" onclick="deleteProduct('${product.name}');"><i class="fa fa-remove"></i> 删除</button>
+                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.id}', '${product.name}');"><i class="fa fa-edit"></i> 编辑</button>
+            </c:if>
+            <c:if test="${product.state == '2' || product.state == '3'}">
+                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.id}', '${product.name}');"><i class="fa fa-tag"></i> 邀请评价</button>
+            </c:if>
+            <c:if test="${product.state == '1'}">
+                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.name}');"><i class="fa fa-star-half-empty"></i> 审核</button>
+            </c:if>
         </section>
 
         <!-- Main content -->
@@ -69,13 +79,13 @@
                               <p class="col-xs-12 productSummary">${product.summary}</p>
                               <p class="col-xs-5 detailInfo-light">作者：${product.author.name}</p>
                               <p class="col-xs-7 detailInfo-light">作者笔名：${product.author.pseudonym}</p>
-                              <p class="col-xs-5 detailInfo-light">题材：${product.subject.name}</p>
+                              <p class="col-xs-5 detailInfo-light">题材：${product.subject.id}</p>
                               <p class="col-xs-7 detailInfo-light">字数：${product.wordCount}&nbsp;万字</p>
                               <p class="col-xs-5 detailInfo-light">出版状态：${product.publishStateText}</p>
                               <p class="col-xs-7 detailInfo-light">出版年份：${product.publishYear}</p>
                               <p class="col-xs-5 detailInfo-light">ISBN：${product.isbn}</p>
                               <div class="col-xs-12 detailInfo-light">
-                                  <span>样章：</span><a class="label bg-gray">1</a><a class="label bg-gray ml10">2</a><a class="label bg-gray ml10">3</a>
+                                  <span>样章：</span><a href='<idp:url value=""/>${product.samples[0].fileUrl}' class="label bg-gray">下载</a>
                               </div>
                           </div>
                       </div>
@@ -87,168 +97,37 @@
                               <li><a href="#timeline" data-toggle="tab">版权信息</a></li>
                               <li><a href="#settings" data-toggle="tab">制作信息</a></li>
                               <li><a href="#settings" data-toggle="tab">运营信息</a></li>
-                              <li><a href="#settings" data-toggle="tab">相册</a></li>
+                              <li><a href="#gallery" data-toggle="tab">相册</a></li>
                             </ul>
                             <div class="tab-content">
                               <div class="active tab-pane" id="evaluationInfo">
                                 <table class="table table-bordered">
                                    <thead>
-                                       <tr style="background-color: #f4f4f4;">
+                                       <tr id="evaTblHeader" style="background-color: #f4f4f4;">
                                            <th class="text-center" width="150" style="font-weight:normal;">评价人</th>
-                                           <th class="text-center" style="font-weight:normal;">测试账号</th>
                                        </tr>    
                                    </thead>
                                    <tbody>
-                                       <tr>
+                                       <tr id="evaTblStory">
                                            <td width="150" style="vertical-align: middle;"><p class="text-center">内容评价</p></td>
-                                           <td>
-                                               <div class="evaItem">
-                                                  <p class="evaItemTitle pull-left txt-indent">情节架构</p>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <span class="evaItemText">优秀</span>
-                                               </div>
-                                               <div class="evaItem">
-                                                  <p class="evaItemTitle pull-left txt-indent">文字水平</p>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-gray"></i>
-                                                  <span class="evaItemText">良好</span>
-                                               </div>
-                                               <div class="evaItem">
-                                                  <p class="evaItemTitle pull-left txt-indent">人物塑造</p>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-yellow"></i>
-                                                  <i class="fa fa-star text-gray"></i>
-                                                  <span class="evaItemText">良好</span>
-                                               </div>
-                                               <div class="evaItem">
-                                                  <p class="evaItemTitle pull-left txt-indent">受众人群</p>
-                                                  <span class="evaItemText">男性</span>
-                                                  <span class="evaItemText">18-26岁</span>
-                                                  <span class="evaItemText">公司白领</span>
-                                               </div>
-                                               <div class="evaItem">
-                                                  <p class="evaItemTitle pull-left txt-indent">其他意见</p>
-                                                  <span class="evaItemText">挺好的</span>
-                                               </div>
-                                           </td>
                                        </tr>
-                                       <tr>
+                                       <tr id="evaTblMake">
                                            <td width="150" style="vertical-align: middle;"><p class="text-center">制作评价</p></td>
-                                           <td>
-                                               <div class="evaItem">
-                                                  <span class="evaItemTitle">音频改编难度</span>
-                                                  <span class="evaItemText">一般</span>
-                                               </div>
-                                               <div class="evaItem">
-                                                  <span class="evaItemTitle">播讲形式建议</span>
-                                                  <span class="evaItemText">男声</span>
-                                                  <span class="evaItemText">单播</span>
-                                                  <span class="evaItemText">小说剧</span>
-                                                  <span class="evaItemText">适合网络播出</span>
-                                               </div>
-                                               <div class="evaItem">
-                                                  <span class="evaItemTitle">演员风格建议</span>
-                                                  <span class="evaItemText">厚重</span>
-                                               </div>
-                                               <div class="evaItem">
-                                                  <p class="evaItemTitle pull-left txt-indent">其他意见</p>
-                                                  <span class="evaItemText">做吧</span>
-                                               </div>
-                                           </td>
                                        </tr>
                                    </tbody>
                                 </table>
+                                <div class="box box-default">
+                                    <div class="box-header with-border">
+                                      <h3 class="box-title">评价汇总</h3>
+                                      <p class="pull-right">参考价：<span id="pricePanel" class="text-red" style="font-weight: bold; font-size: 24px;">0</span>.00元</p>
+                                    </div>
+                                    <div id="finalEvaBody" class="box-body">
+                                          
+                                    </div>
+                                </div>
                               </div><!-- /.tab-pane -->
                               <div class="tab-pane" id="timeline">
-                                <!-- The timeline -->
-                                <ul class="timeline timeline-inverse">
-                                  <!-- timeline time label -->
-                                  <li class="time-label">
-                                    <span class="bg-red">
-                                      10 Feb. 2014
-                                    </span>
-                                  </li>
-                                  <!-- /.timeline-label -->
-                                  <!-- timeline item -->
-                                  <li>
-                                    <i class="fa fa-envelope bg-blue"></i>
-                                    <div class="timeline-item">
-                                      <span class="time"><i class="fa fa-clock-o"></i> 12:05</span>
-                                      <h3 class="timeline-header"><a href="#">Support Team</a> sent you an email</h3>
-                                      <div class="timeline-body">
-                                        Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
-                                        weebly ning heekya handango imeem plugg dopplr jibjab, movity
-                                        jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
-                                        quora plaxo ideeli hulu weebly balihoo...
-                                      </div>
-                                      <div class="timeline-footer">
-                                        <a class="btn btn-primary btn-xs">Read more</a>
-                                        <a class="btn btn-danger btn-xs">Delete</a>
-                                      </div>
-                                    </div>
-                                  </li>
-                                  <!-- END timeline item -->
-                                  <!-- timeline item -->
-                                  <li>
-                                    <i class="fa fa-user bg-aqua"></i>
-                                    <div class="timeline-item">
-                                      <span class="time"><i class="fa fa-clock-o"></i> 5 mins ago</span>
-                                      <h3 class="timeline-header no-border"><a href="#">Sarah Young</a> accepted your friend request</h3>
-                                    </div>
-                                  </li>
-                                  <!-- END timeline item -->
-                                  <!-- timeline item -->
-                                  <li>
-                                    <i class="fa fa-comments bg-yellow"></i>
-                                    <div class="timeline-item">
-                                      <span class="time"><i class="fa fa-clock-o"></i> 27 mins ago</span>
-                                      <h3 class="timeline-header"><a href="#">Jay White</a> commented on your post</h3>
-                                      <div class="timeline-body">
-                                        Take me to your leader!
-                                        Switzerland is small and neutral!
-                                        We are more like Germany, ambitious and misunderstood!
-                                      </div>
-                                      <div class="timeline-footer">
-                                        <a class="btn btn-warning btn-flat btn-xs">View comment</a>
-                                      </div>
-                                    </div>
-                                  </li>
-                                  <!-- END timeline item -->
-                                  <!-- timeline time label -->
-                                  <li class="time-label">
-                                    <span class="bg-green">
-                                      3 Jan. 2014
-                                    </span>
-                                  </li>
-                                  <!-- /.timeline-label -->
-                                  <!-- timeline item -->
-                                  <li>
-                                    <i class="fa fa-camera bg-purple"></i>
-                                    <div class="timeline-item">
-                                      <span class="time"><i class="fa fa-clock-o"></i> 2 days ago</span>
-                                      <h3 class="timeline-header"><a href="#">Mina Lee</a> uploaded new photos</h3>
-                                      <div class="timeline-body">
-                                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                        <img src="http://placehold.it/150x100" alt="..." class="margin">
-                                      </div>
-                                    </div>
-                                  </li>
-                                  <!-- END timeline item -->
-                                  <li>
-                                    <i class="fa fa-clock-o bg-gray"></i>
-                                  </li>
-                                </ul>
+                                
                               </div><!-- /.tab-pane -->
             
                               <div class="tab-pane" id="settings">
@@ -298,6 +177,9 @@
                                     </div>
                                   </div>
                                 </form>
+                              </div><!-- /.tab-pane -->
+                              <div class="tab-pane" id="gallery">
+                                       
                               </div><!-- /.tab-pane -->
                             </div><!-- /.tab-content -->
                           </div><!-- /.nav-tabs-custom -->
@@ -470,6 +352,33 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div id="auditModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">作品审核</h4>
+          </div>
+          <div class="modal-body">
+              <p>待审核作品：<span id="auditProductName"></span></p>
+              <form class="form-horizontal">
+                  <div class="col-md-12">
+                  <div class="form-group">
+                    <label>审核意见</label>
+                    <textarea id="auditText" class="form-control" multiple="multiple" data-placeholder="审核意见" style="width: 100%;"></textarea>
+                  </div><!-- /.form-group -->
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeAuditModal();">关闭</button>
+            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="rejectProduct('${product.id}');">不通过</button>
+            <button type="button" class="btn btn-emarm" onclick="passProduct('${product.id}');">通过</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <!-- jQuery 2.1.4 -->
     <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
     <!-- Bootstrap 3.3.5 -->
@@ -489,13 +398,440 @@
     <script src='<idp:url value="/js/ideajs.js"/>'></script>
     <script src='<idp:url value="/js/template.js"/>'></script>
     
+    <script id="evaHeaderTmpl" type="text/html">
+        <th class="text-center" style="font-weight:normal;">{{evaluation.user.name}}</th>
+    </script>
+    
+    <script id="nonEvaHeaderTmpl" type="text/html">
+        <th class="text-center" style="font-weight:normal;"></th>
+    </script>
+    
+    <script id="evaStoryTmpl" type="text/html">
+        <td>
+           <div class="evaItem">
+              <p class="evaItemTitle pull-left txt-indent">情节架构</p>
+              {{if evaluation.storyFrame > 0}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyFrame > 1}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyFrame > 2}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyFrame > 3}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyFrame > 3}}
+              <span class="evaItemText">优秀</span>
+              {{else if evaluation.storyFrame > 2}}
+              <span class="evaItemText">良好</span>
+              {{else if evaluation.storyFrame > 3}}
+              <span class="evaItemText">一般</span>
+              {{else}}
+              <span class="evaItemText">比较差</span>
+              {{/if}}
+           </div>
+           <div class="evaItem">
+              <p class="evaItemTitle pull-left txt-indent">文字水平</p>
+              {{if evaluation.storyText > 0}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyText > 1}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyText > 2}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyText > 3}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyText > 3}}
+              <span class="evaItemText">优秀</span>
+              {{else if evaluation.storyText > 2}}
+              <span class="evaItemText">良好</span>
+              {{else if evaluation.storyText > 1}}
+              <span class="evaItemText">一般</span>
+              {{else}}
+              <span class="evaItemText">比较差</span>
+              {{/if}}
+           </div>
+           <div class="evaItem">
+              <p class="evaItemTitle pull-left txt-indent">人物塑造</p>
+              {{if evaluation.storyRole > 0}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyRole > 1}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyRole > 2}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyRole > 3}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyRole > 3}}
+              <span class="evaItemText">优秀</span>
+              {{else if evaluation.storyRole > 2}}
+              <span class="evaItemText">良好</span>
+              {{else if evaluation.storyRole > 1}}
+              <span class="evaItemText">一般</span>
+              {{else}}
+              <span class="evaItemText">比较差</span>
+              {{/if}}
+           </div>
+           <div class="evaItem">
+              <p class="evaItemTitle pull-left txt-indent">受众人群</p>
+              <span class="evaItemText">{{evaluation.storyTarget}}</span>
+           </div>
+           <div class="evaItem">
+              <p class="evaItemTitle pull-left txt-indent">其他意见</p>
+              <span class="evaItemText">{{evaluation.storySuggest}}</span>
+           </div>
+       </td>
+    </script>
+    
+    <script id="nonEvaStoryTmpl" type="text/html">
+       <td>暂时没有评价</td>
+    </script>
+    
+    <script id="evaMakeTmpl" type="text/html">
+       <td>
+           <div class="evaItem">
+              <span class="evaItemTitle">音频改编难度</span>
+              {{if evaluation.makeAudioEdit > 2}}
+              <span class="evaItemText">难</span>
+              {{else if evaluation.makeAudioEdit > 1}}
+              <span class="evaItemText">一般</span>
+              {{else}}
+              <span class="evaItemText">容易</span>
+              {{/if}}
+           </div>
+           <div class="evaItem">
+              <span class="evaItemTitle">播讲形式建议</span>
+              <span class="evaItemText">男声</span>
+              <span class="evaItemText">单播</span>
+              <span class="evaItemText">小说剧</span>
+              <span class="evaItemText">适合网络播出</span>
+           </div>
+           <div class="evaItem">
+              <span class="evaItemTitle">演员风格建议</span>
+              <span class="evaItemText">厚重</span>
+           </div>
+           <div class="evaItem">
+              <p class="evaItemTitle pull-left txt-indent">其他意见</p>
+              <span class="evaItemText">{{evaluation.makeSuggest}}</span>
+           </div>
+       </td>
+    </script>
+    
+    <script id="nonEvaMakeTmpl" type="text/html">
+       <td>暂时没有评价</td>
+    </script>
+    
+    <script id="nonFinalEvaTmpl" type="text/html">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">作品评价</label>
+            <div class="col-sm-10 checkbox">
+              <label for="famousProduct" ><input type="radio" id="famousProduct" name="productEva" value="1" onclick="calPrice();"/> 知名作品</label>
+              <label for="normalProduct" ><input type="radio" id="normalProduct" name="productEva" checked value="0" onclick="calPrice();"/> 普通作品</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">作家评价</label>
+            <div class="col-sm-10 checkbox">
+              <label for="topAuthor" ><input type="radio" id="topAuthor" name="authorEva" value="2" onclick="calPrice();"/> 名牌/热门作家</label>
+              <label for="famousAuthor" ><input type="radio" id="famousAuthor" name="authorEva" value="1" onclick="calPrice();"/> 知名作家</label>
+              <label for="normalAuthor" ><input type="radio" id="normalAuthor" name="authorEva" checked value="0" onclick="calPrice();"/> 普通作家</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">内容评价</label>
+            <div class="col-sm-10 checkbox">
+              <label for="storyPerfect" ><input type="radio" id="storyPerfect" name="storyLevel" value="3" onclick="calPrice();"/> 优秀</label>
+              <label for="storyGood" ><input type="radio" id="storyGood" name="storyLevel" value="2" checked onclick="calPrice();"/> 良好</label>
+              <label for="storyNormal" ><input type="radio" id="storyNormal" name="storyLevel" value="1" onclick="calPrice();"/> 一般</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">制作难度</label>
+            <div class="col-sm-10 checkbox">
+              <label for="makeHard" ><input type="radio" id="makeHard" name="makeAudioEdit" value="3" onclick="calPrice();"/> 难</label>
+              <label for="makeNormal" ><input type="radio" id="makeNormal" name="makeAudioEdit" value="2" checked onclick="calPrice();"/> 一般</label>
+              <label for="makeEasy" ><input type="radio" id="makeEasy" name="makeAudioEdit" value="1" onclick="calPrice();"/> 容易</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-10 checkbox">
+              <label for="onlyWebCast" ><input type="checkbox" id="onlyWebCast" name="onlyWebCast" onclick="calPrice();"/> 只适合网络播出</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-10 checkbox">
+              <label for="hotSubject" ><input type="checkbox" id="hotSubject" name="hotSubject" onclick="calPrice();"/> 热门题材</label>
+            </div>
+          </div>
+          <div class="form-group text-center">
+            <button type="button" class="btn btn-emarm" onclick="finishEvaluation();">评价完成</button>
+          </div>
+        </form>
+    </script>
+    
+    <script id="finalEvaTmpl" type="text/html">
+        <form class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label">作品评价</label>
+            <div class="col-sm-10 checkbox">
+              <span>{{if fe.productLevel == 1}}知名作品{{else}}普通作品{{/if}}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">作家评价</label>
+            <div class="col-sm-10 checkbox">
+              <span>{{if fe.authorLevel == 2}}热门作家{{else if fe.authorLevel == 1}}知名作家{{else}}普通作家{{/if}}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">内容评价</label>
+            <div class="col-sm-10 checkbox">
+              {{if fe.storyValue > 0}}
+                  <i class="fa fa-star text-yellow"></i>
+              {{else}}
+                  <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if fe.storyValue > 1}}
+                  <i class="fa fa-star text-yellow"></i>
+              {{else}}
+                  <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if fe.storyValue > 2}}
+                  <i class="fa fa-star text-yellow"></i>
+              {{else}}
+                  <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if fe.storyValue > 2}}
+              <span>优秀</span>
+              {{else if fe.storyValue > 1}}
+              <span>良好</span>
+              {{else}}
+              <span>一般</span>
+              {{/if}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">制作难度</label>
+            <div class="col-sm-10 checkbox">
+              {{if fe.storyValue > 0}}
+                  <i class="fa fa-star text-yellow"></i>
+              {{else}}
+                  <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if fe.storyValue > 1}}
+                  <i class="fa fa-star text-yellow"></i>
+              {{else}}
+                  <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if fe.storyValue > 2}}
+                  <i class="fa fa-star text-yellow"></i>
+              {{else}}
+                  <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if fe.storyValue > 2}}
+              <span>难</span>
+              {{else if fe.storyValue > 1}}
+              <span>一般</span>
+              {{else}}
+              <span>容易</span>
+              {{/if}}
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-10 checkbox">
+              <label for="onlyWebCast" ><input type="checkbox" id="onlyWebCast" name="onlyWebCast" disabled {{if fe.onlyWebCast == '1'}}checked{{/if}}/> 只适合网络播出</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-10 checkbox">
+              <label for="hotSubject" ><input type="checkbox" id="hotSubject" name="hotSubject" disabled {{if fe.hotSubject == '1'}}checked{{/if}}/> 热门题材</label>
+            </div>
+          </div>
+        </form>
+    </script>
+    
     <!-- page script -->
     <script>
       var table;
     
       $(document).ready(function(){
-      
+          loadEvaluations();
+          
+          var state = '${product.state}';
+          if(state == 4) {
+              loadFinalEvaludation();
+          }else{
+              populateNonFinalEvaPanel();
+              calPrice();
+          }
+          
       });
+      
+      function loadFinalEvaludation() {
+          $.get(
+              '<idp:url value="/evaluation/finalEvaluation"/>?productId=${product.id}',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var data = result.data;
+                      var html = template('finalEvaTmpl', {fe: data});
+                      $('#finalEvaBody').html(html);
+                      
+                      $('#pricePanel').text(data.refPrice);
+                  }
+              }
+          );
+      }
+      
+      function populateNonFinalEvaPanel() {
+          var html = template('nonFinalEvaTmpl' ,{});
+          $('#finalEvaBody').html(html);
+      }
+      
+      function calPrice() {
+          var productEva = $('input[name=productEva]:checked').val();
+          var authorEva = $('input[name=authorEva]:checked').val();
+          var makeAudioEdit = $('input[name=makeAudioEdit]:checked').val();
+          var storyLevel = $('input[name=storyLevel]:checked').val();
+          var onlyWeb = $('#onlyWebCast').prop('checked');
+          var ishot = $('#hotSubject').prop('checked');
+          
+          var basePrice = 0;
+          var wordCount = ${product.wordCount};
+          var publishYear = '${product.publishYear}';
+          if(publishYear == '') {
+              publishYear = '${product.finishYear}';
+          }
+
+          if(productEva == 0 && authorEva == 0) {
+              if(storyLevel == 1) {
+                  basePrice = 1000;
+              }else if(storyLevel == 2) {
+                  basePrice = 1500;
+              }else if(storyLevel == 3) {
+                  basePrice = 2000;
+              }
+              
+              basePrice = basePrice * (wordCount / 10);
+              
+              if(basePrice > 5000) {
+                  basePrice = 5000;
+              }
+          }else if(authorEva > 0){
+              if(ishot) {
+                  basePrice = 20000;
+              }else{
+                  if(authorEva == 2) {
+                      basePrice = 10000;
+                  }else{
+                      if(productEva == 1) {
+                          basePrice = 8000;
+                      }else{
+                          basePrice = 6000;
+                      }
+                  } 
+              }
+              
+              if(wordCount > 10) {
+                  basePrice = basePrice * 1.2;
+              }else if(wordCount < 1) {
+                  basePrice = basePrice * 0.8;
+              }else{
+                  basePrice = basePrice * 1;
+              }
+          }
+          
+          var priceRabio = 1;
+          var curDate = new Date();
+          var curYear = curDate.getFullYear();
+          if(curYear - publishYear <=2 ) {
+              priceRabio = priceRabio + 0.2;
+          }else if(curYear - publishYear > 4){
+              priceRabio = priceRabio - 0.2;
+          }
+          
+          if(makeAudioEdit == 3) {
+              priceRabio = priceRabio - 0.2;
+          }else if(makeAudioEdit == 1) {
+              priceRabio = priceRabio + 0.2;
+          }else{
+              priceRabio = priceRabio + 0;
+          }
+          
+          if(onlyWeb) {
+              priceRabio = priceRabio - 0.2;
+          }
+          
+          var price = basePrice * priceRabio;
+          $('#pricePanel').text(price);
+      }
+      
+      function loadEvaluations() {
+          $.get(
+              '<idp:url value="/evaluation/"/>${product.id}/evaluations',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var evaluations = result.data;
+                      if(evaluations.length == 0) {
+                          var headerHtml = template('nonEvaHeaderTmpl', {"evaluation": null});
+                          var storyHtml = template('nonEvaStoryTmpl', {"evaluation": null});
+                          var makeHtml = template('nonEvaMakeTmpl', {"evaluation": null});
+                      
+                          $('#evaTblHeader').append(headerHtml);
+                          $('#evaTblStory').append(storyHtml);
+                          $('#evaTblMake').append(makeHtml);
+                      }else{
+                          for(var i=0; i<evaluations.length; i++) {
+                              var eva = evaluations[i];
+                              var headerHtml = template('evaHeaderTmpl', {"evaluation": eva});
+                              var storyHtml = template('evaStoryTmpl', {"evaluation": eva});
+                              var makeHtml = template('evaMakeTmpl', {"evaluation": eva});
+                              
+                              $('#evaTblHeader').append(headerHtml);
+                              $('#evaTblStory').append(storyHtml);
+                              $('#evaTblMake').append(makeHtml);
+                          }
+                      }
+                  }
+              }
+          );
+      }
       
       function submitAuthor() {
           if(!validateName()) {
@@ -669,6 +1005,110 @@
       function noAudioClick() {
           $('#audioCopyrightDiv').hide();
           $('#audioDescDiv').hide();
+      }
+      
+      function popAuditProduct(name) {
+          $('#auditProductName').text(name);
+          
+          $('#auditModal').modal('show');
+      }
+      
+      function closeAuditModal() {
+          clearAuditModal();
+          $('#auditModal').modal('hide');
+      }
+      
+      function clearAuditModal() {
+          $('#auditProductName').text('');
+      }
+      
+      function passProduct(prodId) {
+          var prodId = $('#auditProductId').val();
+          $.post(
+              '<idp:url value="/evaluation/passProduct"/>',
+              {id: prodId},
+              function(data) {
+                  alert('审核成功');
+                  closeAuditModal();
+                  window.location.reload();
+              }
+          );
+      }
+      
+      function rejectProduct(prodId) {
+          var prodId = $('#auditProductId').val();
+          $.post(
+              '<idp:url value="/evaluation/rejectProduct"/>',
+              {id: prodId},
+              function(data) {
+                  alert('审核成功');
+                  closeAuditModal();
+                  window.location.reload();
+              }
+          );
+      }
+      
+      function deleteProduct(name) {
+          var r = confirm("您真的要删除作品[" + name + "]吗？");
+          if(r) {
+              $.post(
+                  '<idp:url value="/evaluation/product/"/>${product.id}',
+                  {'_method': "delete"},
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('删除成功');
+                          window.close();
+                      }
+                  }
+              );
+          }
+      }
+      
+      function finishEvaluation() {
+          var r = confirm("评价完成以后将不能修改评价信息，并将自动流转到版权入理模块，您确定吗？");
+          var productLevel = $('input[name=productEva]:checked').val();
+          var authorLevel = $('input[name=authorEva]:checked').val();
+          var storyLevel = $('input[name=storyLevel]:checked').val();
+          var makeAudioEdit = $('input[name=makeAudioEdit]:checked').val();
+          var onlyWebCast = $('#onlyWebCast').prop('checked');
+          if(onlyWebCast) {
+              onlyWebCast = '1';
+          }else{
+              onlyWebCast = '0';
+          }
+          var hotSubject = $('#hotSubject').prop('checked');
+          if(hotSubject) {
+              hotSubject = '1';
+          }else{
+              hotSubject = '0';
+          }
+          var refPrice = $('#pricePanel').text();
+          
+          alert(authorLevel);
+          
+          if(r) {
+              $.post(
+                  '<idp:url value="/evaluation/finishEvaluation"/>',
+                  {
+                      'productId': '${product.id}',
+                      'productLevel': productLevel,
+                      'authorLevel': authorLevel,
+                      'storyValue': storyLevel,
+                      'makeValue': makeAudioEdit,
+                      'onlyWebCast': onlyWebCast,
+                      'hotSubject': hotSubject,
+                      'refPrice': refPrice
+                  },
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('保存成功');
+                          window.location.reload();
+                      }
+                  }
+              );
+          }
       }
     </script>
   </body>

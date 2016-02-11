@@ -17,11 +17,13 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ideamoment.emarm.evaluation.service.EvaluationService;
 import com.ideamoment.emarm.model.Author;
 import com.ideamoment.emarm.model.Evaluation;
+import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.util.DataTableSource;
 import com.ideamoment.ideadp.restful.json.JsonData;
 import com.ideamoment.ideajdbc.action.Page;
+import com.ideamoment.wx.util.StringUtils;
 
 /**
  * @author Chinakite
@@ -46,16 +48,78 @@ public class EvaluationAction {
         this.evaluationService = evaluationService;
     }
     
+    @RequestMapping(value="/evaluation/myProductPage", method=RequestMethod.GET)
+    public ModelAndView toMyProducts() {
+        return new ModelAndView("/WEB-INF/jsp/evaluation/myproduct.jsp");
+    }
+    
     @RequestMapping(value="/evaluation/productPage", method=RequestMethod.GET)
     public ModelAndView toProducts() {
         return new ModelAndView("/WEB-INF/jsp/evaluation/product.jsp");
     }
     
     @RequestMapping(value="/evaluation/dtProducts", method=RequestMethod.GET)
-    public JsonData dtAuthors(int draw, int start, int length, String key) {
+    public JsonData dtProducts(
+                               int draw, 
+                               int start, 
+                               int length, 
+                               String productName,
+                               String authorName,
+                               String isbn,
+                               String subject,
+                               String publishState,
+                               String state) {
         int curPage = start/length + 1;
         int pageSize = length;
-        Page<Product> products = evaluationService.pageProducts(curPage, pageSize);
+        
+        HashMap<String, String> condition = new HashMap<String, String>();
+        if(productName != null)
+            condition.put("productName", productName);
+        if(authorName != null)
+            condition.put("authorName", authorName);
+        if(isbn != null)
+            condition.put("isbn", isbn);
+        if(subject != null && !subject.equals("-1"))
+            condition.put("subject", subject);
+        if(publishState != null && !publishState.equals("-1"))
+            condition.put("publishState", publishState);
+        if(state != null && !state.equals("-1"))
+            condition.put("state", state);
+        
+        Page<Product> products = evaluationService.pageProducts(curPage, pageSize, condition);
+        DataTableSource<Product> dts = convertToDataTableSource(draw, products);
+        return new JsonData(dts);
+    }
+    
+    @RequestMapping(value="/evaluation/dtMyProducts", method=RequestMethod.GET)
+    public JsonData dtMyProducts(
+                         int draw, 
+                         int start, 
+                         int length, 
+                         String productName,
+                         String authorName,
+                         String isbn,
+                         String subject,
+                         String publishState,
+                         String state) {
+        int curPage = start/length + 1;
+        int pageSize = length;
+        
+        HashMap<String, String> condition = new HashMap<String, String>();
+        if(productName != null)
+            condition.put("productName", productName);
+        if(authorName != null)
+            condition.put("authorName", authorName);
+        if(isbn != null)
+            condition.put("isbn", isbn);
+        if(subject != null && !subject.equals("-1"))
+            condition.put("subject", subject);
+        if(publishState != null && !publishState.equals("-1"))
+            condition.put("publishState", publishState);
+        if(state != null && !state.equals("-1"))
+            condition.put("state", state);
+        
+        Page<Product> products = evaluationService.pageMyProducts(curPage, pageSize, condition);
         DataTableSource<Product> dts = convertToDataTableSource(draw, products);
         return new JsonData(dts);
     }
@@ -75,7 +139,8 @@ public class EvaluationAction {
     }
     
     @RequestMapping(value="/evaluation/product", method=RequestMethod.POST)
-    public JsonData createProduct(
+    public JsonData saveProduct(
+                        String id,
                         String name,
                         String authorName,
                         String authorPseudonym,
@@ -91,8 +156,17 @@ public class EvaluationAction {
                         String audioCopyright,
                         String audioDesc,
                         String samples,
+                        String isbn,
                         String submit) {
-        Product product = new Product();
+        
+        Product product;
+        if(StringUtils.isEmpty(id)) {
+            product = new Product();
+        }else{
+            product = evaluationService.findProductById(id);
+        }
+        
+        product.setId(id);
         product.setName(name);
         
         Author author = new Author();
@@ -113,6 +187,7 @@ public class EvaluationAction {
         product.setHasAudio(hasAudio);
         product.setAudioCopyright(audioCopyright);
         product.setAudioDesc(audioDesc);
+        product.setIsbn(isbn);
         
         List<ProductSample> sampleList = new ArrayList<ProductSample>();
         String[] sampleArray = samples.split(",");
@@ -147,9 +222,7 @@ public class EvaluationAction {
                             int storyFrame,
                             int storyText,
                             int storyRole,
-                            String targetGender,
-                            String targetAge,
-                            String targetPosition,
+                            String storyTarget,
                             String storySuggest,
                             int audioEdit,
                             String playType,
@@ -161,9 +234,7 @@ public class EvaluationAction {
         eva.setStoryFrame(storyFrame);
         eva.setStoryText(storyText);
         eva.setStoryRole(storyRole);
-        eva.setTargetGender(targetGender);
-        eva.setTargetAge(targetAge);
-        eva.setTargetPosition(targetPosition);
+        eva.setStoryTarget(storyTarget);
         eva.setStorySuggest(storySuggest);
         eva.setAudioEdit(audioEdit);
         eva.setPlayType(playType);
@@ -173,6 +244,60 @@ public class EvaluationAction {
         evaluationService.saveEvaluation(eva);
         
         return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/evaluation/passProduct", method=RequestMethod.POST)
+    public JsonData passProduct(String id) {
+        evaluationService.passProduct(id);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/evaluation/rejectProduct", method=RequestMethod.POST)
+    public JsonData rejectProduct(String id) {
+        evaluationService.rejectProduct(id);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/evaluation/product/{id}", method=RequestMethod.DELETE)
+    public JsonData deleteProduct(@PathVariable String id) {
+        int r = evaluationService.deleteProduct(id);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/evaluation/{productId}/evaluations", method=RequestMethod.GET)
+    public JsonData evaluations(@PathVariable String productId) {
+        List<Evaluation> evaluations = evaluationService.listEvaluations(productId);
+        return JsonData.success(evaluations);
+    }
+    
+    @RequestMapping(value="/evaluation/finishEvaluation", method=RequestMethod.POST)
+    public JsonData finishEvaluation(String productId,
+                                     String productLevel,
+                                     String authorLevel,
+                                     String storyValue,
+                                     String makeValue,
+                                     String onlyWebCast,
+                                     String hotSubject,
+                                     String refPrice) {
+        
+        FinalEvaluation finalEva = new FinalEvaluation();
+        finalEva.setProductId(productId);
+        finalEva.setProductLevel(productLevel);
+        finalEva.setAuthorLevel(authorLevel);
+        finalEva.setStoryValue(storyValue);
+        finalEva.setMakeValue(makeValue);
+        finalEva.setOnlyWebCast(onlyWebCast);
+        finalEva.setHotSubject(hotSubject);
+        finalEva.setRefPrice(refPrice);
+        
+        evaluationService.finishEvaluation(finalEva);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/evaluation/finalEvaluation", method=RequestMethod.GET)
+    public JsonData findFinalEvaluation(String productId) {
+        FinalEvaluation finalEva = evaluationService.findFinalEvaluation(productId);
+        return JsonData.success(finalEva);
     }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {

@@ -6,6 +6,7 @@ package com.ideamoment.emarm.model;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
+import com.ideamoment.ideadata.annotation.Ref;
 
 /**
  * @author Chinakite
@@ -29,14 +30,8 @@ public class Evaluation extends HistoriableEntity {
     @Property(dataItem="C_STORY_ROLE", type=DataItemType.INT)
     private int storyRole;
     
-    @Property(dataItem="C_STORY_TARGET_GENDER", type=DataItemType.VARCHAR, length=2)
-    private String targetGender;
-    
-    @Property(dataItem="C_STORY_TARGET_AGE", type=DataItemType.VARCHAR, length=2)
-    private String targetAge;
-    
-    @Property(dataItem="C_STORY_TARGET_POSITION", type=DataItemType.VARCHAR, length=2)
-    private String targetPosition;
+    @Property(dataItem="C_STORY_TARGET", type=DataItemType.VARCHAR, length=600)
+    private String storyTarget;
     
     @Property(dataItem="C_STORY_SUGGEST", type=DataItemType.VARCHAR, length=1000)
     private String storySuggest;
@@ -53,6 +48,8 @@ public class Evaluation extends HistoriableEntity {
     @Property(dataItem="C_MAKE_SUGGEST", type=DataItemType.VARCHAR, length=1000)
     private String makeSuggest;
 
+    @Ref(entityClass=User.class)
+    private User user;
     
     /**
      * @return the userId
@@ -132,56 +129,21 @@ public class Evaluation extends HistoriableEntity {
     public void setStoryRole(int storyRole) {
         this.storyRole = storyRole;
     }
-
     
     /**
-     * @return the targetGender
+     * @return the storyTarget
      */
-    public String getTargetGender() {
-        return targetGender;
+    public String getStoryTarget() {
+        return storyTarget;
     }
-
     
     /**
-     * @param targetGender the targetGender to set
+     * @param storyTarget the storyTarget to set
      */
-    public void setTargetGender(String targetGender) {
-        this.targetGender = targetGender;
+    public void setStoryTarget(String storyTarget) {
+        this.storyTarget = storyTarget;
     }
 
-    
-    /**
-     * @return the targetAge
-     */
-    public String getTargetAge() {
-        return targetAge;
-    }
-
-    
-    /**
-     * @param targetAge the targetAge to set
-     */
-    public void setTargetAge(String targetAge) {
-        this.targetAge = targetAge;
-    }
-
-    
-    /**
-     * @return the targetPosition
-     */
-    public String getTargetPosition() {
-        return targetPosition;
-    }
-
-    
-    /**
-     * @param targetPosition the targetPosition to set
-     */
-    public void setTargetPosition(String targetPosition) {
-        this.targetPosition = targetPosition;
-    }
-
-    
     /**
      * @return the storySuggest
      */
@@ -261,6 +223,18 @@ public class Evaluation extends HistoriableEntity {
         this.makeSuggest = makeSuggest;
     }
 
-    
+    /**
+     * @return the user
+     */
+    public User getUser() {
+        return user;
+    }
+
+    /**
+     * @param user the user to set
+     */
+    public void setUser(User user) {
+        this.user = user;
+    }
     
 }
