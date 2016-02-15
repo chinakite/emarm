@@ -53,7 +53,7 @@ public class CopyrightDao {
                 +   " LEFT JOIN t_copyright_contract cc "
                 +     " ON cc.C_ID = ccp.C_CONTRACT_ID "
                 + " WHERE p.C_TYPE = :type "
-                + " AND p.C_STATE in (:states) ";
+                + " AND (p.C_STATE in (:states) or p.C_STATE = '0' and p.C_CREATOR = '" + userId + "')";
      
          if(condition.get("productName") != null) {
              sql += " AND p.C_NAME like :productName ";
@@ -166,7 +166,7 @@ public class CopyrightDao {
     }
 
     public String queryMaxContractCode(String prefix) {
-        String sql = "select C_CODE from T_COPYRIGHT_CONTRACT where C_CODE like :code order by C_CODE desc limit 1,1";
+        String sql = "select C_CODE from T_COPYRIGHT_CONTRACT where C_CODE like :code order by C_CODE desc limit 0,1";
         String code = (String)IdeaJdbc.query(sql)
                                         .setParameter("code", prefix+"%")
                                         .uniqueValue();

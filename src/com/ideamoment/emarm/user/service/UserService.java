@@ -217,4 +217,9 @@ public class UserService {
                             .execute();
         }
     }
+
+    @IdeaJdbcTx
+    public List<User> listExtMakers() {
+        return userDao.listExtMakers();
+    }
 }
