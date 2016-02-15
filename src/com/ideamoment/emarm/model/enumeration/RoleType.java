@@ -33,6 +33,13 @@ public class RoleType {
     public static final String CEO_TEXT = "总经理";
     
     public static final String EXT_EVALUATOR = "51";    //外部评价者
+    public static final String EXT_EVALUATOR_TEXT = "外部评价者";
+    
+    public static final String EXT_MAKER = "52";    //外部制作团队
+    public static final String EXT_MAKER_TEXT = "外部制作团队";
+    
+    public static final String EXT_EMCEE = "53";    //主持人
+    public static final String EXT_EMCEE_TEXT = "主持人";
     
     public static final String SUPER_ADMIN = "99";  //超级管理员
     public static final String SUPER_ADMIN_TEXT = "超级管理员";

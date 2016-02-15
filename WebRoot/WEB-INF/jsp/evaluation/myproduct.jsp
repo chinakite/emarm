@@ -978,7 +978,7 @@
                           }
                       }
                       $('#inputSummary').val(prod.summary);
-                      if(prod.samples.length > 0) {
+                      if(prod.samples && prod.samples.length > 0) {
                           $('#samplesShowDiv a').attr('href', '<idp:url value=""/>' + prod.samples[0].fileUrl);
                           $('#samplesUploadDiv').hide();
                           $('#samplesShowDiv').show();

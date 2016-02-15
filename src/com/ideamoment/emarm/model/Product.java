@@ -12,6 +12,7 @@ import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
 import com.ideamoment.ideadata.annotation.Ref;
+import com.ideamoment.ideadata.annotation.Transient;
 
 /**
  * @author Chinakite
@@ -87,6 +88,12 @@ public class Product extends HistoriableEntity {
     
     @Ref
     private CopyrightContractProduct crcProduct;
+    
+    @Transient
+    private Integer taskCount;
+    
+    @Transient
+    private Integer contractCount;
     
     /**
      * @return the crcProduct
@@ -224,7 +231,14 @@ public class Product extends HistoriableEntity {
             return ProductState.EVALUATED_TEXT;
         }else if(ProductState.EVALUATE_FINISH.equals(this.state)){
             return ProductState.EVALUATE_FINISH_TEXT;
-        }else{
+        }else if(ProductState.MK_CONTRACT.equals(this.state)){
+            return ProductState.MK_CONTRACT_TEXT;
+        }else if(ProductState.MK.equals(this.state)){
+            return ProductState.MK_TEXT;
+        }else if(ProductState.MK_FINISH.equals(this.state)){
+            return ProductState.MK_FINISH_TEXT;
+        }
+        else{
             return ProductState.DRAFT_TEXT;
         }
     }
@@ -439,5 +453,42 @@ public class Product extends HistoriableEntity {
     public void setSubject(Subject subject) {
         this.subject = subject;
     }
+
+
+    
+    /**
+     * @return the taskCount
+     */
+    public Integer getTaskCount() {
+        return taskCount;
+    }
+
+
+    
+    /**
+     * @param taskCount the taskCount to set
+     */
+    public void setTaskCount(Integer taskCount) {
+        this.taskCount = taskCount;
+    }
+
+
+    
+    /**
+     * @return the contractCount
+     */
+    public Integer getContractCount() {
+        return contractCount;
+    }
+
+
+    
+    /**
+     * @param contractCount the contractCount to set
+     */
+    public void setContractCount(Integer contractCount) {
+        this.contractCount = contractCount;
+    }
+    
     
 }

@@ -115,4 +115,9 @@ public class UserDao {
         IdeaJdbc.sql(sql).setParameter("status", UserState.DELETED).setParameter("ids", idArray).execute();
     }
 
+    public List<User> listExtMakers() {
+        String sql = "SELECT * FROM T_USER WHERE C_ROLE like '%52%'";
+        return IdeaJdbc.query(sql).listTo(User.class);
+    }
+
 }

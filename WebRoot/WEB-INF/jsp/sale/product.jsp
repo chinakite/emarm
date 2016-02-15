@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 版权管理</title>
+    <title>悦库时光音频资源管理系统 | 制作任务</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -61,12 +61,12 @@
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-          <h1>版权管理
-            <small>所有作品的版权信息。</small>
+          <h1>评价管理
+            <small>所有作品的评价信息。</small>
           </h1>
           <ol class="breadcrumb">
             <li><a href='<idp:url value="/home"/>'><i class="fa fa-home"></i> 首页</a></li>
-            <li class="active">版权管理</li>
+            <li class="active">评价管理</li>
           </ol>
         </section>
 
@@ -103,7 +103,6 @@
                           <label for="inputSearchSubject" class="col-sm-3 control-label">作品题材</label>
                           <div class="col-sm-9">
                             <select id="inputSearchSubject" class="form-control">
-                                <option value="-1">全部</option>
                             </select>
                           </div>
                         </div>
@@ -120,13 +119,16 @@
                           </div>
                         </div>
                         <div class="form-group col-sm-4">
-                          <label for="inputSearchState" class="col-sm-3 control-label">签约状态</label>
+                          <label for="inputSearchState" class="col-sm-3 control-label">作品状态</label>
                           <div class="col-sm-9">
                             <select id="inputSearchState" class="form-control">
                                 <option value="-1">全部</option>
-                                <option value="0">未签约</option>
-                                <option value="1">流程中</option>
-                                <option value="2">已签约</option>
+                                <option value="0">草稿</option>
+                                <option value="1">待审核</option>
+                                <option value="101">审核不过</option>
+                                <option value="2">待评价</option>
+                                <option value="3">已评价</option>
+                                <option value="4">评价完成</option>
                             </select>
                           </div>
                         </div>
@@ -136,10 +138,6 @@
                           <button type="button" class="btn btn-default pull-center" style="margin-left: 20px;" onclick="resetSearch();"><i class="fa fa-rotate-left"></i>&nbsp;重置</button>
                       </div>
                     </form>
-                </div>
-                <div class="tblToolbar">
-                    <button class="btn btn-default" data-toggle="modal" data-target="#productModal"><i class="fa fa-plus"></i>&nbsp;新建作品</button>
-                    <button class="btn btn-default ml10" onclick="batchCreateContract();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>
                 </div>
                 <div class="box-body">
                   <table id="productTbl" class="table table-bordered table-hover">
@@ -151,7 +149,7 @@
                         <th>出版状态</th>
                         <th>出版/完结时间</th>
                         <th>题材</th>
-                        <th>签约状态</th>
+                        <th>状态</th>
                         <th>操作</th>
                       </tr>
                     </thead>
@@ -166,282 +164,12 @@
       <%@ include file="../footer.jsp"%>
     </div><!-- ./wrapper -->
 
-    <div id="productModal" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">新建作品</h4>
-          </div>
-          <div class="modal-body">
-            <form class="form-horizontal">
-                <input id="inputId" type="hidden"/>
-                <div class="clearfix">
-                    <div class="col-xs-12">
-                      <div class="form-group required">
-                          <label for="inputName" class="col-xs-2 control-label">名称</label>
-                          <div class="col-xs-10">
-                              <input type="text" class="form-control" id="inputName" placeholder="名称" onblur="validateName();">
-                              <div class="feedback-tip">
-                                <label for="inputName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-6">
-                      <div class="form-group required">
-                          <label for="inputAuthorName" class="col-xs-4 control-label">作者</label>
-                          <div class="col-xs-8">
-                              <input type="text" class="form-control" id="inputAuthorName" placeholder="作者" onblur="validateAuthorName();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputAuthorName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                      </div>
-                    </div>  
-                    <div class="col-xs-6">
-                      <div class="form-group">
-                          <label for="inputAuthorPseudonym" class="col-xs-4 control-label">作者笔名</label>
-                          <div class="col-xs-8">
-                              <input type="text" class="form-control" id="inputAuthorPseudonym" placeholder="作者笔名">
-                          </div>
-                      </div>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-6">
-                        <div class="form-group required">
-                          <label for="inputWordCount" class="col-xs-4 control-label">字数</label>
-                          <div class="col-xs-8">
-                              <input type="text" class="form-control" id="inputWordCount" placeholder="单位：万字" onblur="validateWordCount();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputWordCount"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="form-group required">
-                          <label for="inputSubject" class="col-xs-4 control-label">作品题材</label>
-                          <div class="col-xs-8">
-                              <select id="inputSubject" class="form-control">
-                                  <option value="1">穿越</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>    
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-6">
-                        <div class="form-group required">
-                          <label for="inputPublishState" class="col-xs-4 control-label">出版状态</label>
-                          <div class="col-xs-8">
-                              <select id="inputPublishState" class="form-control" onchange="changePublishState();">
-                                  <option value="0">已出版</option>
-                                  <option value="1">网络签约</option>
-                                  <option value="2">网络未签约</option>
-                                  <option value="3">未公开</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>
-                    <div id="publishYearDiv" class="col-xs-6">
-                        <div class="form-group required">
-                          <label id="publishYearLabel" for="inputPublishYear" class="col-xs-4 control-label">出版年份</label>
-                          <div class="col-xs-8">
-                              <select id="inputPublishYear" class="form-control">
-                                  <option value="2016">2016</option>
-                                  <option value="2015">2015</option>
-                                  <option value="2014">2014</option>
-                                  <option value="2013">2013</option>
-                                  <option value="2013">2012</option>
-                                  <option value="2013">2011</option>
-                                  <option value="2013">2010</option>
-                                  <option value="2013">2009</option>
-                                  <option value="2013">2008</option>
-                                  <option value="2013">2007</option>
-                                  <option value="2013">2006</option>
-                                  <option value="2013">2005</option>
-                                  <option value="2013">2004</option>
-                                  <option value="2013">2003</option>
-                                  <option value="2013">2002</option>
-                                  <option value="2013">2001</option>
-                                  <option value="2013">2000</option>
-                                  <option value="2013">1999</option>
-                                  <option value="2013">1998</option>
-                                  <option value="2013">1997</option>
-                                  <option value="2013">1996</option>
-                                  <option value="2013">1995</option>
-                                  <option value="2013">1994</option>
-                                  <option value="2013">1993</option>
-                                  <option value="2013">1992</option>
-                                  <option value="2013">1991</option>
-                                  <option value="2013">1990</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>
-                    <div id="finishYearDiv" class="col-xs-6" style="display:none;">
-                        <div class="form-group required">
-                          <label for="inputFinishYear" class="col-xs-4 control-label">完结年份</label>
-                          <div class="col-xs-8">
-                              <select id="inputFinishYear" class="form-control">
-                                  <option value="2016">2016</option>
-                                  <option value="2015">2015</option>
-                                  <option value="2014">2014</option>
-                                  <option value="2013">2013</option>
-                                  <option value="2013">2012</option>
-                                  <option value="2013">2011</option>
-                                  <option value="2013">2010</option>
-                                  <option value="2013">2009</option>
-                                  <option value="2013">2008</option>
-                                  <option value="2013">2007</option>
-                                  <option value="2013">2006</option>
-                                  <option value="2013">2005</option>
-                                  <option value="2013">2004</option>
-                                  <option value="2013">2003</option>
-                                  <option value="2013">2002</option>
-                                  <option value="2013">2001</option>
-                                  <option value="2013">2000</option>
-                                  <option value="2013">1999</option>
-                                  <option value="2013">1998</option>
-                                  <option value="2013">1997</option>
-                                  <option value="2013">1996</option>
-                                  <option value="2013">1995</option>
-                                  <option value="2013">1994</option>
-                                  <option value="2013">1993</option>
-                                  <option value="2013">1992</option>
-                                  <option value="2013">1991</option>
-                                  <option value="2013">1990</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="pressDiv" class="clearfix">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputPress" class="col-xs-2 control-label">出版社</label>
-                          <div class="col-xs-10">
-                              <input type="text" class="form-control" id="inputPress" placeholder="出版社" onblur="validatePress();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputPress"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="isbnDiv" class="clearfix">
-                    <div id="isbnDiv" class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputIsbn" class="col-xs-2 control-label">ISBN</label>
-                          <div class="col-xs-10">
-                              <input type="text" class="form-control" id="inputIsbn" placeholder="ISBN号" onblur="validateIsbn();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputIsbn"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="websiteDiv" class="clearfix" style="display: none;">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputWebsite" class="col-xs-2 control-label">签约网站</label>
-                          <div class="col-xs-10">
-                              <input type="text" class="form-control" id="inputWebsite" placeholder="签约网站" onblur="validateWebsite();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputWebsite"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>    
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputSummary" class="col-xs-2 control-label">内容简介</label>
-                          <div class="col-xs-10">
-                              <textarea id="inputSummary" class="form-control" rows="4" placeholder="内容简介 ..."></textarea>
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputSummary"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputFile" class="col-xs-2 control-label">样章</label>
-                          <div id="samplesUploadDiv" class="col-xs-10">
-                              <input  id="importFile" name="importFile" type="file" class="form-control"/>
-                              <input id="inputSamples" type="hidden"/>
-                              <ul id="uploadedFile"></ul>
-                          </div>
-                          <div id="samplesShowDiv" class="col-xs-10 checkbox" style="display:none;">
-                              <a href='#' class="label bg-gray">下载</a>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputHasAudio" class="col-xs-2 control-label">网络音频</label>
-                          <div class="col-xs-10">
-                              <div class="col-xs-2 radio">
-                                  <label for="hasAudio"><input id="hasAudio" name="hasAudio" type="radio" value="1" onclick="hasAudioClick();"/>有</label>
-                              </div>
-                              <div class="col-xs-2 radio">
-                                  <label for="noAudio"><input id="noAudio" name="hasAudio" type="radio" value="0" checked onclick="noAudioClick();"/>无</label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="audioCopyrightDiv" class="clearfix" style="display: none;">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                          <label for="inputAudioCopyright" class="col-xs-2 control-label">音频情况</label>
-                          <div class="col-xs-10">
-                              <select id="inputAudioCopyright" class="form-control">
-                                  <option value="1">有正规授权</option>
-                                  <option value="1">无正规授权</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="audioDescDiv" class="clearfix" style="display: none;">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputAudioDesc" class="col-sm-2 control-label">音频备注</label>
-                          <div class="col-sm-10">
-                              <textarea id="inputAudioDesc" class="form-control" rows="2" placeholder="音频备注 ..."></textarea>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <input type="hidden" id="sampleUrls">
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearProductModal();">关闭</button>
-            <button type="button" class="btn btn-emarm" onclick="submitProduct('0');">保存</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    
     <div id="contractModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">新建版权合同</h4>
+            <h4 class="modal-title">新建销售合同</h4>
           </div>
           <div class="modal-body">
               <form class="form-horizontal">
@@ -684,35 +412,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearProductModal();">关闭</button>
-            <button type="button" class="btn btn-emarm" onclick="submitCopyrightContract();">确定</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-
-    <div id="auditModal" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">作品审核</h4>
-          </div>
-          <div class="modal-body">
-              <p>待审核作品：<span id="auditProductName"></span></p>
-              <form class="form-horizontal">
-                  <input type="hidden" id="auditProductId"/>
-                  <div class="col-md-12">
-                  <div class="form-group">
-                    <label>审核意见</label>
-                    <textarea id="auditText" class="form-control" multiple="multiple" data-placeholder="审核意见" style="width: 100%;"></textarea>
-                  </div><!-- /.form-group -->
-                  </div>
-              </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeAuditModal();">关闭</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="rejectProduct();">不通过</button>
-            <button type="button" class="btn btn-emarm" onclick="passProduct();">通过</button>
+            <button type="button" class="btn btn-emarm" onclick="submitSaleContract();">确定</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -772,38 +472,26 @@
       var table;
     
       $(document).ready(function(){
-          $('#menu_copyright').addClass('active');
-          $('#menu_cc_product').addClass('active');
-      
-          $('#importFile').fileupload({
-              url: '<idp:url value="/uploadDoc"/>',
-              dataType: 'json',
-              done: function (e, data) {
-                     var fileUrl = data['result']['data'][0]['fileUrl'];
-                     var fileName = data['result']['data'][0]['fileName'];
-                     $('#uploadedFile').append('<li>'+fileName+'</li>');
-                     $('#inputSamples').val(fileUrl);
-              }
-          });
+          $('#menu_sale').addClass('active');
+          $('#menu_sale_prod').addClass('active');
       
           initProductTbl();
-          loadCategories();
-          loadUsers();
+          //loadCategories();
       });
       
-      function loadUsers() {
+      function loadExtMakers() {
           $.get(
-              '<idp:url value="/system/users"/>?status=1',
+              '<idp:url value="/system/extMakers"/>',
               {},
               function(json) {
                   var result = IDEA.parseJSON(json);
                   if(result.type == 'success') {
                       var users = result.data;
                       var html = template('userSelectorTmpl', {"userlist" : users});
-                      $('#inviteEvaluator').empty().append(html);
+                      $('#inputMaker').empty().append(html);
                   }
               
-                  $("#inviteEvaluator").select2();
+                  $("#inputMaker").select2({ width: 'auto' });
               }
           )
       }
@@ -818,10 +506,8 @@
                       var subjects = result.data;
                       var html = template('categoryTmpl', {"cglist" : subjects});
                       $('#inputSubject').empty().append(html);
-                      $('#inputSearchSubject').empty()
-                                              .append('<option value="-1">全部</option>')
-                                              .append(html);
                   }
+                  //$("#inputSubject").select2();
               }
           )
       }
@@ -836,7 +522,7 @@
               "info": true,
               "autoWidth": false,
               "serverSide": true,
-              "ajax": {url: '<idp:url value="/copyright/dtProducts"/>',
+              "ajax": {url: '<idp:url value="/sale/dtProducts"/>',
                   "data": function(d) {
                       var productName = $('#inputSearchProductName').val();
                       if(productName && $.trim(productName).length > 0) {
@@ -936,15 +622,7 @@
                   {
                       "targets": [6],
                       "render": function(data, type, full) {
-                          if(full.state == 4 || full.state == 0) {
-                              return '未签约';
-                          }else if(full.state == 5){
-                              return '流程中';
-                          }else if(full.state == 6) {
-                              return '签约完成';
-                          }else{
-                              return '';
-                          }
+                          return full.stateText;
                       }
                   },
                   {
@@ -953,10 +631,12 @@
                           var role = '${sessionScope.__SESSION__USER__.role}';
                       
                           var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
-                              
-                          if(full.state == '4' || full.state == '0') {
-                              html += '<span class="small">|</span> ';
-                              html += '<a onclick="popContractModal(\'' + full.id + '\');">新建合同</a>';
+                              html += ' <span class="small">|</span> ';
+                              html += '<a onclick="popContractModal(\'' + full.id + '\');">创建合同</a>';
+                          
+                          if(full.contractCount && full.contractCount > 0) {
+                              html += ' <span class="small">|</span> ';
+                              html += '<a href=\'<idp:url value="/sale/productContractPage"/>?productId=' + full.id +'\'>查看合同</a>';
                           }
                           
                           return html;
@@ -970,75 +650,113 @@
           table.ajax.reload();
       }
       
-      function resetSearch() {
-          $('#inputSearchProductName').val('');
-          $('#inputSearchAuthorName').val('');
-          $('#inputSearchIsbn').val('');
-          $('#inputSearchSubject')[0].selectedIndex = 0;
-          $('#inputSearchPublishState')[0].selectedIndex = 0;
-          $('#inputSearchState')[0].selectedIndex = 0;
+      //--------------- 新建合同 ---------------------
+      function popContractModal(id) {
+          $.get(
+              '<idp:url value="/evaluation/product"/>/'+id,
+              {},
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      clearContractModal();
+                      var prod = result.data;
+                      $('#contractProductIds').val(id);
+                      
+                      var prodTblHtml = template('contractProdTblTmpl', {'prodlist': [prod]});
+                      $('#contractProductTbl').html(prodTblHtml);
+                      $('#inputOwner').val('北京悦库时光文化传媒有限公司');
+                      $('#inputBuyer').val('');
+                      
+                      $('#contractModal').modal('show');
+                  }
+              }
+          );
       }
       
-      function submitProduct(submit) {
-          var r = false;
-          if(submit == '0') {
-              r = validateName();
-          }else{
-              r = validateName()
-                    && validateAuthorName()
-                    && validateWordCount();
-          }
+      function clearContractModal(){
+          $('#contractProductTbl').empty();
+      }
       
-          if(!r) {
-              return ;
-          }else{
-              var name = $('#inputName').val();
-              var authorName = $('#inputAuthorName').val();
-              var authorPseudonym = $('#inputAuthorPseudonym').val();
-              var wordCount = $('#inputWordCount').val();
-              var subject = $('#inputSubject').val();
-              var publishState = $('#inputPublishState').val();
-              var publishYear = $('#inputPublishYear').val();
-              var press = $('#inputPress').val();
-              var finishYear = $('#inputFinishYear').val();
-              var website = $('#inputWebsite').val();
-              var summary = $('#inputSummary').val();
-              var hasAudio = $('input[name=hasAudio]:checked').val();
-              var audioCopyright = $('#inputAudioCopyright').val();
-              var audioDesc = $('#inputAudioDesc').val();
-              var samples = $('#inputSamples').val();
-              
-              $.post(
-                  '<idp:url value="/evaluation/product"/>',
-                  {
-                      'name': name,
-                      'authorName': authorName,
-                      'authorPseudonym': authorPseudonym,
-                      'wordCount': wordCount,
-                      'subject': subject,
-                      'publishState': publishState,
-                      'publishYear': publishYear,
-                      'press': press,
-                      'finishYear': finishYear,
-                      'website': website,
-                      'summary': summary,
-                      'hasAudio': hasAudio,
-                      'audioCopyright': audioCopyright,
-                      'audioDesc': audioDesc,
-                      'samples': samples,
-                      'submit': submit
-                  },
-                  function(json) {
-                      var result = IDEA.parseJSON(json);
-                      if(result.type == 'success') {
-                          alert('保存成功');
-                          clearProductModal();
-                          $('#productModal').modal('hide');
-                          table.ajax.reload();
-                      }
-                  }
-              );       
+      function submitSaleContract() {
+          var contractId = $('#inputContractId').val();
+          var totalPrice = $('#inputTotalPrice').val();
+          
+          var priceEles = $('input[id^=inputPrice_]');
+          var idarr = [];
+          var pricearr = [];
+          for(var i=0; i<priceEles.length; i++) {
+              var ele = priceEles[i];
+              var prodId = $(ele).attr('rel');
+              idarr.push(prodId);
+              pricearr.push($(ele).val());
           }
+          var contractProductIds = idarr.join(',');
+          var prices = pricearr.join(',');
+          
+          var owner = $('#inputOwner').val();
+          var ownerContact = $('#inputOwnerContact').val();
+          var ownerContactPhone = $('#inputOwnerContactPhone').val();
+          var ownerContactAddress = $('#inputOwnerContactAddress').val();
+          var ownerContactEmail = $('#inputOwnerContactEmail').val();
+          
+          var buyer = $('#inputBuyer').val();
+          var buyerContact = $('#inputBuyerContact').val();
+          var buyerContactPhone = $('#inputBuyerContactPhone').val();
+          var buyerContactAddress = $('#inputBuyerContactAddress').val();
+          var buyerContactEmail = $('#inputBuyerContactEmail').val();
+          
+          var checkPrivgs = $('input[name=inputPrivileges]:checked');
+          var privgArr = [];
+          for(var j=0; j<checkPrivgs.length; j++) {
+              privgArr.push($(checkPrivgs[j]).val());
+          }
+          var privileges = privgArr.join(',');
+          var privilegeType = $('#inputPrivilegeType').val();
+          var privilegeRange = $('#inputPrivilegeRange').val();
+          var privilegeDeadline = $('#inputPrivilegeDeadline').val();
+          
+          var bankAccountName = $('#inputBankAccountName').val();
+          var bankAccountNo = $('#inputBankAccountNo').val();
+          var bank = $('#inputBank').val();
+          
+          $.post(
+              '<idp:url value="/sale/saleContract"/>',
+              {
+                  'contractId': contractId,
+                  'totalPrice': totalPrice,
+                  'contractProductIds' : contractProductIds,
+                  'prices': prices,
+                  'owner': owner,
+                  'ownerContact': ownerContact,
+                  'ownerContactPhone': ownerContactPhone,
+                  'ownerContactAddress': ownerContactAddress,
+                  'ownerContactEmail': ownerContactEmail,
+                  'buyer': buyer,
+                  'buyerContact': buyerContact,
+                  'buyerContactPhone': buyerContactPhone,
+                  'buyerContactAddress': buyerContactAddress,
+                  'buyerContactEmail': buyerContactEmail,
+                  'privileges': privileges,
+                  'privilegeType': privilegeType,
+                  'privilegeRange': privilegeRange,
+                  'privilegeDeadline': privilegeDeadline,
+                  'bankAccountName': bankAccountName,
+                  'bankAccountNo': bankAccountName,
+                  'bank': bank,
+                  'submit': 1
+              },
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      alert('保存成功');
+                      clearContractModal();
+                      $('#contractModal').modal('hide');
+                      window.location.reload();
+                  }else{
+                      alert('保存失败，请重试或联系管理员');
+                  }
+              }
+          );
       }
       
       function validateName() {
@@ -1098,8 +816,8 @@
           }
       }
       
-      function clearProductModal() {
-          $('#inputName').val('');
+      function clearTaskModal() {
+          $('#inputProductId').val('');
       }
       
       function popAuditProduct(id, name) {
@@ -1143,7 +861,7 @@
           });
       }
       
-      function batchCreateContract() {
+      function batchDeleteAuthors() {
           var ids = [];
           $('.tblRowCheckbox:checked').each(function(){
               ids.push($(this).val());
@@ -1154,7 +872,23 @@
               return ;
           }
       
-          
+          var r = confirm("您真的要删除这些作者吗？");
+          if(r) {
+              $.post(
+                  '<idp:url value="/system/batchDeleteAuthor"/>',
+                  {
+                      '_method': "delete",
+                      'ids': ids.join(',')
+                  },
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('删除成功');
+                          table.ajax.reload();
+                      }
+                  }
+              );
+          }
       }
       
       function changePublishState() {
@@ -1165,6 +899,7 @@
               $('#finishYearLabel').hide();
               $('#finishYearDiv').hide();
               $('#pressDiv').show();
+              $('#isbnDiv').show();
               $('#websiteDiv').hide();
           }else{
               if(publishState == '1') {
@@ -1178,6 +913,7 @@
               $('#finishYearLabel').show();
               $('#finishYearDiv').show();
               $('#pressDiv').hide();
+              $('#isbnDiv').hide();
           }
       }
       
@@ -1191,108 +927,34 @@
           $('#audioDescDiv').hide();
       }
       
-      //--------------- 新建合同 ---------------------
-      function popContractModal(id) {
-          $.get(
-              '<idp:url value="/evaluation/product"/>/'+id,
-              {},
-              function(json) {
-                  var result = IDEA.parseJSON(json);
-                  if(result.type == 'success') {
-                      clearContractModal();
-                      var prod = result.data;
-                      $('#contractProductIds').val(id);
-                      
-                      var prodTblHtml = template('contractProdTblTmpl', {'prodlist': [prod]});
-                      $('#contractProductTbl').html(prodTblHtml);
-                      $('#inputOwner').val(prod.author.name);
-                      $('#inputBuyer').val('北京悦库时光文化传媒有限公司');
-                      
-                      $('#contractModal').modal('show');
-                  }
-              }
-          );
+      //--------------- 评价 ---------------------
+      function popEvaluationModal(id, name) {
+          $('#evaluateProductName').text(name);
+          $('#evaluateProductId').val(id);
+          $('#evaluationModal').modal('show');
       }
       
-      function clearContractModal(){
-          $('#contractProductTbl').empty();
+      function clearEvaluationModal() {
+          $('#evaluateProductName').text();
+          $('#evaluateProductId').val('');
+          $('#inviteEvaluator').val('');
       }
       
-      function submitCopyrightContract() {
-          var contractId = $('#inputContractId').val();
-          var totalPrice = $('#inputTotalPrice').val();
+      function submitEvaluate() {
+          var s = $('#inviteEvaluator').val();
+          var proId = $('#evaluateProductId').val();
           
-          var priceEles = $('input[id^=inputPrice_]');
-          var idarr = [];
-          var pricearr = [];
-          for(var i=0; i<priceEles.length; i++) {
-              var ele = priceEles[i];
-              var prodId = $(ele).attr('rel');
-              idarr.push(prodId);
-              pricearr.push($(ele).val());
+          if(!s || $.trim(s).length == 0) {
+              alert('您没有选择任何评价人，无法发送邀请.');
           }
-          var contractProductIds = idarr.join(',');
-          var prices = pricearr.join(',');
-          
-          var owner = $('#inputOwner').val();
-          var ownerContact = $('#inputOwnerContact').val();
-          var ownerContactPhone = $('#inputOwnerContactPhone').val();
-          var ownerContactAddress = $('#inputOwnerContactAddress').val();
-          var ownerContactEmail = $('#inputOwnerContactEmail').val();
-          
-          var buyer = $('#inputBuyer').val();
-          var buyerContact = $('#inputBuyerContact').val();
-          var buyerContactPhone = $('#inputBuyerContactPhone').val();
-          var buyerContactAddress = $('#inputBuyerContactAddress').val();
-          var buyerContactEmail = $('#inputBuyerContactEmail').val();
-          
-          var checkPrivgs = $('input[name=inputPrivileges]:checked');
-          var privgArr = [];
-          for(var j=0; j<checkPrivgs.length; j++) {
-              privgArr.push($(checkPrivgs[j]).val());
-          }
-          var privileges = privgArr.join(',');
-          var privilegeType = $('#inputPrivilegeType').val();
-          var privilegeRange = $('#inputPrivilegeRange').val();
-          var privilegeDeadline = $('#inputPrivilegeDeadline').val();
-          
-          var bankAccountName = $('#inputBankAccountName').val();
-          var bankAccountNo = $('#inputBankAccountNo').val();
-          var bank = $('#inputBank').val();
           
           $.post(
-              '<idp:url value="/copyright/copyrightContract"/>',
+              '<idp:url value="/evaluation/inviteEvaluation/"/>'+proId,
               {
-                  'contractId': contractId,
-                  'totalPrice': totalPrice,
-                  'contractProductIds' : contractProductIds,
-                  'prices': prices,
-                  'owner': owner,
-                  'ownerContact': ownerContact,
-                  'ownerContactPhone': ownerContactPhone,
-                  'ownerContactAddress': ownerContactAddress,
-                  'ownerContactEmail': ownerContactEmail,
-                  'buyer': buyer,
-                  'buyerContact': buyerContact,
-                  'buyerContactPhone': buyerContactPhone,
-                  'buyerContactAddress': buyerContactAddress,
-                  'buyerContactEmail': buyerContactEmail,
-                  'privileges': privileges,
-                  'privilegeType': privilegeType,
-                  'privilegeRange': privilegeRange,
-                  'privilegeDeadline': privilegeDeadline,
-                  'bankAccountName': bankAccountName,
-                  'bankAccountNo': bankAccountNo,
-                  'bank': bank,
-                  'submit': 1
+                  'userIds': s+''
               },
               function(json) {
-                  var result = IDEA.parseJSON(json);
-                  if(result.type == 'success') {
-                      alert('保存成功');
-                  }else{
-                      alert('保存失败，请重试或联系管理员');
-                  }
+                  alert(json);
               }
           );
       }
@@ -1323,13 +985,62 @@
           );
       }
       
-      function resetSearch() {
-          $('#inputSearchProductName').val('');
-          $('#inputSearchAuthorName').val('');
-          $('#inputSearchIsbn').val('');
-          $('#inputSearchSubject')[0].selectedIndex = 0;
-          $('#inputSearchPublishState')[0].selectedIndex = 0;
-          $('#inputSearchState')[0].selectedIndex = 0;
+      function popEditModal(id) {
+          $.get(
+              '<idp:url value="/evaluation/product"/>/'+id,
+              {},
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      clearProductModal();
+                      var prod = result.data;
+                      
+                      $('#inputId').val(prod.id);
+                      $('#inputName').val(prod.name);
+                      $('#inputAuthorName').val(prod.author.name);
+                      $('#inputAuthorPseudonym').val(prod.author.pseudonym);
+                      $('#inputWordCount').val(prod.wordCount);
+                      $('#inputSubject').find('option[value=' + prod.subject.id + ']').attr('selected', true);
+                      $('#inputPublishState').find('option[value=' + prod.publishState + ']').attr('selected', true);
+                      if(prod.publishState == 0) {
+                          $('#inputPublishYear').find('option[value=' + prod.publishYear + ']').attr('selected', true);
+                          $('#inputPress').val(prod.press);
+                          $('#inputIsbn').val(prod.isbn);
+                      }else{
+                          $('#publishYearDiv').hide();
+                          $('#pressDiv').hide();
+                          $('#isbnDiv').hide();
+                          $('#inputFinishYear').find('option[value=' + prod.finishYear + ']').attr('selected', true);
+                          $('#finishYearDiv').show();
+                          if(prod.publishState == 1) {
+                              $('#inputWebsite').val(prod.website);
+                              $('#websiteDiv').show();
+                          }
+                      }
+                      $('#inputSummary').val(prod.summary);
+                      if(prod.samples.length > 0) {
+                          $('#samplesShowDiv a').attr('href', '<idp:url value=""/>' + prod.samples[0].fileUrl);
+                          $('#samplesUploadDiv').hide();
+                          $('#samplesShowDiv').show();
+                      }
+                      
+                      if(prod.hasAudio == '1') {
+                          $('#hasAudio').attr('checked', true);
+                          $('#inputAudioCopyright').find('option[value=' + prod.audioCopyright + ']').attr('selected', true);
+                          $('#inputAudioDesc').val(prod.audioDesc);
+                          $('#audioCopyrightDiv').show();
+                          $('#audioDescDiv').show();
+                      }else{
+                          $('#noAudio').attr('checked', true);
+                          $('#inputAudioDesc').val('');
+                          $('#audioCopyrightDiv').hide();
+                          $('#audioDescDiv').hide();
+                      }
+                      
+                      $('#productModal').modal('show');
+                  }
+              }
+          );
       }
     </script>
   </body>

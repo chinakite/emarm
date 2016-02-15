@@ -41,8 +41,16 @@
                 </a>
               </li>
               <!-- Control Sidebar Toggle Button -->
-              <li>
-                <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
+                <ul class="dropdown-menu">
+                    <li>
+                        <a><i class="fa fa-cog"></i>修改密码</a>
+                    </li>
+                    <li>
+                        <a><i class="fa fa-power-off"></i>退出</a>
+                    </li>
+                </ul>
               </li>
             </ul>
           </div>

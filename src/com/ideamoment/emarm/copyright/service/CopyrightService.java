@@ -174,6 +174,7 @@ public class CopyrightService {
         if(maxCode != null) {
             String[] codeParts = maxCode.split("-");
             intCode = Integer.parseInt(codeParts[1]);
+            intCode++;
         }
         
         DecimalFormat nf = new DecimalFormat("000");

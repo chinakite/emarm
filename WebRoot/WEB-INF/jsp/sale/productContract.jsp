@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 版权管理</title>
+    <title>悦库时光音频资源管理系统 | 运营合同</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -61,12 +61,13 @@
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-          <h1>版权管理
-            <small>所有作品的版权信息。</small>
+          <h1>《${product.name}》的运营合同
+            <small></small>
           </h1>
           <ol class="breadcrumb">
             <li><a href='<idp:url value="/home"/>'><i class="fa fa-home"></i> 首页</a></li>
-            <li class="active">版权管理</li>
+            <li><i class="fa fa-book"></i> 合同维度</li>
+            <li class="active">作品合同</li>
           </ol>
         </section>
 
@@ -76,57 +77,35 @@
             <div class="col-xs-12">
               <div class="box">
                 <div class="box-header">
-                  <h3 class="box-title">作品列表</h3>
+                  <h3 class="box-title">合同列表</h3>
                 </div><!-- /.box-header -->
                 <div>
                     <form class="form-horizontal">
                       <div class="box-body">
                         <div class="form-group col-sm-4">
-                          <label for="inputSearchProductName" class="col-sm-3 control-label">作品名称</label>
+                          <label for="inputSearchCode" class="col-sm-3 control-label">合同编号</label>
                           <div class="col-sm-9">
-                            <input type="text" class="form-control" id="inputSearchProductName" placeholder="作品名称关键字">
+                            <input type="text" class="form-control" id="inputSearchCode" placeholder="合同编号">
                           </div>
                         </div>
                         <div class="form-group col-sm-4">
-                          <label for="inputSearchAuthorName" class="col-sm-3 control-label">作者姓名</label>
+                          <label for="inputSearchOwner" class="col-sm-3 control-label">甲方</label>
                           <div class="col-sm-9">
-                            <input type="text" class="form-control" id="inputSearchAuthorName" placeholder="作者姓名">
+                            <input type="text" class="form-control" id="inputSearchOwner" placeholder="甲方关键字">
                           </div>
                         </div>
                         <div class="form-group col-sm-4">
-                          <label for="inputSearchIsbn" class="col-sm-3 control-label">ISBN号</label>
+                          <label for="inputSearchAudithState" class="col-sm-3 control-label">审批状态</label>
                           <div class="col-sm-9">
-                            <input type="text" class="form-control" id="inputSearchIsbn" placeholder="ISBN号">
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchSubject" class="col-sm-3 control-label">作品题材</label>
-                          <div class="col-sm-9">
-                            <select id="inputSearchSubject" class="form-control">
+                            <select id="inputSearchAudithState" class="form-control">
                                 <option value="-1">全部</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchPublishState" class="col-sm-3 control-label">出版状态</label>
-                          <div class="col-sm-9">
-                            <select id="inputSearchPublishState" class="form-control">
-                                <option value="-1">全部</option>
-                                <option value="0">已出版</option>
-                                <option value="1">网络签约</option>
-                                <option value="2">网络未签约</option>
-                                <option value="3">未公开</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchState" class="col-sm-3 control-label">签约状态</label>
-                          <div class="col-sm-9">
-                            <select id="inputSearchState" class="form-control">
-                                <option value="-1">全部</option>
-                                <option value="0">未签约</option>
-                                <option value="1">流程中</option>
-                                <option value="2">已签约</option>
+                                <option value="1">待主管审批</option>
+                                <option value="2">待经理审批</option>
+                                <option value="3">待总经理审批</option>
+                                <option value="4">业务审批完成</option>
+                                <option value="5">待法务审批</option>
+                                <option value="6">待法务确认</option>
+                                <option value="100">已完成</option>
                             </select>
                           </div>
                         </div>
@@ -138,20 +117,21 @@
                     </form>
                 </div>
                 <div class="tblToolbar">
-                    <button class="btn btn-default" data-toggle="modal" data-target="#productModal"><i class="fa fa-plus"></i>&nbsp;新建作品</button>
-                    <button class="btn btn-default ml10" onclick="batchCreateContract();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>
+                    <button class="btn btn-default ml10" onclick="batchDeleteAuthors();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>
                 </div>
                 <div class="box-body">
                   <table id="productTbl" class="table table-bordered table-hover">
                     <thead>
                       <tr>
                         <th width="1" style="padding-right:8px;"><input type="checkbox" onclick="checkAll(this);"/></th>
-                        <th>名称</th>
-                        <th>作者</th>
-                        <th>出版状态</th>
-                        <th>出版/完结时间</th>
-                        <th>题材</th>
-                        <th>签约状态</th>
+                        <th>合同编号</th>
+                        <th>甲方</th>
+                        <th>乙方联系人</th>
+                        <th>版权</th>
+                        <th>版权类型</th>
+                        <th>版权范围</th>
+                        <th>版权期限</th>
+                        <th>审批状态</th>
                         <th>操作</th>
                       </tr>
                     </thead>
@@ -165,283 +145,13 @@
       
       <%@ include file="../footer.jsp"%>
     </div><!-- ./wrapper -->
-
-    <div id="productModal" class="modal fade" tabindex="-1" role="dialog">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">新建作品</h4>
-          </div>
-          <div class="modal-body">
-            <form class="form-horizontal">
-                <input id="inputId" type="hidden"/>
-                <div class="clearfix">
-                    <div class="col-xs-12">
-                      <div class="form-group required">
-                          <label for="inputName" class="col-xs-2 control-label">名称</label>
-                          <div class="col-xs-10">
-                              <input type="text" class="form-control" id="inputName" placeholder="名称" onblur="validateName();">
-                              <div class="feedback-tip">
-                                <label for="inputName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-6">
-                      <div class="form-group required">
-                          <label for="inputAuthorName" class="col-xs-4 control-label">作者</label>
-                          <div class="col-xs-8">
-                              <input type="text" class="form-control" id="inputAuthorName" placeholder="作者" onblur="validateAuthorName();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputAuthorName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                      </div>
-                    </div>  
-                    <div class="col-xs-6">
-                      <div class="form-group">
-                          <label for="inputAuthorPseudonym" class="col-xs-4 control-label">作者笔名</label>
-                          <div class="col-xs-8">
-                              <input type="text" class="form-control" id="inputAuthorPseudonym" placeholder="作者笔名">
-                          </div>
-                      </div>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-6">
-                        <div class="form-group required">
-                          <label for="inputWordCount" class="col-xs-4 control-label">字数</label>
-                          <div class="col-xs-8">
-                              <input type="text" class="form-control" id="inputWordCount" placeholder="单位：万字" onblur="validateWordCount();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputWordCount"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                    <div class="col-xs-6">
-                        <div class="form-group required">
-                          <label for="inputSubject" class="col-xs-4 control-label">作品题材</label>
-                          <div class="col-xs-8">
-                              <select id="inputSubject" class="form-control">
-                                  <option value="1">穿越</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>    
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-6">
-                        <div class="form-group required">
-                          <label for="inputPublishState" class="col-xs-4 control-label">出版状态</label>
-                          <div class="col-xs-8">
-                              <select id="inputPublishState" class="form-control" onchange="changePublishState();">
-                                  <option value="0">已出版</option>
-                                  <option value="1">网络签约</option>
-                                  <option value="2">网络未签约</option>
-                                  <option value="3">未公开</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>
-                    <div id="publishYearDiv" class="col-xs-6">
-                        <div class="form-group required">
-                          <label id="publishYearLabel" for="inputPublishYear" class="col-xs-4 control-label">出版年份</label>
-                          <div class="col-xs-8">
-                              <select id="inputPublishYear" class="form-control">
-                                  <option value="2016">2016</option>
-                                  <option value="2015">2015</option>
-                                  <option value="2014">2014</option>
-                                  <option value="2013">2013</option>
-                                  <option value="2013">2012</option>
-                                  <option value="2013">2011</option>
-                                  <option value="2013">2010</option>
-                                  <option value="2013">2009</option>
-                                  <option value="2013">2008</option>
-                                  <option value="2013">2007</option>
-                                  <option value="2013">2006</option>
-                                  <option value="2013">2005</option>
-                                  <option value="2013">2004</option>
-                                  <option value="2013">2003</option>
-                                  <option value="2013">2002</option>
-                                  <option value="2013">2001</option>
-                                  <option value="2013">2000</option>
-                                  <option value="2013">1999</option>
-                                  <option value="2013">1998</option>
-                                  <option value="2013">1997</option>
-                                  <option value="2013">1996</option>
-                                  <option value="2013">1995</option>
-                                  <option value="2013">1994</option>
-                                  <option value="2013">1993</option>
-                                  <option value="2013">1992</option>
-                                  <option value="2013">1991</option>
-                                  <option value="2013">1990</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>
-                    <div id="finishYearDiv" class="col-xs-6" style="display:none;">
-                        <div class="form-group required">
-                          <label for="inputFinishYear" class="col-xs-4 control-label">完结年份</label>
-                          <div class="col-xs-8">
-                              <select id="inputFinishYear" class="form-control">
-                                  <option value="2016">2016</option>
-                                  <option value="2015">2015</option>
-                                  <option value="2014">2014</option>
-                                  <option value="2013">2013</option>
-                                  <option value="2013">2012</option>
-                                  <option value="2013">2011</option>
-                                  <option value="2013">2010</option>
-                                  <option value="2013">2009</option>
-                                  <option value="2013">2008</option>
-                                  <option value="2013">2007</option>
-                                  <option value="2013">2006</option>
-                                  <option value="2013">2005</option>
-                                  <option value="2013">2004</option>
-                                  <option value="2013">2003</option>
-                                  <option value="2013">2002</option>
-                                  <option value="2013">2001</option>
-                                  <option value="2013">2000</option>
-                                  <option value="2013">1999</option>
-                                  <option value="2013">1998</option>
-                                  <option value="2013">1997</option>
-                                  <option value="2013">1996</option>
-                                  <option value="2013">1995</option>
-                                  <option value="2013">1994</option>
-                                  <option value="2013">1993</option>
-                                  <option value="2013">1992</option>
-                                  <option value="2013">1991</option>
-                                  <option value="2013">1990</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="pressDiv" class="clearfix">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputPress" class="col-xs-2 control-label">出版社</label>
-                          <div class="col-xs-10">
-                              <input type="text" class="form-control" id="inputPress" placeholder="出版社" onblur="validatePress();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputPress"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="isbnDiv" class="clearfix">
-                    <div id="isbnDiv" class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputIsbn" class="col-xs-2 control-label">ISBN</label>
-                          <div class="col-xs-10">
-                              <input type="text" class="form-control" id="inputIsbn" placeholder="ISBN号" onblur="validateIsbn();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputIsbn"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="websiteDiv" class="clearfix" style="display: none;">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputWebsite" class="col-xs-2 control-label">签约网站</label>
-                          <div class="col-xs-10">
-                              <input type="text" class="form-control" id="inputWebsite" placeholder="签约网站" onblur="validateWebsite();">
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputWebsite"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>    
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputSummary" class="col-xs-2 control-label">内容简介</label>
-                          <div class="col-xs-10">
-                              <textarea id="inputSummary" class="form-control" rows="4" placeholder="内容简介 ..."></textarea>
-                              <div class="feedback-tip">
-                                <label class="control-label" for="inputSummary"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputFile" class="col-xs-2 control-label">样章</label>
-                          <div id="samplesUploadDiv" class="col-xs-10">
-                              <input  id="importFile" name="importFile" type="file" class="form-control"/>
-                              <input id="inputSamples" type="hidden"/>
-                              <ul id="uploadedFile"></ul>
-                          </div>
-                          <div id="samplesShowDiv" class="col-xs-10 checkbox" style="display:none;">
-                              <a href='#' class="label bg-gray">下载</a>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="clearfix">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputHasAudio" class="col-xs-2 control-label">网络音频</label>
-                          <div class="col-xs-10">
-                              <div class="col-xs-2 radio">
-                                  <label for="hasAudio"><input id="hasAudio" name="hasAudio" type="radio" value="1" onclick="hasAudioClick();"/>有</label>
-                              </div>
-                              <div class="col-xs-2 radio">
-                                  <label for="noAudio"><input id="noAudio" name="hasAudio" type="radio" value="0" checked onclick="noAudioClick();"/>无</label>
-                              </div>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="audioCopyrightDiv" class="clearfix" style="display: none;">
-                    <div class="col-xs-12">
-                        <div class="form-group">
-                          <label for="inputAudioCopyright" class="col-xs-2 control-label">音频情况</label>
-                          <div class="col-xs-10">
-                              <select id="inputAudioCopyright" class="form-control">
-                                  <option value="1">有正规授权</option>
-                                  <option value="1">无正规授权</option>
-                              </select>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <div id="audioDescDiv" class="clearfix" style="display: none;">
-                    <div class="col-xs-12">
-                        <div class="form-group required">
-                          <label for="inputAudioDesc" class="col-sm-2 control-label">音频备注</label>
-                          <div class="col-sm-10">
-                              <textarea id="inputAudioDesc" class="form-control" rows="2" placeholder="音频备注 ..."></textarea>
-                          </div>
-                        </div>
-                    </div>
-                </div>
-                <input type="hidden" id="sampleUrls">
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearProductModal();">关闭</button>
-            <button type="button" class="btn btn-emarm" onclick="submitProduct('0');">保存</button>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
     
     <div id="contractModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">新建版权合同</h4>
+            <h4 class="modal-title">新建销售合同</h4>
           </div>
           <div class="modal-body">
               <form class="form-horizontal">
@@ -684,7 +394,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearProductModal();">关闭</button>
-            <button type="button" class="btn btn-emarm" onclick="submitCopyrightContract();">确定</button>
+            <button type="button" class="btn btn-primary" onclick="submitCopyrightContract();">确定</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -751,13 +461,6 @@
         {{/each}}
     </script>
     
-    <!-- template -->
-    <script id="categoryTmpl" type="text/html">
-        {{each cglist as cg idx}}
-           <option value="{{cg.id}}">{{cg.name}}</option>
-        {{/each}}
-    </script>
-    
     <script id="contractProdTblTmpl" type="text/html">
         {{each prodlist as prod idx}}
            <tr>
@@ -773,22 +476,11 @@
     
       $(document).ready(function(){
           $('#menu_copyright').addClass('active');
-          $('#menu_cc_product').addClass('active');
+          $('#menu_cc_contract').addClass('active');
+          $('#menu_cc_mycontract').addClass('active');
       
-          $('#importFile').fileupload({
-              url: '<idp:url value="/uploadDoc"/>',
-              dataType: 'json',
-              done: function (e, data) {
-                     var fileUrl = data['result']['data'][0]['fileUrl'];
-                     var fileName = data['result']['data'][0]['fileName'];
-                     $('#uploadedFile').append('<li>'+fileName+'</li>');
-                     $('#inputSamples').val(fileUrl);
-              }
-          });
-      
-          initProductTbl();
-          loadCategories();
-          loadUsers();
+          initContractTbl();
+          //loadUsers();
       });
       
       function loadUsers() {
@@ -808,25 +500,7 @@
           )
       }
       
-      function loadCategories() {
-          $.get(
-              '<idp:url value="/system/textSubjects"/>',
-              {},
-              function(json) {
-                  var result = IDEA.parseJSON(json);
-                  if(result.type == 'success') {
-                      var subjects = result.data;
-                      var html = template('categoryTmpl', {"cglist" : subjects});
-                      $('#inputSubject').empty().append(html);
-                      $('#inputSearchSubject').empty()
-                                              .append('<option value="-1">全部</option>')
-                                              .append(html);
-                  }
-              }
-          )
-      }
-      
-      function initProductTbl() {
+      function initContractTbl() {
           table = $('#productTbl').DataTable({
               "processing": true,
               "paging": true,
@@ -836,34 +510,7 @@
               "info": true,
               "autoWidth": false,
               "serverSide": true,
-              "ajax": {url: '<idp:url value="/copyright/dtProducts"/>',
-                  "data": function(d) {
-                      var productName = $('#inputSearchProductName').val();
-                      if(productName && $.trim(productName).length > 0) {
-                          d.productName = productName;
-                      }
-                      var authorName = $('#inputSearchAuthorName').val();
-                      if(authorName && $.trim(authorName).length > 0) {
-                          d.authorName = authorName;
-                      }
-                      var isbn = $('#inputSearchIsbn').val();
-                      if(isbn && $.trim(isbn).length > 0) {
-                          d.isbn = isbn;
-                      }
-                      var subject = $('#inputSearchSubject').val();
-                      if(subject && $.trim(subject).length > 0) {
-                          d.subject = subject;
-                      }
-                      var publishState = $('#inputSearchPublishState').val();
-                      if(publishState && $.trim(publishState).length > 0) {
-                          d.publishState = publishState;
-                      }
-                      var state = $('#inputSearchState').val();
-                      if(state && $.trim(state).length > 0) {
-                          d.state = state;
-                      }
-                  }
-              },
+              "ajax": '<idp:url value="/sale/productContracts"/>?productId=${product.id}',
               language: {
                 "paginate": {
                   "first":      "首页",
@@ -875,6 +522,8 @@
               },
               "columns": [
                 {width:'1px'},
+                {},
+                {},
                 {},
                 {},
                 {},
@@ -893,14 +542,14 @@
                   {
                       "targets": [1],
                       "render": function(data, type, full) {
-                          return full.name;
+                          return full.code;
                       }
                   },
                   {
                       "targets": [2],
                       "render": function(data, type, full) {
-                          if(full.author) {
-                              return full.author.name;
+                          if(full.owner) {
+                              return full.owner;
                           }else{
                               return '';
                           }
@@ -909,52 +558,45 @@
                   {
                       "targets": [3],
                       "render": function(data, type, full) {
-                          return full.publishStateText;
+                          return full.buyerContact;
                       }
                   },
                   {
                       "targets": [4],
                       "render": function(data, type, full) {
-                          if(full.publishYear) {
-                              return full.publishYear;
-                          }else if(full.finishYear){
-                              return full.finishYear;
-                          }else{
-                              return '';
-                          }
+                          return full.privilegesText.replace(/,/g, '<br/>');
                       }
                   },
                   {
                       "targets": [5],
                       "render": function(data, type, full) {
-                          if(full.subject)
-                              return full.subject.name;
-                          else
-                              return '';
+                          return full.privilegeTypeText;
                       }
                   },
                   {
                       "targets": [6],
                       "render": function(data, type, full) {
-                          if(full.state == 4 || full.state == 0) {
-                              return '未签约';
-                          }else if(full.state == 5){
-                              return '流程中';
-                          }else if(full.state == 6) {
-                              return '签约完成';
-                          }else{
-                              return '';
-                          }
+                          return full.privilegeRangeText;
                       }
                   },
                   {
                       "targets": [7],
                       "render": function(data, type, full) {
-                          var role = '${sessionScope.__SESSION__USER__.role}';
-                      
-                          var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
+                          return full.privilegeDeadline + "年";
+                      }
+                  },
+                  {
+                      "targets": [8],
+                      "render": function(data, type, full) {
+                          return full.auditStateText;
+                      }
+                  },
+                  {
+                      "targets": [9],
+                      "render": function(data, type, full) {
+                          var html = '<a href=\'<idp:url value="/copyright/contractDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
-                          if(full.state == '4' || full.state == '0') {
+                          if(full.state == '4') {
                               html += '<span class="small">|</span> ';
                               html += '<a onclick="popContractModal(\'' + full.id + '\');">新建合同</a>';
                           }
@@ -964,19 +606,6 @@
                   }
               ]
           });
-      }
-      
-      function searchProducts() {
-          table.ajax.reload();
-      }
-      
-      function resetSearch() {
-          $('#inputSearchProductName').val('');
-          $('#inputSearchAuthorName').val('');
-          $('#inputSearchIsbn').val('');
-          $('#inputSearchSubject')[0].selectedIndex = 0;
-          $('#inputSearchPublishState')[0].selectedIndex = 0;
-          $('#inputSearchState')[0].selectedIndex = 0;
       }
       
       function submitProduct(submit) {
@@ -1034,7 +663,7 @@
                           alert('保存成功');
                           clearProductModal();
                           $('#productModal').modal('hide');
-                          table.ajax.reload();
+                          table.ajax().reload();
                       }
                   }
               );       
@@ -1143,7 +772,7 @@
           });
       }
       
-      function batchCreateContract() {
+      function batchDeleteAuthors() {
           var ids = [];
           $('.tblRowCheckbox:checked').each(function(){
               ids.push($(this).val());
@@ -1154,7 +783,23 @@
               return ;
           }
       
-          
+          var r = confirm("您真的要删除这些作者吗？");
+          if(r) {
+              $.post(
+                  '<idp:url value="/system/batchDeleteAuthor"/>',
+                  {
+                      '_method': "delete",
+                      'ids': ids.join(',')
+                  },
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('删除成功');
+                          table.ajax.reload();
+                      }
+                  }
+              );
+          }
       }
       
       function changePublishState() {
@@ -1282,7 +927,7 @@
                   'privilegeRange': privilegeRange,
                   'privilegeDeadline': privilegeDeadline,
                   'bankAccountName': bankAccountName,
-                  'bankAccountNo': bankAccountNo,
+                  'bankAccountNo': bankAccountName,
                   'bank': bank,
                   'submit': 1
               },
@@ -1321,15 +966,6 @@
                   table.ajax.reload();
               }
           );
-      }
-      
-      function resetSearch() {
-          $('#inputSearchProductName').val('');
-          $('#inputSearchAuthorName').val('');
-          $('#inputSearchIsbn').val('');
-          $('#inputSearchSubject')[0].selectedIndex = 0;
-          $('#inputSearchPublishState')[0].selectedIndex = 0;
-          $('#inputSearchState')[0].selectedIndex = 0;
       }
     </script>
   </body>

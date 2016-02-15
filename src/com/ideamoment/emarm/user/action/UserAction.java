@@ -54,6 +54,12 @@ public class UserAction {
         return JsonData.success(users);
     }
     
+    @RequestMapping(value="/system/extMakers", method=RequestMethod.GET)
+    public JsonData listExtMakers() {
+        List<User> users = userService.listExtMakers();
+        return JsonData.success(users);
+    }
+    
     @RequestMapping(value="/system/user/{id}", method=RequestMethod.GET)
     public JsonData findUser(@PathVariable String id) {
         User user = userService.findUser(id);

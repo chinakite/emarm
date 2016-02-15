@@ -225,6 +225,12 @@
                       <div class="col-sm-4 checkbox">
                           <label for="lawyerRole"><input id="lawyerRole" name="role" type="checkbox" value="80"/>法务人员</label>
                       </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="extMakerRole"><input id="extMakerRole" name="role" type="checkbox" value="52"/>外部制作团队</label>
+                      </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="extEmceeRole"><input id="extEmceeRole" name="role" type="checkbox" value="53"/>主持人</label>
+                      </div>
                   </div>
                 </div>
             </form>

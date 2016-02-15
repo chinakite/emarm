@@ -58,12 +58,15 @@ public class ProductState {
     public static final String CP_FINISH = "10";
     public static final String CP_FINISH_TEXT = "版权合同完成";
     
-    public static final String MK = "11";
+    public static final String MK_CONTRACT = "11";
+    public static final String MK_CONTRACT_TEXT = "制作合同签订";
+    
+    public static final String MK = "12";
     public static final String MK_TEXT = "制作中";
 
-    public static final String MK_FINISH = "12";
+    public static final String MK_FINISH = "13";
     public static final String MK_FINISH_TEXT = "制作完成";
     
-    public static final String SALED = "13";
+    public static final String SALED = "14";
     public static final String SALED_TEXT = "已销售";
 }

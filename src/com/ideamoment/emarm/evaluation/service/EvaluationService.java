@@ -217,7 +217,13 @@ public class EvaluationService {
             
             product.setType(ProductType.TEXT);
             
-            IdeaJdbc.update(product);
+            if(product.getId() != null) {
+                IdeaJdbc.update(product);
+            }else{
+                product.setCreateTime(curTime);
+                product.setCreator(curUser.getId());
+                IdeaJdbc.save(product);
+            }
             
             List<ProductSample> samples = product.getSamples();
             for(ProductSample sample : samples) {
