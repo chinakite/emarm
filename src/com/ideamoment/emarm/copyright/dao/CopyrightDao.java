@@ -270,4 +270,25 @@ public class CopyrightDao {
                        .setParameter("contractId", contractId)
                        .listTo(CopyrightContractDoc.class);
     }
+
+    public List<CopyrightContract> listProductContracts(String productId) {
+        String sql = "SELECT cc.C_ID as cc$id,"
+                    + " cc.C_CODE as cc$code,"
+                    + " cc.C_OWNER as cc$owner,"
+                    + " cc.C_BUYER_CONTACT as cc$buyerContact,"
+                    + " cc.C_PRIVILEGES as cc$privileges,"
+                    + " cc.C_PRIVILEGE_TYPE as cc$privilegeType,"
+                    + " cc.C_PRIVILEGE_RANGE as cc$privilegeRange,"
+                    + " cc.C_PRIVILEGE_DEADLINE as cc$privilegeDeadline,"
+                    + " cc.C_AUDIT_STATE as cc$auditState, "
+                    + " cc.C_CREATETIME as cc$createTime "
+                    + " FROM t_copyright_contract cc, t_copyright_ctrt_prod ccp "
+                    + " WHERE ccp.C_PRODUCT_ID = :productId "
+                    + " AND ccp.C_CONTRACT_ID = cc.C_ID "
+                    + " ORDER BY cc.C_CREATETIME DESC ";
+        
+        return IdeaJdbc.query(sql)
+                        .setParameter("productId", productId)
+                        .listTo(CopyrightContract.class, "cc");
+    }
 }

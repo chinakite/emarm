@@ -33,7 +33,7 @@
                     <ul class="treeview-menu">
                         <li id="menu_cc_mycontract"><a href='<idp:url value="/copyright/myContractPage"/>'><i class="fa fa-angle-double-right f10"></i> 我的合同</a></li>
                         <li id="menu_cc_auditcontract"><a href='<idp:url value="/copyright/auditContractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同审批</a></li>
-                        <li id="menu_eva_prodmgr"><a href='<idp:url value="/copyright/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同管理</a></li>
+                        <!--<li id="menu_eva_prodmgr"><a href='<idp:url value="/copyright/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同管理</a></li>-->
                     </ul>
                 </li>
               </ul>

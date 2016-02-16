@@ -26,6 +26,18 @@ public class RoleType {
     public static final String COPYRIGHT_MANAGER = "13";
     public static final String COPYRIGHT_MANAGER_TEXT = "版权经理";
     
+    public static final String MAKE_OPR = "21";
+    public static final String MAKE_OPR_TEXT = "制作专员";
+    
+    public static final String MAKE_MGR = "22";
+    public static final String MAKE_MGR_TEXT = "制作经理";
+    
+    public static final String SALE_OPR = "31";
+    public static final String SALE_OPR_TEXT = "运营专员";
+    
+    public static final String SALE_MGR = "32";
+    public static final String SALE_MGR_TEXT = "运营经理";
+    
     public static final String LAWYER = "80";
     public static final String LAWYER_TEXT = "法务人员";
     

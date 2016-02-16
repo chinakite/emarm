@@ -122,6 +122,9 @@ public class MakeTask extends HistoriableEntity {
     }
 
     public String getShowTypeText() {
+        if(showType == null)
+            return "";
+        
         if(showType.equals(ShowType.SINGLE_PLAY)) {
             return ShowType.SINGLE_PLAY_TEXT;
         }else if(showType.equals(ShowType.PAIR_PLAY)) {
@@ -245,6 +248,9 @@ public class MakeTask extends HistoriableEntity {
     }
     
     public String getStateText() {
+        if(state == null)
+            return "";
+        
         if(state.equals(MakeTaskState.NEW)) {
             return MakeTaskState.NEW_TEXT;
         }else if(state.equals(MakeTaskState.PUBLISH)) {

@@ -227,6 +227,12 @@ public class CopyrightAction {
         return JsonData.success(audits);
     }
     
+    @RequestMapping(value="/copyright/productContracts", method=RequestMethod.GET)
+    public JsonData listProductContracts(String productId) {
+        List<CopyrightContract> contracts = copyrightService.listProductContracts(productId);
+        return JsonData.success(contracts);
+    }
+    
     @RequestMapping(value="/copyright/passContract", method=RequestMethod.POST)
     public JsonData passContract(String id, String remark) {
         copyrightService.passContract(id, remark);

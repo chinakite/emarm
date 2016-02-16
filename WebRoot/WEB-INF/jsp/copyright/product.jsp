@@ -125,8 +125,8 @@
                             <select id="inputSearchState" class="form-control">
                                 <option value="-1">全部</option>
                                 <option value="0">未签约</option>
-                                <option value="1">流程中</option>
-                                <option value="2">已签约</option>
+                                <option value="5">流程中</option>
+                                <option value="6">已签约</option>
                             </select>
                           </div>
                         </div>
@@ -139,7 +139,7 @@
                 </div>
                 <div class="tblToolbar">
                     <button class="btn btn-default" data-toggle="modal" data-target="#productModal"><i class="fa fa-plus"></i>&nbsp;新建作品</button>
-                    <button class="btn btn-default ml10" onclick="batchCreateContract();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>
+                    <!--<button class="btn btn-default ml10" onclick="batchCreateContract();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>-->
                 </div>
                 <div class="box-body">
                   <table id="productTbl" class="table table-bordered table-hover">

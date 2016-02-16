@@ -231,6 +231,18 @@
                       <div class="col-sm-4 checkbox">
                           <label for="extEmceeRole"><input id="extEmceeRole" name="role" type="checkbox" value="53"/>主持人</label>
                       </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="makeOprRole"><input id="makeOprRole" name="role" type="checkbox" value="21"/>制作专员</label>
+                      </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="makeMgrRole"><input id="makeMgrRole" name="role" type="checkbox" value="22"/>制作经理</label>
+                      </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="saleOprRole"><input id="saleOprRole" name="role" type="checkbox" value="31"/>运营专员</label>
+                      </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="saleMgrRole"><input id="saleMgrRole" name="role" type="checkbox" value="32"/>运营经理</label>
+                      </div>
                   </div>
                 </div>
             </form>

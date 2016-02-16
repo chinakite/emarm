@@ -439,4 +439,9 @@ public class CopyrightService {
             e.printStackTrace();
         }
     }
+
+    @IdeaJdbcTx
+    public List<CopyrightContract> listProductContracts(String productId) {
+        return copyrightDao.listProductContracts(productId);
+    }
 }
