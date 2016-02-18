@@ -346,7 +346,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearAuthorModal();">关闭</button>
             <button type="button" class="btn btn-primary" onclick="submitAuthor();">保存</button>
-            <button type="button" class="btn btn-primary" onclick="submitAuthor();">提交</button>
+            <button type="button" class="btn btn-emarm" onclick="submitAuthor();">提交</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -755,8 +755,15 @@
           if(state == 4) {
               loadFinalEvaludation();
           }else{
+              <c:choose>
+              <c:when test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1}">
               populateNonFinalEvaPanel();
               calPrice();
+              </c:when>
+              <c:otherwise>
+              $('#finalEvaBody').html("尚未完成评价。");
+              </c:otherwise>
+              </c:choose>
           }
           
       });

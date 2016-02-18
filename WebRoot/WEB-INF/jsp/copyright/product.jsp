@@ -139,7 +139,7 @@
                 </div>
                 <div class="tblToolbar">
                     <button class="btn btn-default" data-toggle="modal" data-target="#productModal"><i class="fa fa-plus"></i>&nbsp;新建作品</button>
-                    <!--<button class="btn btn-default ml10" onclick="batchCreateContract();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>-->
+                    <button class="btn btn-default ml10" onclick="batchCreateContract();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>
                 </div>
                 <div class="box-body">
                   <table id="productTbl" class="table table-bordered table-hover">
@@ -1154,7 +1154,7 @@
               return ;
           }
       
-          
+          popContractModal(ids);
       }
       
       function changePublishState() {
@@ -1192,20 +1192,22 @@
       }
       
       //--------------- 新建合同 ---------------------
-      function popContractModal(id) {
+      function popContractModal(ids) {
           $.get(
-              '<idp:url value="/evaluation/product"/>/'+id,
+              '<idp:url value="/product/products?ids="/>'+ids,
               {},
               function(json) {
                   var result = IDEA.parseJSON(json);
                   if(result.type == 'success') {
                       clearContractModal();
                       var prod = result.data;
-                      $('#contractProductIds').val(id);
+                      $('#contractProductIds').val(ids);
                       
-                      var prodTblHtml = template('contractProdTblTmpl', {'prodlist': [prod]});
+                      var prodTblHtml = template('contractProdTblTmpl', {'prodlist': prod});
                       $('#contractProductTbl').html(prodTblHtml);
-                      $('#inputOwner').val(prod.author.name);
+                      if(prod.length == 1) {
+                          $('#inputOwner').val(prod[0].author.name);
+                      }
                       $('#inputBuyer').val('北京悦库时光文化传媒有限公司');
                       
                       $('#contractModal').modal('show');
