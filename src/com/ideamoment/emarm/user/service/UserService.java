@@ -23,6 +23,7 @@ import com.ideamoment.ideadp.usercontext.UserContext;
 import com.ideamoment.ideadp.util.CodecUtils;
 import com.ideamoment.ideajdbc.IdeaJdbc;
 import com.ideamoment.ideajdbc.spring.IdeaJdbcTx;
+import com.ideamoment.wx.util.EncryptUtils;
 
 /**
  * @author Chinakite
@@ -221,5 +222,25 @@ public class UserService {
     @IdeaJdbcTx
     public List<User> listExtMakers() {
         return userDao.listExtMakers();
+    }
+
+    @IdeaJdbcTx
+    public String changePwd(String oldPwd, String newPwd) {
+        UserContext uc = UserContext.getCurrentContext();
+        User optUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        String userId = optUser.getId();
+        
+        User queryUser = IdeaJdbc.find(User.class, userId);
+        String md5 = EncryptUtils.md5(oldPwd);
+        if(md5.equals(queryUser.getPassword())) {
+            String newmd5 = EncryptUtils.md5(newPwd);
+            IdeaJdbc.update(User.class, userId)
+                    .setProperty("password", newmd5)
+                    .execute();
+            return "success";
+        }else{
+            return "wrong_oldpwd";
+        }
     }
 }

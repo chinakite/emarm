@@ -60,6 +60,8 @@
             <button class="btn btn-default pull-right ml10" onclick="auditContract('${contract.id}');"><i class="fa fa-remove"></i> 审批</button>
             <button class="btn btn-default pull-right ml10" onclick="generateDoc('${contract.id}');"><i class="fa fa-remove"></i> 生成草稿</button>
             <button class="btn btn-default pull-right ml10" onclick="popUploadContractDoc('${contract.id}');"><i class="fa fa-remove"></i> 上传合同</button>
+            <button class="btn btn-default pull-right ml10" onclick="toLawyer('${contract.id}');"><i class="fa fa-remove"></i> 提交法务</button>
+            <button class="btn btn-default pull-right ml10" onclick="popUploadFinishContractDoc('${contract.id}');"><i class="fa fa-remove"></i> 上传最终合同</button>
         </section>
 
         <!-- Main content -->
@@ -249,6 +251,7 @@
           </div>
           <div class="modal-body">
               <form class="form-horizontal">
+                  <input id="finishedDoc" type="hidden" value="0"/>
                   <div class="col-xs-12">
                       <div class="form-group required">
                           <label for="inputFile" class="col-xs-2 control-label">合同文件</label>
@@ -693,8 +696,32 @@
           );
       }
       
+      function toLawyer(contractId) {
+          var r = window.confirm('确定提交法务审核吗?');
+          if(!r) {
+              return;
+          } 
+          
+          $.post(
+              '<idp:url value="/copyright/toLawyer"/>',
+              {
+                  id: contractId
+              },
+              function(data) {
+                  alert('提交成功');
+                  window.location.reload();
+              }
+          );
+      }
+      
       function popUploadContractDoc(contractId) {
           clearDocModal();
+          $('#docModal').modal('show');
+      }
+      
+      function popUploadFinishContractDoc(contractId) {
+          clearDocModal();
+          $('#finishedDoc').val('1');
           $('#docModal').modal('show');
       }
       
@@ -704,6 +731,7 @@
       }
       
       function clearDocModal() {
+          $('#finishedDoc').val('0');
           $('#version1')[0].selectedIndex = 0;
           $('#version2')[0].selectedIndex = 0;
           $('#inputFile').val('');
@@ -715,12 +743,15 @@
           var fileUrl = $('#inputDoc').val();
           var version = $('#version1').val() + "." + $('#version2').val();
           
+          var finishedDoc = $('#finishedDoc').val();
+          
           $.post(
               '<idp:url value="/copyright/uploadContractDoc"/>',
               {
                   "id": contractId,
                   "fileUrl": fileUrl,
-                  "version": version
+                  "version": version,
+                  "finishedDoc": finishedDoc
               },
               function(json) {
                   alert('保存成功');

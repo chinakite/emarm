@@ -245,6 +245,32 @@ public class MakeAction {
         return JsonData.SUCCESS;
     }
     
+    @RequestMapping(value="/make/extMyTaskPage", method=RequestMethod.GET)
+    public ModelAndView toExtMyTaskPage() {
+        return new ModelAndView("/WEB-INF/jsp/make/extMyTaskPage.jsp");
+    }
+    
+    @RequestMapping(value="/make/extMyMakeTasks", method=RequestMethod.GET)
+    public JsonData listExtMyMakeTasks(int draw, 
+                                       int start, 
+                                       int length) {
+        
+        int curPage = start/length + 1;
+        int pageSize = length;
+        
+        Page<MakeTask> tasks = makeService.pageExtMyMakeTasks(curPage, pageSize);
+        DataTableSource<MakeTask> dts = convertTaskToDataTableSource(draw, tasks);
+        return new JsonData(dts);
+    }
+    
+    @RequestMapping(value="/make/extTaskDetail", method=RequestMethod.GET)
+    public ModelAndView extTaskDetail(String id) {
+        MakeTask task = makeService.findMakeTask(id);
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("task", task);
+        return new ModelAndView("/WEB-INF/jsp/make/extTaskDetail.jsp", model);
+    }
+    
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {
         DataTableSource<Product> dts = new DataTableSource<Product>();
         
@@ -252,6 +278,16 @@ public class MakeAction {
         dts.setRecordsTotal(productsPage.getTotalRecord());
         dts.setRecordsFiltered(productsPage.getTotalRecord());
         dts.setData(productsPage.getData());
+        
+        return dts;
+    }
+    
+    private DataTableSource<MakeTask> convertTaskToDataTableSource(int draw, Page<MakeTask> tasksPage) {
+        DataTableSource<MakeTask> dts = new DataTableSource<MakeTask>();        
+        dts.setDraw(draw);
+        dts.setRecordsTotal(tasksPage.getTotalRecord());
+        dts.setRecordsFiltered(tasksPage.getTotalRecord());
+        dts.setData(tasksPage.getData());
         
         return dts;
     }

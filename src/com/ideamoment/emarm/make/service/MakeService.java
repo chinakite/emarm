@@ -335,4 +335,22 @@ public class MakeService {
     private boolean checkCanFinish() {
         return true;
     }
+
+    @IdeaJdbcTx
+    public List<MakeTask> listExtMyMakeTasks() {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        return makeDao.listExtMyMakeTasks(userId);
+    }
+
+    @IdeaJdbcTx
+    public Page<MakeTask> pageExtMyMakeTasks(int curPage, int pageSize) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        return makeDao.pageExtMyMakeTasks(curPage, pageSize, userId);
+    }
 }

@@ -253,7 +253,8 @@ public class CopyrightDao {
                    + "u.C_NAME AS u$name "
                    + "FROM t_copyright_ctrt_audit cca, t_user u "
                    + "WHERE cca.C_CONTRACT_ID = :contractId "
-                   + "AND cca.c_auditor_id = u.c_id";
+                   + "AND cca.c_auditor_id = u.c_id "
+                   + " ORDER BY C_AUDIT_TIME DESC ";
         
         return IdeaJdbc.query(sql)
                         .setParameter("contractId", contractId)

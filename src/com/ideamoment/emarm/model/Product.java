@@ -80,6 +80,9 @@ public class Product extends HistoriableEntity {
     @Property(dataItem="C_LOGO_URL", type=DataItemType.VARCHAR, length=100)
     private String logoUrl;
     
+    @Property(dataItem="C_RESERVED", type=DataItemType.VARCHAR, length=1)
+    private String reserved;
+    
     @Ref
     private Author author;
     
@@ -488,6 +491,24 @@ public class Product extends HistoriableEntity {
      */
     public void setContractCount(Integer contractCount) {
         this.contractCount = contractCount;
+    }
+
+
+    
+    /**
+     * @return the reserved
+     */
+    public String getReserved() {
+        return reserved;
+    }
+
+
+    
+    /**
+     * @param reserved the reserved to set
+     */
+    public void setReserved(String reserved) {
+        this.reserved = reserved;
     }
     
     

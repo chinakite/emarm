@@ -71,8 +71,9 @@ public class MakeDao {
 
         sql += " ORDER BY p.C_MODIFYTIME DESC ";
 
-        String[] states = new String[] { ProductState.CP_FINISH,
-                ProductState.MK, ProductState.MK_FINISH, ProductState.MK_CONTRACT, ProductState.DRAFT };
+        String[] states = new String[] { ProductState.CP_CONTRACT_FINISH,
+                ProductState.MK, ProductState.MK_FINISH,
+                ProductState.MK_CONTRACT, ProductState.DRAFT };
 
         Query query = IdeaJdbc.query(sql).setParameter("type", ProductType.TEXT)
                 .setParameter("states", states).populate("author", "a")
@@ -104,116 +105,151 @@ public class MakeDao {
 
         return products;
     }
-    
+
     public Map<String, Long> countTaskByProduct(List<String> productIds) {
         Map<String, Long> result = new HashMap<String, Long>();
         String sql = "SELECT t.C_PRODUCT_ID prodId, COUNT(C_ID) cnt"
-                    + " FROM T_MAKE_TASK t"
-                    + " WHERE t.C_PRODUCT_ID IN (:productIds)";
-        
-        List<Map<String, Object>> queryResult 
-                    = IdeaJdbc.query(sql)
-                                .setParameter("productIds", productIds)
-                                .list();
-        
-        if(queryResult.size() == 0) {
+                     + " FROM T_MAKE_TASK t"
+                     + " WHERE t.C_PRODUCT_ID IN (:productIds)";
+
+        List<Map<String, Object>> queryResult = IdeaJdbc.query(sql)
+                .setParameter("productIds", productIds).list();
+
+        if (queryResult.size() == 0) {
             return result;
         }
-        
-        for(Map<String, Object> map : queryResult) {
-            result.put((String)map.get("prodId"), (Long)map.get("cnt"));
+
+        for (Map<String, Object> map : queryResult) {
+            result.put((String) map.get("prodId"), (Long) map.get("cnt"));
         }
-        
+
         return result;
     }
-    
+
     public List<MakeTask> listMakeTasks(String productId) {
         String sql = "SELECT t.C_ID as t$id, "
-                   +        "t.C_PRODUCT_ID as t$productId, "
-                   +        "t.C_CONTRACT_ID as t$contractId, "
-                   +        "t.C_MAKER_ID as t$makerId, "
-                   +        "t.C_TIME_SECTION as t$timePerSection, "
-                   +        "t.C_MAKE_TIME as t$makeTime, "
-                   +        "t.C_SHOW_TYPE as t$showType, "
-                   +        "t.C_STATE as t$state, "
-                   +        "u.C_ID as u$id, "
-                   +        "u.C_NAME as u$name, "
-                   +        "u.C_EMAIL as u$email "
-                   + " FROM T_MAKE_TASK t, T_USER u "
-                   + " WHERE t.C_PRODUCT_ID = :productId "
-                   + " AND t.C_MAKER_ID = u.C_ID "
-                   + " ORDER BY t.C_MODIFYTIME DESC";
-        
-        return IdeaJdbc.query(sql)
-                       .setParameter("productId", productId)
-                       .populate("maker", "u")
-                       .listTo(MakeTask.class, "t");
+                     + "t.C_PRODUCT_ID as t$productId, "
+                     + "t.C_CONTRACT_ID as t$contractId, "
+                     + "t.C_MAKER_ID as t$makerId, "
+                     + "t.C_TIME_SECTION as t$timePerSection, "
+                     + "t.C_MAKE_TIME as t$makeTime, "
+                     + "t.C_SHOW_TYPE as t$showType, "
+                     + "t.C_STATE as t$state, "
+                     + "u.C_ID as u$id, "
+                     + "u.C_NAME as u$name, "
+                     + "u.C_EMAIL as u$email "
+                     + " FROM T_MAKE_TASK t, T_USER u "
+                     + " WHERE t.C_PRODUCT_ID = :productId "
+                     + " AND t.C_MAKER_ID = u.C_ID "
+                     + " ORDER BY t.C_MODIFYTIME DESC";
+
+        return IdeaJdbc.query(sql).setParameter("productId", productId)
+                .populate("maker", "u").listTo(MakeTask.class, "t");
     }
 
     public MakeTask findMakeTask(String id) {
         String sql = "SELECT t.C_ID as t$id, "
-                    +        "t.C_PRODUCT_ID as t$productId, "
-                    +        "t.C_CONTRACT_ID as t$contractId, "
-                    +        "t.C_MAKER_ID as t$makerId, "
-                    +        "t.C_TIME_SECTION as t$timePerSection, "
-                    +        "t.C_MAKE_TIME as t$makeTime, "
-                    +        "t.C_SHOW_TYPE as t$showType, "
-                    +        "t.C_STATE as t$state, "
-                    +        "t.C_SHOW_EXPECTION as t$showExpection, "
-                    +        "t.C_DESC as t$desc, "
-                    +        "t.C_TOTAL_SECTION as t$totalSection, "
-                    +        "u.C_ID as u$id, "
-                    +        "u.C_NAME as u$name, "
-                    +        "u.C_EMAIL as u$email, "
-                    +        "p.C_ID as p$id, "
-                    +        "p.C_NAME as p$name, "
-                    +        "mc.C_ID as mc$id, "
-                    +        "mc.C_CODE as mc$code "
-                    + " FROM T_MAKE_TASK t "
-                    + " INNER JOIN T_USER u ON t.C_MAKER_ID = u.C_ID "
-                    + " INNER JOIN T_PRODUCT p ON t.C_PRODUCT_ID = p.C_ID "
-                    + " LEFT JOIN T_MAKE_CONTRACT mc ON t.C_CONTRACT_ID = mc.C_ID "
-                    + " WHERE t.C_ID = :id ";
-        
-        List<MakeTask> tasks = IdeaJdbc.query(sql)
-                                        .setParameter("id", id)
-                                        .populate("maker", "u")
-                                        .populate("product", "p")
-                                        .populate("makeContract", "mc")
-                                        .listTo(MakeTask.class, "t");
-    
-        if(tasks != null && tasks.size() > 0) {
+                     + "t.C_PRODUCT_ID as t$productId, "
+                     + "t.C_CONTRACT_ID as t$contractId, "
+                     + "t.C_MAKER_ID as t$makerId, "
+                     + "t.C_TIME_SECTION as t$timePerSection, "
+                     + "t.C_MAKE_TIME as t$makeTime, "
+                     + "t.C_SHOW_TYPE as t$showType, "
+                     + "t.C_STATE as t$state, "
+                     + "t.C_SHOW_EXPECTION as t$showExpection, "
+                     + "t.C_DESC as t$desc, "
+                     + "t.C_TOTAL_SECTION as t$totalSection, "
+                     + "u.C_ID as u$id, "
+                     + "u.C_NAME as u$name, "
+                     + "u.C_EMAIL as u$email, "
+                     + "p.C_ID as p$id, "
+                     + "p.C_NAME as p$name, "
+                     + "mc.C_ID as mc$id, "
+                     + "mc.C_CODE as mc$code "
+                     + " FROM T_MAKE_TASK t "
+                     + " INNER JOIN T_USER u ON t.C_MAKER_ID = u.C_ID "
+                     + " INNER JOIN T_PRODUCT p ON t.C_PRODUCT_ID = p.C_ID "
+                     + " LEFT JOIN T_MAKE_CONTRACT mc ON t.C_CONTRACT_ID = mc.C_ID "
+                     + " WHERE t.C_ID = :id ";
+
+        List<MakeTask> tasks = IdeaJdbc.query(sql).setParameter("id", id)
+                .populate("maker", "u").populate("product", "p")
+                .populate("makeContract", "mc").listTo(MakeTask.class, "t");
+
+        if (tasks != null && tasks.size() > 0) {
             return tasks.get(0);
-        }else{
+        } else {
             return null;
         }
     }
 
     public String queryMaxContractCode(String prefix) {
         String sql = "select C_CODE from T_MAKE_CONTRACT where C_CODE like :code order by C_CODE desc limit 0,1";
-        String code = (String)IdeaJdbc.query(sql)
-                                        .setParameter("code", prefix+"%")
-                                        .uniqueValue();
-        
+        String code = (String) IdeaJdbc.query(sql)
+                .setParameter("code", prefix + "%").uniqueValue();
+
         return code;
     }
 
     public MakeContract findMakeContract(String productId) {
         String sql = "select * from T_MAKE_CONTRACT where C_PRODUCT_ID = :productId order by C_MODIFYTIME desc limit 0,1";
-        
-        return (MakeContract)IdeaJdbc.query(sql)
-                                       .setParameter("productId", productId)
-                                       .uniqueTo(MakeContract.class);
+
+        return (MakeContract) IdeaJdbc.query(sql)
+                .setParameter("productId", productId)
+                .uniqueTo(MakeContract.class);
     }
 
     public List<MakeContractDoc> listContractDocs(String contractId) {
-        String sql = "SELECT * "
-                + "FROM T_MAKE_CTRT_DOC "
-                + "WHERE C_CONTRACT_ID = :contractId "
-                + "ORDER BY C_CREATETIME DESC";
-     return IdeaJdbc.query(sql)
-                    .setParameter("contractId", contractId)
-                    .listTo(MakeContractDoc.class);
+        String sql = "SELECT * " + "FROM T_MAKE_CTRT_DOC "
+                     + "WHERE C_CONTRACT_ID = :contractId "
+                     + "ORDER BY C_CREATETIME DESC";
+        return IdeaJdbc.query(sql).setParameter("contractId", contractId)
+                .listTo(MakeContractDoc.class);
+    }
+
+    public List<MakeTask> listExtMyMakeTasks(String userId) {
+        String sql = "SELECT t.C_ID as t$id, "
+                     + "t.C_PRODUCT_ID as t$productId, "
+                     + "t.C_CONTRACT_ID as t$contractId, "
+                     + "t.C_MAKER_ID as t$makerId, "
+                     + "t.C_TIME_SECTION as t$timePerSection, "
+                     + "t.C_MAKE_TIME as t$makeTime, "
+                     + "t.C_SHOW_TYPE as t$showType, "
+                     + "t.C_STATE as t$state, "
+                     + "u.C_ID as u$id, "
+                     + "u.C_NAME as u$name, "
+                     + "u.C_EMAIL as u$email "
+                     + " FROM T_MAKE_TASK t, T_USER u "
+                     + " WHERE t.C_MAKER_ID = :userId "
+                     + " AND t.C_MAKER_ID = u.C_ID "
+                     + " ORDER BY t.C_MODIFYTIME DESC";
+
+        return IdeaJdbc.query(sql).setParameter("userId", userId)
+                .populate("maker", "u").listTo(MakeTask.class, "t");
+    }
+
+    public Page<MakeTask> pageExtMyMakeTasks(int curPage,
+                                             int pageSize,
+                                             String userId)
+    {
+        String sql = "SELECT t.C_ID as t$id, "
+                     + "t.C_PRODUCT_ID as t$productId, "
+                     + "t.C_CONTRACT_ID as t$contractId, "
+                     + "t.C_MAKER_ID as t$makerId, "
+                     + "t.C_TIME_SECTION as t$timePerSection, "
+                     + "t.C_MAKE_TIME as t$makeTime, "
+                     + "t.C_SHOW_TYPE as t$showType, "
+                     + "t.C_STATE as t$state, "
+                     + "u.C_ID as u$id, "
+                     + "u.C_NAME as u$name, "
+                     + "u.C_EMAIL as u$email "
+                     + " FROM T_MAKE_TASK t, T_USER u "
+                     + " WHERE t.C_MAKER_ID = :userId "
+                     + " AND t.C_MAKER_ID = u.C_ID "
+                     + " ORDER BY t.C_MODIFYTIME DESC";
+
+        return IdeaJdbc.query(sql).setParameter("userId", userId)
+                .populate("maker", "u").pageTo(MakeTask.class, "t", curPage, pageSize);
     }
 
 }

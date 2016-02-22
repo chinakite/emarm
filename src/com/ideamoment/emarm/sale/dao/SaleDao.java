@@ -68,7 +68,7 @@ public class SaleDao {
 
         sql += " ORDER BY p.C_MODIFYTIME DESC ";
 
-        String[] states = new String[] { ProductState.CP_FINISH,
+        String[] states = new String[] { ProductState.CP_CONTRACT_FINISH,
                 ProductState.MK, ProductState.MK_FINISH,
                 ProductState.MK_CONTRACT, ProductState.SALED,
                 ProductState.DRAFT };

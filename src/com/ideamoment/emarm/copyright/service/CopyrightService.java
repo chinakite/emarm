@@ -157,7 +157,7 @@ public class CopyrightService {
             IdeaJdbc.save(ccp);
             
             IdeaJdbc.update(Product.class, productId)
-                    .setProperty("state", ProductState.CP_CONTRACT_AUDIT)
+                    .setProperty("state", ProductState.CP_CONTRACT_INFLOW)
                     .execute();
         }
         
@@ -273,9 +273,23 @@ public class CopyrightService {
             }
         }else if(cc.getAuditState().equals(CopyrightContractState.CEO_AUDIT)) {
             cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
+        }else if(cc.getAuditState().equals(CopyrightContractState.LAWYER_AUDIT)) {
+            cc.setAuditState(CopyrightContractState.LAWYER_CONFIRM);
+        }else if(cc.getAuditState().equals(CopyrightContractState.FINISH_CONFIRM)) {
+            cc.setAuditState(CopyrightContractState.FINISH);
         }
         
         IdeaJdbc.update(cc);
+        
+        if(cc.getAuditState().equals(CopyrightContractState.FINISH)) {
+            List<Product> products = copyrightDao.listContractProducts(id);
+            
+            for(Product product : products) {
+                IdeaJdbc.update(Product.class, product.getId())
+                        .setProperty("state", ProductState.CP_CONTRACT_FINISH)
+                        .execute();
+            }
+        }
     }
 
     @IdeaJdbcTx
@@ -293,7 +307,11 @@ public class CopyrightService {
         IdeaJdbc.save(cca);
         
         CopyrightContract cc = IdeaJdbc.find(CopyrightContract.class, id);
-        cc.setAuditState(CopyrightContractState.REJECTED);
+        if(cc.getAuditState().equals(CopyrightContractState.FINISH_CONFIRM)) {
+            cc.setAuditState(CopyrightContractState.LAWYER_CONFIRM);
+        }else{
+            cc.setAuditState(CopyrightContractState.REJECTED);
+        }
         
         IdeaJdbc.update(cc);
     }
@@ -390,7 +408,7 @@ public class CopyrightService {
     }
 
     @IdeaJdbcTx
-    public void uploadContractDoc(String id, String fileUrl, String version) {
+    public void uploadContractDoc(String id, String fileUrl, String version, String finishedDoc) {
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         
@@ -402,6 +420,12 @@ public class CopyrightService {
         ccd.setFileUrl(fileUrl);
         
         IdeaJdbc.save(ccd);
+        
+        if(finishedDoc.equals("1")) {
+            IdeaJdbc.update(CopyrightContract.class, id)
+                    .setProperty("auditState", CopyrightContractState.FINISH_CONFIRM)
+                    .execute();
+        }
     }
     
     public static void main(String[] args) {
@@ -444,4 +468,18 @@ public class CopyrightService {
     public List<CopyrightContract> listProductContracts(String productId) {
         return copyrightDao.listProductContracts(productId);
     }
+
+    @IdeaJdbcTx
+    public void toLawyer(String id) {
+        IdeaJdbc.update(CopyrightContract.class, id)
+                .setProperty("auditState", CopyrightContractState.LAWYER_AUDIT)
+                .execute();
+    }
+
+    @IdeaJdbcTx
+    public void finish(String id) {
+        
+        
+    }
+    
 }

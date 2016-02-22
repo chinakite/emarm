@@ -258,8 +258,14 @@ public class CopyrightAction {
     }
     
     @RequestMapping(value="/copyright/uploadContractDoc", method=RequestMethod.POST)
-    public JsonData uploadContractDoc(String id, String fileUrl, String version) {
-        copyrightService.uploadContractDoc(id, fileUrl, version);
+    public JsonData uploadContractDoc(String id, String fileUrl, String version, String finishedDoc) {
+        copyrightService.uploadContractDoc(id, fileUrl, version, finishedDoc);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/copyright/toLawyer", method=RequestMethod.POST)
+    public JsonData toLawyer(String id) {
+        copyrightService.toLawyer(id);
         return JsonData.SUCCESS;
     }
     

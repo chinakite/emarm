@@ -32,31 +32,13 @@ public class ProductState {
     public static final String CP_CONTRACT_INFLOW_TEXT = "签约流程中";
     
     public static final String CP_CONTRACT_FINISH = "6";
-    public static final String CP_CONTRACT_FINISH_TEXT = "签约完成";
+    public static final String CP_CONTRACT_FINISH_TEXT = "版权合同完成";
     
-    public static final String CP_CONTRACT_AUDIT = "5";
-    public static final String CP_CONTRACT_AUDIT_TEXT = "版权合同审批中";
+    public static final String RESERVED = "7";
+    public static final String RESERVED_TEXT = "已预订";
     
-    public static final String CP_CONTRACT_AUDIT_PASS = "6";
-    public static final String CP_CONTRACT_AUDIT_PASS_TEXT = "审批通过";
-    
-    public static final String CP_CONTRACT_AUDIT_REJECT = "102";
-    public static final String CP_CONTRACT_AUDIT_REJECT_TEXT = "审批未通过";
-    
-    public static final String CP_LAWYER_AUDIT = "7";
-    public static final String CP_LAWYER_AUDIT_TEXT = "法务审批中";
-    
-    public static final String CP_LAWYER_AUDIT_PASS = "8";
-    public static final String CP_LAWYER_AUDIT_PASS_TEXT = "法务审批通过";
-    
-    public static final String CP_LAWYER_AUDIT_REJECT = "103";
-    public static final String CP_LAWYER_AUDIT_REJECT_TEXT = "法务审批未通过";
-    
-    public static final String CP_LAWYER_SURE = "9";
-    public static final String CP_LAWYER_SURE_TEXT = "法务终审中";
-    
-    public static final String CP_FINISH = "10";
-    public static final String CP_FINISH_TEXT = "版权合同完成";
+    public static final String MK_WAITING = "8";
+    public static final String MK_WAITING_TEXT = "待制作";
     
     public static final String MK_CONTRACT = "11";
     public static final String MK_CONTRACT_TEXT = "制作合同签订";

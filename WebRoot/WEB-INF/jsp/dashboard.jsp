@@ -108,10 +108,31 @@
           </div><!-- /.row -->
 
           <div class="row">
-            <div class="col-md-12">
-              <div class="box box-success text-center">
-                  <img src='<idp:url value="/img/comingsoon.jpg"/>'/>
-              </div><!-- /.box -->
+            <div class="col-md-6">
+                <div class="box box-emarm">
+                    <div class="box-header with-border">
+                        <h4 class="box-title"><span>最新作品</span></h4>
+                        <a class="pull-right">更多&gt;&gt;</a>
+                    </div>
+                    <div class="box-body">
+                        <ul id="lastProductList" class="list-group list-group-unbordered">
+                            
+                        </ul>
+                    </div>  
+                </div><!-- /.box -->
+            </div><!-- /.col -->
+            <div class="col-md-6">
+                <div class="box box-emarm">
+                    <div class="box-header with-border">
+                      <h4 class="box-title"><span>我的待办</span></h4>
+                      <a class="pull-right">更多&gt;&gt;</a>
+                    </div>
+                    <div class="box-body">
+                        <ul id="taskList" class="list-group list-group-unbordered">
+                            
+                        </ul>
+                    </div>  
+                </div><!-- /.box -->
             </div><!-- /.col -->
           </div><!-- /.row -->
         </section><!-- /.content -->
@@ -138,10 +159,77 @@
     <!-- ChartJS 1.0.1 -->
     <script src='<idp:url value="/plugins/chartjs/Chart.min.js"/>'></script>
     
+    <script src='<idp:url value="/js/ideajs.js"/>'></script>
+    <script src='<idp:url value="/js/template.js"/>'></script>
+    
+    <script id="lastProductTmpl" type="text/html">
+        {{each prodlist as prod index}}
+            <li class="list-group-item">
+                <a>{{prod.name}}</a>
+            </li>
+        {{/each}}
+    </script>
+    
+    <script id="taskTmpl" type="text/html">
+        {{each tasklist as task index}}
+            <li class="list-group-item">
+                {{if task.targetType == '0'}}
+                <a href="<idp:ctx/>/evaluation/productDetail?id={{task.targetid}}" target="_blank">{{task.title}}</a>
+                {{/if}}
+                {{if task.targetType == '1'}}
+                <a href="<idp:ctx/>/copyright/contractDetail?id={{task.targetid}}" target="_blank">{{task.title}}</a>
+                {{/if}}
+            </li>
+        {{/each}}
+    </script>
+    
     <script type="text/javascript">
         $(document).ready(function(){
             $('#menu_home').addClass('active');
+            
+            loadLastProducts();
+            loadMyTasks();
         });
+        
+        function loadLastProducts() {
+            $.get(
+                '<idp:url value="/product/lastProducts"/>',
+                {},
+                function(json) {
+                    var result = IDEA.parseJSON(json);
+                    if(result.type == 'success') {
+                        var prodlist = result.data;
+                        
+                        if(prodlist.length > 0) { 
+                            var prodTblHtml = template('lastProductTmpl', {'prodlist': prodlist});
+                            $('#lastProductList').html(prodTblHtml); 
+                        }else{
+                            $('#lastProductList').html('<li style="list-style:none; height:206px; text-align: center;">目前没有作品。</li>');
+                        }
+                    }
+                }
+            );
+        }
+        
+        function loadMyTasks() {
+            $.get(
+                '<idp:url value="/task/myTasksDashboard"/>',
+                {},
+                function(json) {
+                    var result = IDEA.parseJSON(json);
+                    if(result.type == 'success') {
+                        var tasklist = result.data;
+                        
+                        if(tasklist.length > 0) { 
+                            var taskListHtml = template('taskTmpl', {'tasklist': tasklist});
+                            $('#taskList').html(taskListHtml); 
+                        }else{
+                            $('#taskList').html('<li style="list-style:none; height:206px; text-align: center;">目前没有待办事项。</li>');
+                        }
+                    }
+                }
+            );
+        }
     </script>
   </body>
 </html>

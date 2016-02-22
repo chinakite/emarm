@@ -10,9 +10,11 @@ import com.ideamoment.emarm.model.MakeContractDoc;
 import com.ideamoment.emarm.model.MakeTask;
 import com.ideamoment.emarm.model.ProductAudio;
 import com.ideamoment.emarm.model.ProductImage;
+import com.ideamoment.emarm.model.ProductReservedInfo;
 import com.ideamoment.emarm.model.SaleContract;
 import com.ideamoment.emarm.model.SaleContractDoc;
 import com.ideamoment.emarm.model.SaleContractProduct;
+import com.ideamoment.emarm.model.Task;
 import com.ideamoment.ideajdbc.configuration.IdeaJdbcConfiguration;
 import com.ideamoment.ideajdbc.tool.mysql.entity2ddl.MySqlEntity2Ddl;
 
@@ -46,9 +48,11 @@ public class GenerateDb {
 //                  MakeTask.class,
 //                  MakeContract.class,
 //                MakeContractDoc.class,
-                  SaleContract.class,
-                  SaleContractProduct.class,
-                  SaleContractDoc.class
+//                  SaleContract.class,
+//                  SaleContractProduct.class,
+//                  SaleContractDoc.class,
+//                  Task.class,
+                    ProductReservedInfo.class
                 };
         
         for(Class clz : cls) {

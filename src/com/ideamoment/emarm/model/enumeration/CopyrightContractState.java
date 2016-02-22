@@ -31,9 +31,12 @@ public class CopyrightContractState {
     public static final String LAWYER_CONFIRM = "6";    //法务确认
     public static final String LAWYER_CONFIRM_TEXT = "法务确认";
     
+    public static final String FINISH_CONFIRM = "7";    //法务确认
+    public static final String FINISH_CONFIRM_TEXT = "待最终确认";
+    
     public static final String REJECTED = "51";
     public static final String REJECTED_TEXT = "已拒绝";
     
-    public static final String FINISH = "100";        //完成
+    public static final String FINISH = "99";        //完成
     public static final String FINISH_TEXT = "完成";        //完成
 }

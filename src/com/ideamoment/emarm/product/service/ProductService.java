@@ -40,6 +40,11 @@ public class ProductService {
         String[] idArray = ids.split(",");
         return productDao.listProducts(idArray);
     }
+
+    @IdeaJdbcTx
+    public List<Product> listLastProducts() {
+        return productDao.listLastProducts();
+    }
     
     
 }

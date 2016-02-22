@@ -45,10 +45,10 @@
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
                 <ul class="dropdown-menu">
                     <li>
-                        <a><i class="fa fa-cog"></i>修改密码</a>
+                        <a href="<idp:ctx/>/user/toChangePwd"><i class="fa fa-cog"></i>修改密码</a>
                     </li>
                     <li>
-                        <a><i class="fa fa-power-off"></i>退出</a>
+                        <a href="<idp:ctx/>/logout"><i class="fa fa-power-off"></i>退出</a>
                     </li>
                 </ul>
               </li>

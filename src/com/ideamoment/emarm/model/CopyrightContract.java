@@ -81,9 +81,11 @@ public class CopyrightContract extends HistoriableEntity {
     @Property(dataItem="C_TOTAL_PRICE", type=DataItemType.DECIMAL)
     private BigDecimal totalPrice;
 
-    @Property(dataItem="C_AUDIT_STATE", type=DataItemType.VARCHAR, length=1)
+    @Property(dataItem="C_AUDIT_STATE", type=DataItemType.VARCHAR, length=3)
     private String auditState;
     
+    @Property(dataItem="C_FINISH_TIME", type=DataItemType.DATETIME)
+    private String finishTime;
     
     /**
      * @return the owner
@@ -444,11 +446,13 @@ public class CopyrightContract extends HistoriableEntity {
         }else if(this.auditState.equals(CopyrightContractState.LAWYER_AUDIT)) {
             return CopyrightContractState.LAWYER_AUDIT_TEXT;
         }else if(this.auditState.equals(CopyrightContractState.LAWYER_CONFIRM)) {
-            return CopyrightContractState.LAWYER_CONFIRM;
+            return CopyrightContractState.LAWYER_CONFIRM_TEXT;
         }else if(this.auditState.equals(CopyrightContractState.MANAGER_AUDIT)) {
             return CopyrightContractState.MANAGER_AUDIT_TEXT;
         }else if(this.auditState.equals(CopyrightContractState.REJECTED)) {
             return CopyrightContractState.REJECTED_TEXT;
+        }else if(this.auditState.equals(CopyrightContractState.FINISH_CONFIRM)) {
+            return CopyrightContractState.FINISH_CONFIRM_TEXT;
         }else{
             return CopyrightContractState.DRAFT_TEXT;
         }
@@ -466,6 +470,20 @@ public class CopyrightContract extends HistoriableEntity {
      */
     public void setCode(String code) {
         this.code = code;
+    }
+
+    /**
+     * @return the finishTime
+     */
+    public String getFinishTime() {
+        return finishTime;
+    }
+    
+    /**
+     * @param finishTime the finishTime to set
+     */
+    public void setFinishTime(String finishTime) {
+        this.finishTime = finishTime;
     }
     
 }

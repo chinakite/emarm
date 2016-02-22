@@ -43,4 +43,9 @@ public class ProductAction {
         return JsonData.success(products);
     }
     
+    @RequestMapping(value="/product/lastProducts", method=RequestMethod.GET)
+    public JsonData lastProducts() throws Exception {
+        List<Product> products = productService.listLastProducts();
+        return JsonData.success(products);
+    }
 }

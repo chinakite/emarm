@@ -166,4 +166,62 @@ public class UserAction {
     public ModelAndView comingsoon() {
         return new ModelAndView("/comingsoon.jsp");
     }
+    
+    @RequestMapping(value="/user/toChangePwd", method=RequestMethod.GET)
+    public ModelAndView toChangePwd() {
+        return new ModelAndView("/WEB-INF/jsp/user/changePwd.jsp");
+    }
+    
+    @RequestMapping(value="/user/changePwd", method=RequestMethod.POST)
+    public JsonData changePwd(String oldPwd, String newPwd) {
+        oldPwd = oldPwd.trim();
+        newPwd = newPwd.trim();
+        String result = userService.changePwd(oldPwd, newPwd);
+        
+        if(result.equals("success")) {
+            return JsonData.SUCCESS;
+        }else{
+            return JsonData.success(result);
+        }
+    }
+    
+    @RequestMapping(value="/logout", method=RequestMethod.GET)
+    public String logout() {
+        UserContext context = UserContext.getCurrentContext();
+        context.getRequest().getSession().removeAttribute(UserContext.SESSION_USER);
+        context.getRequest().getSession().invalidate();
+        return "redirect:/login";
+    }
+    
+    @RequestMapping(value="/reservedlogin", method=RequestMethod.GET)
+    public ModelAndView toReservedLogin() {
+        return new ModelAndView("/reservedLogin.jsp");
+    }
+    
+    @RequestMapping(value="/reservedUserLogin", method=RequestMethod.POST)
+    public String reservedLogin(String userName, String password) {
+        User user = userService.login(userName, password);
+        
+        UserContext context = UserContext.getCurrentContext();
+        context.getRequest().getSession().setAttribute(UserContext.SESSION_USER, user);
+        context.setContextAttribute(UserContext.SESSION_USER, user);
+        
+        return "redirect:/reserved/productPage";
+    }
+    
+    @RequestMapping(value="/mklogin", method=RequestMethod.GET)
+    public ModelAndView toMakeLogin() {
+        return new ModelAndView("/makeLogin.jsp");
+    }
+    
+    @RequestMapping(value="/mkUserLogin", method=RequestMethod.POST)
+    public String makeLogin(String userName, String password) {
+        User user = userService.login(userName, password);
+        
+        UserContext context = UserContext.getCurrentContext();
+        context.getRequest().getSession().setAttribute(UserContext.SESSION_USER, user);
+        context.setContextAttribute(UserContext.SESSION_USER, user);
+        
+        return "redirect:/make/extMyTaskPage";
+    }
 }
