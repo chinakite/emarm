@@ -18,7 +18,11 @@ import com.ideamoment.emarm.make.service.MakeService;
 import com.ideamoment.emarm.model.MakeContract;
 import com.ideamoment.emarm.model.MakeContractDoc;
 import com.ideamoment.emarm.model.MakeTask;
+import com.ideamoment.emarm.model.MakeTaskAudio;
+import com.ideamoment.emarm.model.MakeTaskAudioAudit;
+import com.ideamoment.emarm.model.MakeTaskAudioFile;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.emarm.util.DataTableSource;
 import com.ideamoment.ideadp.restful.json.JsonData;
 import com.ideamoment.ideajdbc.action.Page;
@@ -269,6 +273,54 @@ public class MakeAction {
         HashMap<String, Object> model = new HashMap<String, Object>();
         model.put("task", task);
         return new ModelAndView("/WEB-INF/jsp/make/extTaskDetail.jsp", model);
+    }
+    
+    @RequestMapping(value="/make/makeTaskAudioes", method=RequestMethod.GET)
+    public JsonData listMakeTaskAudioes(String id) {
+        List<MakeTaskAudio> audioes = makeService.listMakeTaskAudioes(id);
+        return JsonData.success(audioes);
+    }
+    
+    @RequestMapping(value="/make/createSection", method=RequestMethod.POST)
+    public JsonData createSection(String name, String makeTaskId) {
+        makeService.createSection(name, makeTaskId);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/make/makeTaskAudioFile", method=RequestMethod.POST)
+    public JsonData createMakeTaskAudioFile(String makeTaskAudioId, String version, String fileUrl) {
+        makeService.createMakeTaskAudioFile(makeTaskAudioId, version, fileUrl);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/make/makeTaskAudioFiles", method=RequestMethod.GET)
+    public JsonData listMakeTaskAudioFiles(String makeTaskAudioId) {
+        List<MakeTaskAudioFile> files = makeService.listMakeTaskAudioFiles(makeTaskAudioId);
+        return JsonData.success(files);
+    }
+    
+    @RequestMapping(value="/make/makeTaskAudioAudits", method=RequestMethod.GET)
+    public JsonData listMakeTaskAudioAudits(String makeTaskAudioId) {
+        List<MakeTaskAudioAudit> audits = makeService.listMakeTaskAudioAudits(makeTaskAudioId);
+        return JsonData.success(audits);
+    }
+    
+    @RequestMapping(value="/make/makeTaskAudioAudit", method=RequestMethod.POST)
+    public JsonData createMakeTaskAudioAudit(String makeTaskAudioId, String remark) {
+        makeService.createMakeTaskAudioAudit(makeTaskAudioId, remark, "-1");
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/make/passMakeTaskAudioAudit", method=RequestMethod.POST)
+    public JsonData passMakeTaskAudioAudit(String makeTaskAudioId, String remark) {
+        makeService.createMakeTaskAudioAudit(makeTaskAudioId, remark, YesOrNo.YES);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/make/rejectMakeTaskAudioAudit", method=RequestMethod.POST)
+    public JsonData rejectMakeTaskAudioAudit(String makeTaskAudioId, String remark) {
+        makeService.createMakeTaskAudioAudit(makeTaskAudioId, remark, YesOrNo.NO);
+        return JsonData.SUCCESS;
     }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {

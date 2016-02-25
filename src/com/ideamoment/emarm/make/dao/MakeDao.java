@@ -10,10 +10,12 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.ideamoment.emarm.model.CopyrightContractDoc;
 import com.ideamoment.emarm.model.MakeContract;
 import com.ideamoment.emarm.model.MakeContractDoc;
 import com.ideamoment.emarm.model.MakeTask;
+import com.ideamoment.emarm.model.MakeTaskAudio;
+import com.ideamoment.emarm.model.MakeTaskAudioAudit;
+import com.ideamoment.emarm.model.MakeTaskAudioFile;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
@@ -250,6 +252,33 @@ public class MakeDao {
 
         return IdeaJdbc.query(sql).setParameter("userId", userId)
                 .populate("maker", "u").pageTo(MakeTask.class, "t", curPage, pageSize);
+    }
+
+    public List<MakeTaskAudio> listMakeTaskAudioes(String id) {
+        String sql = "SELECT * FROM T_MAKE_TASK_AUDIO WHERE C_MAKE_TASK_ID = :id";
+        return IdeaJdbc.query(sql).setParameter("id", id).listTo(MakeTaskAudio.class);
+    }
+
+    public List<MakeTaskAudioFile> listMakeTaskAudioFiles(String makeTaskAudioId) {
+        String sql = "SELECT * FROM T_MAKE_TASK_AUDIO_FILE WHERE C_MAKE_TASK_AUDIO_ID = :id ORDER BY C_CREATETIME DESC";
+        return IdeaJdbc.query(sql).setParameter("id", makeTaskAudioId).listTo(MakeTaskAudioFile.class);
+    }
+
+    public List<MakeTaskAudioAudit> listMakeTaskAudioAudits(String makeTaskAudioId) {
+        String sql = "SELECT mtaa.C_ID as mtaa$id, "
+                    + "      mtaa.C_REMARK as mtaa$remark, "
+                    + "      mtaa.C_CREATETIME as mtaa$createTime, "
+                    + "      mtaa.C_RESULT as mtaa$result, "
+                    + "      u.C_ID as u$id, "
+                    + "      u.C_NAME as u$name "
+                    + "FROM T_MAKE_TASK_AUDIO_AUDIT mtaa, T_USER u "
+                    + "WHERE mtaa.C_MAKE_TASK_AUDIO_ID = :id "
+                    + "AND mtaa.C_CREATOR = u.C_ID "
+                    + "ORDER BY mtaa.C_CREATETIME DESC";
+        return IdeaJdbc.query(sql)
+                       .setParameter("id", makeTaskAudioId)
+                       .populate("auditor", "u")
+                       .listTo(MakeTaskAudioAudit.class, "mtaa");
     }
 
 }

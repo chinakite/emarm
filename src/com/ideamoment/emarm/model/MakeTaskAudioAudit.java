@@ -6,6 +6,7 @@ package com.ideamoment.emarm.model;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
+import com.ideamoment.ideadata.annotation.Ref;
 
 /**
  * @author Chinakite
@@ -21,6 +22,9 @@ public class MakeTaskAudioAudit extends HistoriableEntity {
     
     @Property(dataItem="C_REMARK", type=DataItemType.VARCHAR, length=600)
     private String remark;
+    
+    @Ref
+    private User auditor;
     
     /**
      * @return the makeTaskAudioId
@@ -62,6 +66,20 @@ public class MakeTaskAudioAudit extends HistoriableEntity {
      */
     public void setRemark(String remark) {
         this.remark = remark;
+    }
+    
+    /**
+     * @return the auditor
+     */
+    public User getAuditor() {
+        return auditor;
+    }
+    
+    /**
+     * @param auditor the auditor to set
+     */
+    public void setAuditor(User auditor) {
+        this.auditor = auditor;
     }
     
 }

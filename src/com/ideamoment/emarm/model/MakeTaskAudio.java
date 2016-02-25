@@ -17,9 +17,9 @@ public class MakeTaskAudio extends HistoriableEntity {
     @Property(dataItem="C_MAKE_TASK_ID", type=DataItemType.VARCHAR, length=32)
     private String makeTaskId;
     
-    @Property(dataItem="C_FILE_URL", type=DataItemType.VARCHAR, length=1000)
-    private String fileUrl;
-
+    @Property(dataItem="C_TITLE", type=DataItemType.VARCHAR, length=300)
+    private String title;
+    
     
     /**
      * @return the makeTaskId
@@ -36,17 +36,17 @@ public class MakeTaskAudio extends HistoriableEntity {
     }
     
     /**
-     * @return the fileUrl
+     * @return the title
      */
-    public String getFileUrl() {
-        return fileUrl;
+    public String getTitle() {
+        return title;
     }
-
     
     /**
-     * @param fileUrl the fileUrl to set
+     * @param title the title to set
      */
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+    public void setTitle(String title) {
+        this.title = title;
     }
+    
 }

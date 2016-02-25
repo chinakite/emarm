@@ -97,9 +97,12 @@
                                       <span class="pull-right">共 ${task.totalSection} 集</span>
                                   </div>
                                   <div class="box-body">
-                                      <ul id="audioTbl" class="list-group">
+                                      <div style="height: 40px;">
+                                          <button class="btn btn-default pull-right ml10" onclick="popSectionModal();"><i class="fa fa-star-half-empty"></i> 新增单集</button>
+                                      </div>
+                                      <div id="audioList">
                                           
-                                      </ul>
+                                      </div>
                                   </div> 
                               </div><!-- /.box -->
                           </div>
@@ -122,19 +125,49 @@
         <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京悦库时光文化传媒有限公司</a>.</strong> All rights reserved.
     </footer>
 
+    <div id="sectionModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">新增单集</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputSectionName" class="col-md-2 control-label">名称</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputSectionName" placeholder="名称">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputSectionName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeSectionModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="submitSection();">保存</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <div id="auditModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">作品审核</h4>
+            <h4 class="modal-title">评论</h4>
           </div>
           <div class="modal-body">
-              <p>待审核作品：<span id="auditProductName"></span></p>
               <form class="form-horizontal">
+                  <input id="inputAuditMakeTaskAudioId" type="hidden"/>
                   <div class="col-md-12">
                   <div class="form-group">
-                    <label>审核意见</label>
+                    <label>内容</label>
                     <textarea id="auditText" class="form-control" multiple="multiple" data-placeholder="审核意见" style="width: 100%;"></textarea>
                   </div><!-- /.form-group -->
                   </div>
@@ -142,8 +175,71 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeAuditModal();">关闭</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="rejectProduct('${product.id}');">不通过</button>
-            <button type="button" class="btn btn-emarm" onclick="passProduct('${product.id}');">通过</button>
+            <button type="button" class="btn btn-emarm" onclick="submitAudit();">保存</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="audioModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">上传音频文件</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                  <input id="inputSectionId" type="hidden"/>
+                  <div class="col-xs-12">
+                      <div class="form-group required">
+                          <label for="inputFile" class="col-xs-2 control-label">音频文件</label>
+                          <div id="docUploadDiv" class="col-xs-10">
+                              <input id="importFile" name="importFile" type="file" class="form-control"/>
+                              <ul id="uploadedFile"></ul>
+                              <input type="hidden" id="inputAudio"/>
+                          </div>
+                      </div>
+                      <div class="form-group required">
+                          <label class="col-xs-2 control-label">版本</label>
+                          <div class="col-xs-2">
+                              <select class="form-control col-md-1" id="version1">
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4">4</option>
+                                  <option value="5">5</option>
+                                  <option value="6">6</option>
+                                  <option value="7">7</option>
+                                  <option value="8">8</option>
+                                  <option value="9">9</option>
+                                  <option value="10">10</option>
+                              </select>
+                          </div>
+                          <div class="pull-left" style="font-weight: bold; margin-top: 10px;">
+                              <span>.</span>
+                          </div>
+                          <div class="col-xs-2">
+                              <select class="form-control col-md-1" id="version2">
+                                  <option value="0">0</option>
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4">4</option>
+                                  <option value="5">5</option>
+                                  <option value="6">6</option>
+                                  <option value="7">7</option>
+                                  <option value="8">8</option>
+                                  <option value="9">9</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeAudioModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="submitAudio();">确定</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -165,14 +261,240 @@
     <!-- AdminLTE for demo purposes -->
     <script src='<idp:url value="/js/demo.js"/>'></script>
     
+    <script src='<idp:url value="/plugins/fileupload/jquery.ui.widget.js"/>'></script>
+    <script src='<idp:url value="/plugins/fileupload/jquery.fileupload.js"/>'></script>
+    <script src='<idp:url value="/plugins/fileupload/jquery.iframe-transport.js"/>'></script>
+    
     <script src='<idp:url value="/js/ideajs.js"/>'></script>
     <script src='<idp:url value="/js/template.js"/>'></script>
+    
+    <script id="makeAudioTmpl" type="text/html">
+        {{each audioes as audio index}}
+            <div class="box box-default box-solid collapsed-box" rel="{{audio.id}}">
+              <div class="box-header with-border">
+                  <span>{{audio.title}}</span>
+                  <div class="box-tools pull-right">
+                    <button class="btn btn-box-tool" onclick="popAudioModal('{{audio.id}}');"><i class="fa fa-up"></i>上传</button>
+                    <button class="btn btn-box-tool mr30" onclick="popAuditModal('{{audio.id}}');"><i class="fa fa-up"></i>评论</button>
+                    <button class="btn btn-box-tool" data-widget="collapse" onclick="listAudioFiles('{{audio.id}}', this);"><i class="fa fa-plus"></i></button>
+                  </div><!-- /.box-tools -->
+              </div>
+              <div class="box-body" style="display: none;">
+                  <strong>文件列表</strong>
+                  <table rel="{{audio.id}}" class="table table-bordered table-hover" style="width:100%;">
+                      <tbody>
+                      
+                      </tbody>
+                  </table>
+                  <strong>审核信息</strong>
+                  <ul class="list-group" rel="{{audio.id}}">
+                      
+                  </ul>
+              </div>
+            </div>
+        {{/each}}
+    </script>
+    
+    <script id="fileTblTmpl" type="text/html">
+        {{each files as file index}}
+            <tr>
+              <td>{{file.version}}</td>
+              <td>{{file.createTime}}</td>
+              <td><a href='<idp:url value="{{file.fileUrl}}"/>' class="label bg-green">下载</a></td>
+            </tr>
+        {{/each}}
+    </script>
+    
+    <script id="auditListTmpl" type="text/html">
+        {{each audits as audit index}}
+            <li class="list-group-item col-xs-12">
+              <div class="col-xs-2">{{audit.auditor.name}}</div>
+              <div class="col-xs-3">{{audit.createTime}}</div>
+              <div class="col-xs-7">{{audit.remark}}</div>
+            </li>
+        {{/each}}
+    </script>
     
     <!-- page script -->
     <script>
       $(document).ready(function(){
+          loadMakeTaskAudioes();
           
+          $('#importFile').fileupload({
+              url: '<idp:url value="/uploadAudio"/>',
+              dataType: 'json',
+              done: function (e, data) {
+                     var fileUrl = data['result']['data'][0]['fileUrl'];
+                     var fileName = data['result']['data'][0]['fileName'];
+                     $('#uploadedFile').html('<li>'+fileName+'</li>');
+                     $('#inputAudio').val(fileUrl);
+              }
+          });
       });
+      
+      function loadMakeTaskAudioes() {
+          $.get(
+              '<idp:url value="/make/makeTaskAudioes"/>?id=${task.id}',
+              {},
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type = 'success') {
+                      var audioes = result.data;
+                      var html = template('makeAudioTmpl', {"audioes": audioes});    
+                      $('#audioList').html(html);
+                  }
+                  
+              }
+          )
+      }
+      
+      function popSectionModal() {
+          clearSectionModal();
+          $('#sectionModal').modal('show');
+      }
+      
+      function clearSectionModal() {
+          $('#inputSectionName').val('');
+      }
+      
+      function closeSectionModal() {
+          clearSectionModal();
+          $('#sectionModal').modal('hide');
+      }
+      
+      function submitSection() {
+          var name = $('#inputSectionName').val();
+          
+          $.post(
+              '<idp:url value="/make/createSection"/>',
+              {
+                  "name": name,
+                  "makeTaskId": '${task.id}'   
+              },
+              function(json) {
+                  var result = $.parseJSON(json);
+                  if(result.type == 'success') {
+                      alert('保存成功。');
+                      window.location.reload();
+                  }
+              }
+          );
+      }
+      
+      function validateSectionName() {
+          
+      }
+      
+      
+      
+      function popAudioModal(id) {
+          clearAudioModal();
+          $('#inputSectionId').val(id);
+          $('#audioModal').modal('show');
+      }
+      
+      function clearAudioModal() {
+          $('#inputSectionId').val('');
+          $('#inputAudio').val('');
+          $('#importFile').val('');
+          $('#uploadedFile').empty();
+          $('#version1')[0].selectedIndex = 0;
+          $('#version2')[0].selectedIndex = 0;
+      }
+      
+      function closeAudioModal() {
+          clearAudioModal();
+          $('#audioModal').modal('hide');
+      }
+      
+      function submitAudio() {
+          var id = $('#inputSectionId').val();
+          var fileUrl = $('#inputDoc').val();
+          var version = $('#version1').val() + "." + $('#version2').val();
+          
+          $.post(
+              '<idp:url value="/make/makeTaskAudioFile"/>',
+              {
+                  "makeTaskAudioId": id,
+                  "version": version,
+                  "fileUrl": fileUrl
+              },
+              function(json) {
+                  var result = $.parseJSON(json);
+                  if(result.type == 'success') {
+                      alert('保存成功。');
+                      window.location.reload();
+                  }
+              }
+          );
+      }
+      
+      function listAudioFiles(id, obj) {
+          var parentBox = $(obj).parentsUntil('box').parent();
+          if(parentBox.hasClass('collapsed-box')) {
+              $.get(
+                  '<idp:url value="/make/makeTaskAudioFiles"/>?makeTaskAudioId=' + id,
+                  {},
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          var files = result.data;
+                          var html = template('fileTblTmpl', {"files": files});
+                          $('table[rel=' + id + '] tbody').html(html);
+                      }
+                  }
+              );
+              
+              $.get(
+                  '<idp:url value="/make/makeTaskAudioAudits"/>?makeTaskAudioId=' + id,
+                  {},
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          var audits = result.data;
+                          var html = template('auditListTmpl', {"audits": audits});
+                          $('.list-group[rel=' + id + ']').html(html);
+                      }
+                  }
+              );
+          }
+      }
+      
+      function popAuditModal(id) {
+          clearAuditModal();
+          $('#inputAuditMakeTaskAudioId').val(id);
+          $('#auditModal').modal('show');
+      }
+      
+      function clearAuditModal() {
+          $('#inputAuditMakeTaskAudioId').val('');
+          $('#auditText').val('');
+      }
+      
+      function closeAuditModal() {
+          clearAuditModal();
+          $('#auditModal').modal('hide');
+      }
+      
+      function submitAudit() {
+          var id = $('#inputAuditMakeTaskAudioId').val();
+          var remark = $('#auditText').val();
+          
+          $.post(
+              '<idp:url value="/make/makeTaskAudioAudit"/>',
+              {
+                  "makeTaskAudioId": id,
+                  "remark": remark
+              },
+              function(json) {
+                  var result = $.parseJSON(json);
+                  if(result.type == 'success') {
+                      alert('保存成功。');
+                      window.location.reload();
+                  }
+              }
+          );
+      }
     </script>
   </body>
 </html>

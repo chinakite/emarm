@@ -24,10 +24,12 @@ import org.springframework.stereotype.Service;
 import com.ideamoment.emarm.copyright.CopyrightException;
 import com.ideamoment.emarm.copyright.CopyrightExceptionCode;
 import com.ideamoment.emarm.make.dao.MakeDao;
-import com.ideamoment.emarm.model.CopyrightContractDoc;
 import com.ideamoment.emarm.model.MakeContract;
 import com.ideamoment.emarm.model.MakeContractDoc;
 import com.ideamoment.emarm.model.MakeTask;
+import com.ideamoment.emarm.model.MakeTaskAudio;
+import com.ideamoment.emarm.model.MakeTaskAudioAudit;
+import com.ideamoment.emarm.model.MakeTaskAudioFile;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.ProductState;
@@ -352,5 +354,87 @@ public class MakeService {
         String userId = curUser.getId();
         
         return makeDao.pageExtMyMakeTasks(curPage, pageSize, userId);
+    }
+
+    @IdeaJdbcTx
+    public List<MakeTaskAudio> listMakeTaskAudioes(String id) {
+        return makeDao.listMakeTaskAudioes(id);
+    }
+
+    @IdeaJdbcTx
+    public void createSection(String name, String makeTaskId) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        Date curTime = new Date();
+        
+        MakeTaskAudio mta = new MakeTaskAudio();
+        mta.setCreateTime(curTime);
+        mta.setCreator(userId);
+        mta.setMakeTaskId(makeTaskId);
+        mta.setModifier(userId);
+        mta.setModifyTime(curTime);
+        mta.setTitle(name);
+        
+        IdeaJdbc.save(mta);
+    }
+
+    @IdeaJdbcTx
+    public void createMakeTaskAudioFile(String makeTaskAudioId,
+                                        String version,
+                                        String fileUrl)
+    {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        Date curTime = new Date();
+        
+        MakeTaskAudioFile mtaf = new MakeTaskAudioFile();
+        mtaf.setCreateTime(curTime);
+        mtaf.setCreator(userId);
+        mtaf.setMakeTaskAudioId(makeTaskAudioId);
+        mtaf.setModifier(userId);
+        mtaf.setModifyTime(curTime);
+        mtaf.setVersion(version);
+        mtaf.setFileUrl(fileUrl);
+        
+        IdeaJdbc.save(mtaf);
+        
+    }
+
+    @IdeaJdbcTx
+    public List<MakeTaskAudioFile> listMakeTaskAudioFiles(String makeTaskAudioId) {
+        return makeDao.listMakeTaskAudioFiles(makeTaskAudioId);
+    }
+
+    @IdeaJdbcTx
+    public List<MakeTaskAudioAudit> listMakeTaskAudioAudits(String makeTaskAudioId) {
+        return makeDao.listMakeTaskAudioAudits(makeTaskAudioId);
+    }
+
+    @IdeaJdbcTx
+    public void createMakeTaskAudioAudit(String makeTaskAudioId,
+                                         String remark,
+                                         String result)
+    {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        Date curTime = new Date();
+        
+        MakeTaskAudioAudit mtaa = new MakeTaskAudioAudit();
+        mtaa.setCreateTime(curTime);
+        mtaa.setCreator(userId);
+        mtaa.setMakeTaskAudioId(makeTaskAudioId);
+        mtaa.setModifier(userId);
+        mtaa.setModifyTime(curTime);
+        mtaa.setRemark(remark);
+        mtaa.setResult(result);
+        
+        IdeaJdbc.save(mtaa);
+        
     }
 }
