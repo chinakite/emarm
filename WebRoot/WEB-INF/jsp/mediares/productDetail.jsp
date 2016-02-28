@@ -82,7 +82,7 @@
                               <p class="col-xs-12 productSummary">${product.summary}</p>
                               <p class="col-xs-5 detailInfo-light">作者：${product.author.name}</p>
                               <p class="col-xs-7 detailInfo-light">作者笔名：${product.author.pseudonym}</p>
-                              <p class="col-xs-5 detailInfo-light">题材：${product.subject.id}</p>
+                              <p class="col-xs-5 detailInfo-light">题材：${product.subject.name}</p>
                               <p class="col-xs-7 detailInfo-light">字数：${product.wordCount}&nbsp;万字</p>
                               <p class="col-xs-5 detailInfo-light">出版状态：${product.publishStateText}</p>
                               <p class="col-xs-7 detailInfo-light">出版年份：${product.publishYear}</p>
@@ -97,11 +97,13 @@
                           <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
                               <li class="active"><a href="#evaluationInfo" data-toggle="tab">评价信息</a></li>
-                              <li><a href="#timeline" data-toggle="tab">版权信息</a></li>
-                              <li><a href="#settings" data-toggle="tab">制作信息</a></li>
+                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '40') > -1}">
+                              <li><a href="#copyrightInfo" data-toggle="tab">版权信息</a></li>
+                              <li><a href="#makeInfo" data-toggle="tab">制作信息</a></li>
                               <li><a href="#settings" data-toggle="tab">运营信息</a></li>
                               <li><a href="#gallery" data-toggle="tab">相册</a></li>
                               <li><a href="#audioes" data-toggle="tab">音频</a></li>
+                              </c:if>
                             </ul>
                             <div class="tab-content">
                               <div class="active tab-pane" id="evaluationInfo">
@@ -130,57 +132,59 @@
                                     </div>
                                 </div>
                               </div><!-- /.tab-pane -->
-                              <div class="tab-pane" id="timeline">
-                                
+                              <div class="tab-pane" id="copyrightInfo">
+                                  <table id="copyrightTbl" class="table table-bordered table-hover">
+                                      <thead>
+                                          <tr>
+                                              <th>合同编号</th>
+                                              <th>甲方</th>
+                                              <th>乙方联系人</th>
+                                              <th>创建时间</th>
+                                              <th></th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                      
+                                      </tbody>
+                                  </table>  
                               </div><!-- /.tab-pane -->
             
-                              <div class="tab-pane" id="settings">
-                                <form class="form-horizontal">
-                                  <div class="form-group">
-                                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-                                    <div class="col-sm-10">
-                                      <input type="email" class="form-control" id="inputName" placeholder="Name">
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="inputEmail" class="col-sm-2 control-label">Email</label>
-                                    <div class="col-sm-10">
-                                      <input type="email" class="form-control" id="inputEmail" placeholder="Email">
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="inputName" class="col-sm-2 control-label">Name</label>
-                                    <div class="col-sm-10">
-                                      <input type="text" class="form-control" id="inputName" placeholder="Name">
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="inputExperience" class="col-sm-2 control-label">Experience</label>
-                                    <div class="col-sm-10">
-                                      <textarea class="form-control" id="inputExperience" placeholder="Experience"></textarea>
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <label for="inputSkills" class="col-sm-2 control-label">Skills</label>
-                                    <div class="col-sm-10">
-                                      <input type="text" class="form-control" id="inputSkills" placeholder="Skills">
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                      <div class="checkbox">
-                                        <label>
-                                          <input type="checkbox"> I agree to the <a href="#">terms and conditions</a>
-                                        </label>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div class="form-group">
-                                    <div class="col-sm-offset-2 col-sm-10">
-                                      <button type="submit" class="btn btn-danger">Submit</button>
-                                    </div>
-                                  </div>
-                                </form>
+                              <div class="tab-pane" id="makeInfo">
+                                  <h5>制作任务</h5>
+                                  <table id="makeTaskTbl" class="table table-bordered table-hover">
+                                      <thead>
+                                          <tr>
+                                            <th>制作团队</th>
+                                            <th>合同编号</th>
+                                            <th>单集时长</th>
+                                            <th>演播形式</th>
+                                            <th>制作周期</th>
+                                            <th>状态</th>
+                                            <th>操作</th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                      
+                                      </tbody>
+                                  </table>
+                                  <hr/>
+                                  <h5>制作合同</h5>
+                                  <table id="makeContractTbl" class="table table-bordered table-hover">
+                                      <thead>
+                                          <tr>
+                                              <th>合同编号</th>
+                                              <th>甲方联系人</th>
+                                              <th>乙方联系人</th>
+                                              <th>乙方联系方式</th>
+                                              <th>总集数</th>
+                                              <th>总价</th>
+                                              <th></th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                      
+                                      </tbody>
+                                  </table>  
                               </div><!-- /.tab-pane -->
                               <div class="tab-pane col-md-12" id="gallery">
                                   <div class="row">
@@ -616,6 +620,64 @@
         </form>
     </script>
     
+    <script id="nonCopyrightTmpl" type="text/html">
+        <tr>
+            <td colspan="5">目前没有版权合同。</td>
+        </tr>
+    </script>
+    
+    <script id="copyrightTmpl" type="text/html">
+        {{each cclist as cc idx}}
+        <tr>
+            <td>{{cc.code}}</td>
+            <td>{{cc.owner}}</td>
+            <td>{{cc.buyerContact}}</td>
+            <td>{{cc.createTime}}</td>
+            <td><a href='<idp:url value="/copyright/contractDetail"/>?id={{cc.id}}' target="_blank">查看</a></td>
+        </tr>
+        {{/each}}
+    </script>
+    
+    <script id="nonMakeTaskTmpl" type="text/html">
+        <tr>
+            <td colspan="7">目前没有制作任务。</td>
+        </tr>
+    </script>
+    
+    <script id="makeTaskTmpl" type="text/html">
+        {{each tasklist as task idx}}
+        <tr>
+            <td>{{task.maker.name}}</td>
+            <td>{{if task.contract}}{{task.contract.code}}{{/if}}</td>
+            <td>{{task.timePerSection}} 分钟</td>
+            <td>{{task.showTypeText}}</td>
+            <td>{{task.makeTime}} 天</td>
+            <td>{{task.stateText}}</td>
+            <td><a href='<idp:url value="/make/taskDetail"/>?id={{task.id}}' target="_blank">查看</a></td>
+        </tr>
+        {{/each}}
+    </script>
+    
+    <script id="nonMakeContractTmpl" type="text/html">
+        <tr>
+            <td colspan="7">目前没有制作合同。</td>
+        </tr>
+    </script>
+    
+    <script id="makeContractTmpl" type="text/html">
+        {{each mclist as mc idx}}
+        <tr>
+            <td>{{mc.ownerContact}}</td>
+            <td>{{mc.worker}}</td>
+            <td>{{mc.workerContact}}</td>
+            <td>{{mc.workerContactPhone}}</td>
+            <td>{{mc.totalSection}} 分钟</td>
+            <td>{{mc.totalPrice}} 元</td>
+            <td><a href='<idp:url value="/make/contractDetail"/>?productId={{mc.productId}}' target="_blank">查看</a></td>
+        </tr>
+        {{/each}}
+    </script>
+    
     <script id="imageListTmpl" type="text/html">
         <div class="row mt20">
             {{each imglist as img index}}
@@ -642,6 +704,9 @@
     
       $(document).ready(function(){
           loadEvaluations();
+          loadCopyrightContracts();
+          loadMakeTasks();
+          loadMakeContracts();
           listProductImages();
           listProductAudioes();
           $('#importImgFile').fileupload({
@@ -793,6 +858,66 @@
                               $('#evaTblStory').append(storyHtml);
                               $('#evaTblMake').append(makeHtml);
                           }
+                      }
+                  }
+              }
+          );
+      }
+      
+      function loadCopyrightContracts() {
+          $.get(
+              '<idp:url value="/copyright/productContracts"/>?productId=${product.id}',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var ccs = result.data;
+                      if(ccs.length == 0) {
+                          var copyrightHtml = template('nonCopyrightTmpl', {});
+                          $('#copyrightTbl tbody').html(copyrightHtml);
+                      }else{
+                          var copyrightHtml = template('copyrightTmpl', {cclist: ccs});
+                          $('#copyrightTbl tbody').html(copyrightHtml);
+                      }
+                  }
+              }
+          );
+      }
+      
+      function loadMakeTasks() {
+          $.get(
+              '<idp:url value="/make/makeTasks"/>?productId=${product.id}',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var tasks = result.data;
+                      if(tasks.length == 0) {
+                          var makeTaskHtml = template('nonMakeTaskTmpl', {});
+                          $('#makeTaskTbl tbody').html(makeTaskHtml);
+                      }else{
+                          var makeTaskHtml = template('makeTaskTmpl', {tasklist: tasks});
+                          $('#makeTaskTbl tbody').html(makeTaskHtml);
+                      }
+                  }
+              }
+          );
+      }
+      
+      function loadMakeContracts() {
+          $.get(
+              '<idp:url value="/make/productMakeContracts"/>?productId=${product.id}',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var mcs = result.data;
+                      if(mcs.length == 0) {
+                          var makeContractHtml = template('nonMakeContractTmpl', {});
+                          $('#makeContractTbl tbody').html(makeContractHtml);
+                      }else{
+                          var makeContractHtml = template('makeContractTmpl', {mclist: mcs});
+                          $('#makeContractTbl tbody').html(makeContractHtml);
                       }
                   }
               }

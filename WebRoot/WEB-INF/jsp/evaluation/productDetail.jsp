@@ -94,10 +94,12 @@
                           <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
                               <li class="active"><a href="#evaluationInfo" data-toggle="tab">评价信息</a></li>
+                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1}">
                               <li><a href="#copyrightInfo" data-toggle="tab">版权信息</a></li>
                               <li><a href="#makeInfo" data-toggle="tab">制作信息</a></li>
                               <li><a href="#settings" data-toggle="tab">运营信息</a></li>
                               <li><a href="#gallery" data-toggle="tab">相册</a></li>
+                              </c:if>
                             </ul>
                             <div class="tab-content">
                               <div class="active tab-pane" id="evaluationInfo">

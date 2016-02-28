@@ -4,7 +4,9 @@
 package com.ideamoment.emarm.copyright.dao;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,7 @@ import com.ideamoment.emarm.model.CopyrightContractDoc;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
+import com.ideamoment.emarm.model.enumeration.RoleType;
 import com.ideamoment.ideajdbc.IdeaJdbc;
 import com.ideamoment.ideajdbc.action.Page;
 import com.ideamoment.ideajdbc.action.Query;
@@ -27,7 +30,7 @@ public class CopyrightDao {
 
     public Page<Product> pageProducts(int curPage,
                                       int pageSize,
-                                      String role,
+                                      List<String> roles,
                                       String userId,
                                       HashMap<String, String> condition)
     {
@@ -53,7 +56,7 @@ public class CopyrightDao {
                 +   " LEFT JOIN t_copyright_contract cc "
                 +     " ON cc.C_ID = ccp.C_CONTRACT_ID "
                 + " WHERE p.C_TYPE = :type "
-                + " AND (p.C_STATE in (:states) or p.C_STATE = '0' and p.C_CREATOR = '" + userId + "')";
+                + " AND p.C_STATE in (:states) or (p.C_STATE = '50' and p.C_CREATOR = '" + userId + "')";
      
          if(condition.get("productName") != null) {
              sql += " AND p.C_NAME like :productName ";
@@ -76,11 +79,15 @@ public class CopyrightDao {
          
          sql += " ORDER BY p.C_MODIFYTIME DESC ";
          
-         String[] states = new String[]{
-                 ProductState.EVALUATE_FINISH,
-                 ProductState.CP_CONTRACT_INFLOW,
-                 ProductState.CP_CONTRACT_FINISH
-         };
+         
+         Set<String> states = new HashSet<String>();
+         for(String role : roles) {
+             if(role.equals(RoleType.SUPER_ADMIN)) {
+                 states.add(ProductState.EVALUATE_FINISH);
+                 states.add(ProductState.CP_CONTRACT_INFLOW);
+                 states.add(ProductState.CP_CONTRACT_FINISH);
+             }
+         }
          
          Query query = IdeaJdbc.query(sql)
                                  .setParameter("type", ProductType.TEXT)

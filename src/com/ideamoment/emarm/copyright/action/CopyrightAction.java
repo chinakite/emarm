@@ -4,6 +4,7 @@
 package com.ideamoment.emarm.copyright.action;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -14,11 +15,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ideamoment.emarm.copyright.service.CopyrightService;
+import com.ideamoment.emarm.model.Author;
 import com.ideamoment.emarm.model.CopyrightContract;
 import com.ideamoment.emarm.model.CopyrightContractAudit;
 import com.ideamoment.emarm.model.CopyrightContractDoc;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.ProductSample;
+import com.ideamoment.emarm.product.service.ProductService;
 import com.ideamoment.emarm.util.DataTableSource;
+import com.ideamoment.ideadp.exception.IdeaBaseException;
 import com.ideamoment.ideadp.restful.json.JsonData;
 import com.ideamoment.ideajdbc.action.Page;
 import com.ideamoment.wx.util.StringUtils;
@@ -33,6 +38,9 @@ public class CopyrightAction {
     @Autowired
     private CopyrightService copyrightService;
     
+    @Autowired
+    private ProductService productService;
+    
     /**
      * @return the copyrightService
      */
@@ -46,8 +54,20 @@ public class CopyrightAction {
     public void setCopyrightService(CopyrightService copyrightService) {
         this.copyrightService = copyrightService;
     }
-
-
+    
+    /**
+     * @return the productService
+     */
+    public ProductService getProductService() {
+        return productService;
+    }
+    
+    /**
+     * @param productService the productService to set
+     */
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
 
     @RequestMapping(value="/copyright/productPage", method=RequestMethod.GET)
     public ModelAndView toProducts() {
@@ -85,6 +105,75 @@ public class CopyrightAction {
         Page<Product> products = copyrightService.pageProducts(curPage, pageSize, condition);
         DataTableSource<Product> dts = convertProductsToDataTableSource(draw, products);
         return new JsonData(dts);
+    }
+    
+    @RequestMapping(value="/product/createProduct", method=RequestMethod.POST)
+    public JsonData saveProduct(
+                        String id,
+                        String name,
+                        String authorName,
+                        String authorPseudonym,
+                        String wordCount,
+                        String subject,
+                        String publishState,
+                        String publishYear,
+                        String press,
+                        String finishYear,
+                        String website,
+                        String summary,
+                        String hasAudio,
+                        String audioCopyright,
+                        String audioDesc,
+                        String samples,
+                        String isbn,
+                        String submit) {
+        
+        Product product;
+        if(StringUtils.isEmpty(id)) {
+            product = new Product();
+        }else{
+            product = productService.findProductById(id);
+        }
+        
+        product.setId(id);
+        product.setName(name);
+        
+        Author author = new Author();
+        author.setName(authorName);
+        author.setPseudonym(authorPseudonym);
+
+        product.setAuthor(author);
+        if(StringUtils.isNotEmpty(wordCount)) {
+            product.setWordCount(Integer.valueOf(wordCount));
+        }
+        product.setSubjectId(subject);
+        product.setPublishState(publishState);
+        product.setPublishYear(publishYear);
+        product.setPress(press);
+        product.setFinishYear(finishYear);
+        product.setWebsite(website);
+        product.setSummary(summary);
+        product.setHasAudio(hasAudio);
+        product.setAudioCopyright(audioCopyright);
+        product.setAudioDesc(audioDesc);
+        product.setIsbn(isbn);
+        
+        List<ProductSample> sampleList = new ArrayList<ProductSample>();
+        String[] sampleArray = samples.split(",");
+        for(String sampleUrl : sampleArray) {
+            ProductSample sample = new ProductSample();
+            sample.setFileUrl(sampleUrl);
+            sampleList.add(sample);
+        }
+        product.setSamples(sampleList);
+        try{
+            product = productService.saveProduct(product, submit, true);
+        }catch(IdeaBaseException e) {
+            e.printStackTrace();
+            return JsonData.exception(e.getCode(), e.getMessage());
+        }
+        
+        return JsonData.success(product);
     }
     
     @RequestMapping(value="/copyright/myContractPage", method=RequestMethod.GET)

@@ -116,7 +116,7 @@
                     </form>
                 </div>
                 <div class="tblToolbar">
-                    <button class="btn btn-default ml10" onclick="batchDeleteAuthors();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>
+                    <button class="btn btn-default ml10" onclick="popSaleContractModal();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>
                 </div>
                 <div class="box-body">
                   <table id="productTbl" class="table table-bordered table-hover">
@@ -130,7 +130,6 @@
                         <th>版权类型</th>
                         <th>版权范围</th>
                         <th>版权期限</th>
-                        <th>审批状态</th>
                         <th>操作</th>
                       </tr>
                     </thead>
@@ -474,9 +473,8 @@
       var table;
     
       $(document).ready(function(){
-          $('#menu_copyright').addClass('active');
-          $('#menu_cc_contract').addClass('active');
-          $('#menu_cc_mycontract').addClass('active');
+          $('#menu_sale').addClass('active');
+          $('#menu_sale_contract').addClass('active');
       
           initContractTbl();
           //loadUsers();
@@ -509,7 +507,7 @@
               "info": true,
               "autoWidth": false,
               "serverSide": true,
-              "ajax": '<idp:url value="/sale/productContracts"/>?productId=${product.id}',
+              "ajax": '<idp:url value="/sale/contracts"/>',
               language: {
                 "paginate": {
                   "first":      "首页",
@@ -521,7 +519,6 @@
               },
               "columns": [
                 {width:'1px'},
-                {},
                 {},
                 {},
                 {},
@@ -586,12 +583,6 @@
                   },
                   {
                       "targets": [8],
-                      "render": function(data, type, full) {
-                          return full.auditStateText;
-                      }
-                  },
-                  {
-                      "targets": [9],
                       "render": function(data, type, full) {
                           var html = '<a href=\'<idp:url value="/copyright/contractDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
@@ -836,7 +827,7 @@
       }
       
       //--------------- 新建合同 ---------------------
-      function popContractModal(id) {
+      function createSaleContract(id) {
           $.get(
               '<idp:url value="/evaluation/product"/>/'+id,
               {},

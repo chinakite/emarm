@@ -243,6 +243,9 @@
                       <div class="col-sm-4 checkbox">
                           <label for="saleMgrRole"><input id="saleMgrRole" name="role" type="checkbox" value="32"/>运营经理</label>
                       </div>
+                      <div class="col-sm-4 checkbox">
+                          <label for="mediaMgrRole"><input id="mediaMgrRole" name="role" type="checkbox" value="40"/>媒资管理员</label>
+                      </div>
                   </div>
                 </div>
             </form>
