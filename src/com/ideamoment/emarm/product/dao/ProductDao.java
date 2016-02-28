@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.ideajdbc.IdeaJdbc;
+import com.ideamoment.ideajdbc.action.Query;
 
 /**
  * @author Chinakite
@@ -105,4 +106,27 @@ public class ProductDao {
         return products;
     }
 
+    public List<Product> checkIsbnDuplicated(String isbn, String id) {
+        String sql = "select C_ID from T_PRODUCT where C_ISBN = :isbn ";
+        if(id != null) {
+            sql += " AND C_ID <> :id";
+        }
+        Query query = IdeaJdbc.query(sql).setParameter("isbn", isbn);
+        if(id != null) {
+            query.setParameter("id", id);
+        }
+        return query.listTo(Product.class);
+    }
+
+    public List<Product> checkProductDuplicated(String name, String id) {
+        String sql = "select C_ID from T_PRODUCT where C_NAME = :name ";
+        if(id != null) {
+            sql += " AND C_ID <> :id";
+        }
+        Query query = IdeaJdbc.query(sql).setParameter("name", name);
+        if(id != null) {
+            query.setParameter("id", id);
+        }
+        return query.listTo(Product.class);
+    }
 }

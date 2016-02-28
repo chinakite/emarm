@@ -80,7 +80,9 @@ public class SaleContract extends HistoriableEntity {
     
     @Property(dataItem="C_TOTAL_PRICE", type=DataItemType.DECIMAL)
     private BigDecimal totalPrice;
-
+    
+    @Property(dataItem="C_STATE", type=DataItemType.VARCHAR, length=2)
+    private String state;
     
     /**
      * @return the owner
@@ -423,6 +425,19 @@ public class SaleContract extends HistoriableEntity {
     public void setCode(String code) {
         this.code = code;
     }
+
+    /**
+     * @return the state
+     */
+    public String getState() {
+        return state;
+    }
     
+    /**
+     * @param state the state to set
+     */
+    public void setState(String state) {
+        this.state = state;
+    }
     
 }

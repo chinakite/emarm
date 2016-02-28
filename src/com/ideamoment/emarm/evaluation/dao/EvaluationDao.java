@@ -306,4 +306,33 @@ public class EvaluationDao {
         
         return products;
     }
+
+    public List<Product> checkIsbnDuplicated(String isbn, String id) {
+        String sql = "select C_ID from T_PRODUCT where C_ISBN = :isbn ";
+        if(id != null) {
+            sql += " AND C_ID <> :id";
+        }
+        Query query = IdeaJdbc.query(sql).setParameter("isbn", isbn);
+        if(id != null) {
+            query.setParameter("id", id);
+        }
+        return query.listTo(Product.class);
+    }
+
+    public List<Product> checkProductDuplicated(String name, String id) {
+        String sql = "select C_ID from T_PRODUCT where C_NAME = :name ";
+        if(id != null) {
+            sql += " AND C_ID <> :id";
+        }
+        Query query = IdeaJdbc.query(sql).setParameter("name", name);
+        if(id != null) {
+            query.setParameter("id", id);
+        }
+        return query.listTo(Product.class);
+    }
+
+    public void batchDeleteProducts(String[] idArray) {
+        String sql = "DELETE FROM T_PRODUCT WHERE C_ID in (:ids)";
+        
+    }
 }

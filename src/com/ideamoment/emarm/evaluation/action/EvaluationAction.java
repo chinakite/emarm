@@ -21,6 +21,7 @@ import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.util.DataTableSource;
+import com.ideamoment.ideadp.exception.IdeaBaseException;
 import com.ideamoment.ideadp.restful.json.JsonData;
 import com.ideamoment.ideajdbc.action.Page;
 import com.ideamoment.wx.util.StringUtils;
@@ -174,7 +175,7 @@ public class EvaluationAction {
         author.setPseudonym(authorPseudonym);
 
         product.setAuthor(author);
-        if(wordCount != null) {
+        if(StringUtils.isNotEmpty(wordCount)) {
             product.setWordCount(Integer.valueOf(wordCount));
         }
         product.setSubjectId(subject);
@@ -197,8 +198,13 @@ public class EvaluationAction {
             sampleList.add(sample);
         }
         product.setSamples(sampleList);
+        try{
+            product = evaluationService.saveProduct(product, submit);
+        }catch(IdeaBaseException e) {
+            e.printStackTrace();
+            return JsonData.exception(e.getCode(), e.getMessage());
+        }
         
-        product = evaluationService.saveProduct(product, submit);
         return JsonData.success(product);
     }
     
@@ -298,6 +304,13 @@ public class EvaluationAction {
     public JsonData findFinalEvaluation(String productId) {
         FinalEvaluation finalEva = evaluationService.findFinalEvaluation(productId);
         return JsonData.success(finalEva);
+    }
+    
+    @RequestMapping(value="/evaluation/batchDeleteProducts", method=RequestMethod.DELETE)
+    public JsonData batchDeleteProducts(String ids) {
+        String[] idArray = ids.split(",");
+        evaluationService.batchDeleteProducts(idArray);
+        return JsonData.SUCCESS;
     }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {

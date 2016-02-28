@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
+import com.ideamoment.emarm.model.enumeration.PublishState;
 import com.ideamoment.emarm.model.enumeration.RoleType;
 import com.ideamoment.ideadp.exception.IdeaDataException;
 import com.ideamoment.ideadp.exception.IdeaDataExceptionCode;
@@ -147,36 +149,39 @@ public class EvaluationService {
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         
-        if("1".equals(submit)) {
+        if("0".equals(submit)) {
             String name = product.getName();
             if(name == null || "".equals(name.trim())) {
                 throw nameRequired();
             }
             
+            checkDuplicated(product, product.getId());
+            
             Date curTime = new Date();
             
             Author author = product.getAuthor();
             String authorName = author.getName();
-            Author existsAuthor = authorDao.queryAuthor(authorName, null);
-            if(existsAuthor != null) {
-                product.setAuthorId(existsAuthor.getId());
-            }else{
-                author.setCreateTime(curTime);
-                author.setCreator(curUser.getId());
-                author.setModifier(curUser.getId());
-                author.setModifyTime(curTime);
-                
-                IdeaJdbc.save(author);
-                product.setAuthorId(author.getId());
+            if(StringUtils.isNotEmpty(authorName)) {
+                Author existsAuthor = authorDao.queryAuthor(authorName, null);
+                if(existsAuthor != null) {
+                    product.setAuthorId(existsAuthor.getId());
+                }else{
+                    author.setCreateTime(curTime);
+                    author.setCreator(curUser.getId());
+                    author.setModifier(curUser.getId());
+                    author.setModifyTime(curTime);
+                    
+                    IdeaJdbc.save(author);
+                    product.setAuthorId(author.getId());
+                }
             }
             
             product.setModifier(curUser.getId());
             product.setModifyTime(curTime);
             
             product.setType(ProductType.TEXT);
-            product.setState(ProductState.APPROVE_WAITING);
-            
-            if(product.getId() != null) {
+            product.setState(ProductState.DRAFT);
+            if(!StringUtils.isEmpty(product.getId())) {
                 IdeaJdbc.update(product);
             }else{
                 product.setCreateTime(curTime);
@@ -189,34 +194,39 @@ public class EvaluationService {
                 sample.setProductId(product.getId());
                 IdeaJdbc.save(sample);
             }
-        }else if("2".equals(submit)) {
+        }else if("1".equals(submit)) {
             String name = product.getName();
             if(name == null || "".equals(name.trim())) {
                 throw nameRequired();
             }
             
+            checkDuplicated(product, product.getId());
+            
             Date curTime = new Date();
             
             Author author = product.getAuthor();
             String authorName = author.getName();
-            Author existsAuthor = authorDao.queryAuthor(authorName, null);
-            if(existsAuthor != null) {
-                product.setAuthorId(existsAuthor.getId());
-            }else{
-                author.setCreateTime(curTime);
-                author.setCreator(curUser.getId());
-                author.setModifier(curUser.getId());
-                author.setModifyTime(curTime);
-                
-                IdeaJdbc.save(author);
-                product.setAuthorId(author.getId());
+            
+            if(StringUtils.isNotEmpty(authorName)) {
+                Author existsAuthor = authorDao.queryAuthor(authorName, null);
+                if(existsAuthor != null) {
+                    product.setAuthorId(existsAuthor.getId());
+                }else{
+                    author.setCreateTime(curTime);
+                    author.setCreator(curUser.getId());
+                    author.setModifier(curUser.getId());
+                    author.setModifyTime(curTime);
+                    
+                    IdeaJdbc.save(author);
+                    product.setAuthorId(author.getId());
+                }
             }
             
             product.setModifier(curUser.getId());
             product.setModifyTime(curTime);
             
             product.setType(ProductType.TEXT);
-            
+            product.setState(ProductState.APPROVE_WAITING);
             if(product.getId() != null) {
                 IdeaJdbc.update(product);
             }else{
@@ -236,21 +246,26 @@ public class EvaluationService {
                 throw nameRequired();
             }
             
+            checkDuplicated(product, product.getId());
+            
             Date curTime = new Date();
             
             Author author = product.getAuthor();
             String authorName = author.getName();
-            Author existsAuthor = authorDao.queryAuthor(authorName, null);
-            if(existsAuthor != null) {
-                product.setAuthorId(existsAuthor.getId());
-            }else{
-                author.setCreateTime(curTime);
-                author.setCreator(curUser.getId());
-                author.setModifier(curUser.getId());
-                author.setModifyTime(curTime);
-                
-                IdeaJdbc.save(author);
-                product.setAuthorId(author.getId());
+            
+            if(StringUtils.isNotEmpty(authorName)) {
+                Author existsAuthor = authorDao.queryAuthor(authorName, null);
+                if(existsAuthor != null) {
+                    product.setAuthorId(existsAuthor.getId());
+                }else{
+                    author.setCreateTime(curTime);
+                    author.setCreator(curUser.getId());
+                    author.setModifier(curUser.getId());
+                    author.setModifyTime(curTime);
+                    
+                    IdeaJdbc.save(author);
+                    product.setAuthorId(author.getId());
+                }
             }
             
             product.setModifier(curUser.getId());
@@ -278,6 +293,20 @@ public class EvaluationService {
         return product;
     }
     
+    private void checkDuplicated(Product product, String id) {
+        List<Product> prods = evaluationDao.checkProductDuplicated(product.getName(), id);
+        if(prods != null && prods.size() > 0) {
+             throw new EvaluationException(EvaluationExceptionCode.PRODUCT_DUPLICATED, "同名作品已存在。");    
+        }
+        
+        if(product.getIsbn() != null && product.getIsbn().trim().length() > 0) {
+            prods = evaluationDao.checkIsbnDuplicated(product.getIsbn(), id);
+            if(prods != null && prods.size() > 0) {
+                 throw new EvaluationException(EvaluationExceptionCode.ISBN_DUPLICATED, "作品ISBN号系统中已存在。");    
+            }
+        }
+    }
+
     private EvaluationException nameRequired() {
         return new EvaluationException(EvaluationExceptionCode.NAME_REQUIRED, "作品名称不能为空。");
     }
@@ -398,5 +427,15 @@ public class EvaluationService {
         String userId = curUser.getId();
         
         return evaluationDao.pageProductsByUser(curPage, pageSize, userId, condition);
+    }
+
+    @IdeaJdbcTx
+    public void batchDeleteProducts(String[] idArray) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        String userId = curUser.getId();
+        
+        evaluationDao.batchDeleteProducts(idArray);
     }
 }

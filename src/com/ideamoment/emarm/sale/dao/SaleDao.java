@@ -168,7 +168,7 @@ public class SaleDao {
                      + " sc.C_PRIVILEGE_DEADLINE "
                      + "FROM T_SALE_CONTRACT sc ";
 
-        sql += "ORDER BY cc.C_MODIFYTIME DESC";
+        sql += "ORDER BY sc.C_MODIFYTIME DESC";
 
         Page<SaleContract> contracts = IdeaJdbc.query(sql).pageTo(SaleContract.class, curPage, pageSize);
 

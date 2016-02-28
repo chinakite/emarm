@@ -140,7 +140,9 @@
                 </div>
                 <div class="tblToolbar">
                     <button class="btn btn-default" data-toggle="modal" data-target="#productModal"><i class="fa fa-plus"></i>&nbsp;新建</button>
+                    <!--
                     <button class="btn btn-default ml10" onclick="batchDeleteAuthors();"><i class="fa fa-remove"></i>&nbsp;删除</button>
+                    -->
                 </div>
                 <div class="box-body">
                   <table id="productTbl" class="table table-bordered table-hover">

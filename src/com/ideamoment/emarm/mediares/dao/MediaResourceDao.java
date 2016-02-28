@@ -70,7 +70,8 @@ public class MediaResourceDao {
 
         String[] states = new String[] { ProductState.MK,
                 ProductState.MK_FINISH, ProductState.SALED,
-                ProductState.DRAFT};
+                ProductState.MK_WAITING, ProductState.RESERVED,
+                ProductState.CP_CONTRACT_FINISH};
 
         Query query = IdeaJdbc.query(sql).setParameter("type", ProductType.TEXT)
                 .setParameter("states", states).populate("author", "a")

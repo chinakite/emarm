@@ -80,18 +80,27 @@ public class CopyrightService {
         String userId = curUser.getId();
         
         String userRole = curUser.getRole();
-        String role = null;
+        List<String> roles = new ArrayList<String>();
         if(userRole.indexOf(RoleType.SUPER_ADMIN) > -1) {
-            role = RoleType.SUPER_ADMIN;
-        }else if(userRole.indexOf(RoleType.EVALUATOR_MGR) > -1) {
-            role = RoleType.EVALUATOR_MGR;
-        }else if(userRole.indexOf(RoleType.EVALUATOR_OPR) > -1){
-            role = RoleType.EVALUATOR_OPR;
-        }else{
-            role = RoleType.NORMAL;
+            roles.add(RoleType.SUPER_ADMIN);
+        }
+        if(userRole.indexOf(RoleType.CEO) > -1) {
+            roles.add(RoleType.CEO);
+        }
+        if(userRole.indexOf(RoleType.COPYRIGHT_MANAGER) > -1){
+            roles.add(RoleType.COPYRIGHT_MANAGER);
+        }
+        if(userRole.indexOf(RoleType.COPYRIGHT_DIRECTOR) > -1){
+            roles.add(RoleType.COPYRIGHT_DIRECTOR);
+        }
+        if(userRole.indexOf(RoleType.COPYRIGHT_OPR) > -1){
+            roles.add(RoleType.COPYRIGHT_OPR);
+        }
+        if(userRole.indexOf(RoleType.LAWYER) > -1){
+            roles.add(RoleType.LAWYER);
         }
         
-        return copyrightDao.pageProducts(curPage, pageSize, role, userId, condition);
+        return copyrightDao.pageProducts(curPage, pageSize, roles, userId, condition);
     }
     
     @IdeaJdbcTx

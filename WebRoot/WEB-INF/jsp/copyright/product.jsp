@@ -127,6 +127,7 @@
                                 <option value="0">未签约</option>
                                 <option value="5">流程中</option>
                                 <option value="6">已签约</option>
+                                <option value="50">旧作品</option>
                             </select>
                           </div>
                         </div>
@@ -430,7 +431,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearProductModal();">关闭</button>
-            <button type="button" class="btn btn-emarm" onclick="submitProduct('0');">保存</button>
+            <button type="button" class="btn btn-emarm" onclick="submitProduct('1');">保存</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -936,12 +937,14 @@
                   {
                       "targets": [6],
                       "render": function(data, type, full) {
-                          if(full.state == 4 || full.state == 0) {
+                          if(full.state == 4) {
                               return '未签约';
                           }else if(full.state == 5){
                               return '流程中';
                           }else if(full.state == 6) {
                               return '签约完成';
+                          }else if(full.state == 50) {
+                              return '旧作品';
                           }else{
                               return '';
                           }
@@ -954,9 +957,12 @@
                       
                           var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
-                          if(full.state == '4' || full.state == '0') {
+                          if(full.state == '4') {
                               html += '<span class="small">|</span> ';
                               html += '<a onclick="popContractModal(\'' + full.id + '\');">新建合同</a>';
+                          }else if(full.state == '50') {
+                              html += '<span class="small">|</span> ';
+                              html += '<a onclick="popEditModal(\'' + full.id + '\');">编辑</a>';
                           }
                           
                           return html;
@@ -986,12 +992,19 @@
           }else{
               r = validateName()
                     && validateAuthorName()
-                    && validateWordCount();
+                    && validateWordCount()
+                    && validatePress()
+                    && validateIsbn()
+                    && validateWebsite()
+                    && validateSummary()
+                    && validateSamples()
+                    && validateAudioDesc();
           }
       
           if(!r) {
               return ;
           }else{
+              var id = $('#inputId').val();
               var name = $('#inputName').val();
               var authorName = $('#inputAuthorName').val();
               var authorPseudonym = $('#inputAuthorPseudonym').val();
@@ -1009,8 +1022,9 @@
               var samples = $('#inputSamples').val();
               
               $.post(
-                  '<idp:url value="/evaluation/product"/>',
+                  '<idp:url value="/product/createProduct"/>',
                   {
+                      'id': id,
                       'name': name,
                       'authorName': authorName,
                       'authorPseudonym': authorPseudonym,
@@ -1038,63 +1052,6 @@
                       }
                   }
               );       
-          }
-      }
-      
-      function validateName() {
-          var inputNameEle = $('#inputName');
-          var authorName = inputNameEle.val();
-          if(!authorName || $.trim(authorName).length == 0) {
-              var formGroup = inputNameEle.parents('.form-group');
-              if(!formGroup.hasClass('has-error')) {
-                  inputNameEle.parents('.form-group').addClass('has-error');
-                  inputNameEle.next('.feedback-tip').find('span').text('作品名称不能为空');
-                  inputNameEle.next('.feedback-tip').show();
-              }
-              return false;
-          }else{
-              inputNameEle.parents('.form-group').removeClass('has-error');
-              inputNameEle.next('.feedback-tip').find('span').text('');
-              inputNameEle.next('.feedback-tip').hide();
-              return true;
-          }
-      }
-      
-      function validateAuthorName() {
-          var inputAuthorNameEle = $('#inputAuthorName');
-          var authorName = inputAuthorNameEle.val();
-          if(!authorName || $.trim(authorName).length == 0) {
-              var formGroup = inputAuthorNameEle.parents('.form-group');
-              if(!formGroup.hasClass('has-error')) {
-                  inputAuthorNameEle.parents('.form-group').addClass('has-error');
-                  inputAuthorNameEle.next('.feedback-tip').find('span').text('作者不能为空');
-                  inputAuthorNameEle.next('.feedback-tip').show();
-              }
-              return false;
-          }else{
-              inputAuthorNameEle.parents('.form-group').removeClass('has-error');
-              inputAuthorNameEle.next('.feedback-tip').find('span').text('');
-              inputAuthorNameEle.next('.feedback-tip').hide();
-              return true;
-          }
-      }
-      
-      function validateWordCount() {
-          var inputWordCountEle = $('#inputWordCount');
-          var wordCount = inputWordCountEle.val();
-          if(!wordCount || $.trim(wordCount).length == 0) {
-              var formGroup = inputWordCountEle.parents('.form-group');
-              if(!formGroup.hasClass('has-error')) {
-                  inputWordCountEle.parents('.form-group').addClass('has-error');
-                  inputWordCountEle.next('.feedback-tip').find('span').text('字数不能为空');
-                  inputWordCountEle.next('.feedback-tip').show();
-              }
-              return false;
-          }else{
-              inputWordCountEle.parents('.form-group').removeClass('has-error');
-              inputWordCountEle.next('.feedback-tip').find('span').text('');
-              inputWordCountEle.next('.feedback-tip').hide();
-              return true;
           }
       }
       
@@ -1332,6 +1289,274 @@
           $('#inputSearchSubject')[0].selectedIndex = 0;
           $('#inputSearchPublishState')[0].selectedIndex = 0;
           $('#inputSearchState')[0].selectedIndex = 0;
+      }
+      
+      function popEditModal(id) {
+          $.get(
+              '<idp:url value="/evaluation/product"/>/'+id,
+              {},
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      clearProductModal();
+                      var prod = result.data;
+                      
+                      $('#inputId').val(prod.id);
+                      $('#inputName').val(prod.name);
+                      if(prod.author) {
+                          $('#inputAuthorName').val(prod.author.name);
+                          $('#inputAuthorPseudonym').val(prod.author.pseudonym);
+                      }else{
+                          $('#inputAuthorName').val('');
+                          $('#inputAuthorPseudonym').val('');
+                      }
+                      $('#inputWordCount').val(prod.wordCount);
+                      $('#inputSubject').find('option[value=' + prod.subject.id + ']').attr('selected', true);
+                      $('#inputPublishState').find('option[value=' + prod.publishState + ']').attr('selected', true);
+                      if(prod.publishState == 0) {
+                          $('#inputPublishYear').find('option[value=' + prod.publishYear + ']').attr('selected', true);
+                          $('#inputPress').val(prod.press);
+                          $('#inputIsbn').val(prod.isbn);
+                      }else{
+                          $('#publishYearDiv').hide();
+                          $('#pressDiv').hide();
+                          $('#isbnDiv').hide();
+                          $('#inputFinishYear').find('option[value=' + prod.finishYear + ']').attr('selected', true);
+                          $('#finishYearDiv').show();
+                          if(prod.publishState == 1) {
+                              $('#inputWebsite').val(prod.website);
+                              $('#websiteDiv').show();
+                          }
+                      }
+                      $('#inputSummary').val(prod.summary);
+                      if(prod.samples && prod.samples.length > 0) {
+                          $('#samplesShowDiv a').attr('href', '<idp:url value=""/>' + prod.samples[0].fileUrl);
+                          $('#inputSamples').val(prod.samples[0].fileUrl);
+                          $('#samplesUploadDiv').hide();
+                          $('#samplesShowDiv').show();
+                      }
+                      
+                      if(prod.hasAudio == '1') {
+                          $('#hasAudio').attr('checked', true);
+                          $('#inputAudioCopyright').find('option[value=' + prod.audioCopyright + ']').attr('selected', true);
+                          $('#inputAudioDesc').val(prod.audioDesc);
+                          $('#audioCopyrightDiv').show();
+                          $('#audioDescDiv').show();
+                      }else{
+                          $('#noAudio').attr('checked', true);
+                          $('#inputAudioDesc').val('');
+                          $('#audioCopyrightDiv').hide();
+                          $('#audioDescDiv').hide();
+                      }
+                      
+                      $('#productModal').modal('show');
+                  }
+              }
+          );
+      }
+      
+      //================= Product Validator ===========
+      function validateName() {
+          var inputNameEle = $('#inputName');
+          var authorName = inputNameEle.val();
+          if(!authorName || $.trim(authorName).length == 0) {
+              var formGroup = inputNameEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputNameEle.parents('.form-group').addClass('has-error');
+                  inputNameEle.next('.feedback-tip').find('span').text('作品名称不能为空');
+                  inputNameEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputNameEle.parents('.form-group').removeClass('has-error');
+              inputNameEle.next('.feedback-tip').find('span').text('');
+              inputNameEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateAuthorName() {
+          var inputAuthorNameEle = $('#inputAuthorName');
+          var authorName = inputAuthorNameEle.val();
+          if(!authorName || $.trim(authorName).length == 0) {
+              var formGroup = inputAuthorNameEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputAuthorNameEle.parents('.form-group').addClass('has-error');
+                  inputAuthorNameEle.next('.feedback-tip').find('span').text('作者不能为空');
+                  inputAuthorNameEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputAuthorNameEle.parents('.form-group').removeClass('has-error');
+              inputAuthorNameEle.next('.feedback-tip').find('span').text('');
+              inputAuthorNameEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateWordCount() {
+          var inputWordCountEle = $('#inputWordCount');
+          var wordCount = inputWordCountEle.val();
+          if(!wordCount || $.trim(wordCount).length == 0) {
+              var formGroup = inputWordCountEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputWordCountEle.parents('.form-group').addClass('has-error');
+                  inputWordCountEle.next('.feedback-tip').find('span').text('字数不能为空');
+                  inputWordCountEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputWordCountEle.parents('.form-group').removeClass('has-error');
+              inputWordCountEle.next('.feedback-tip').find('span').text('');
+              inputWordCountEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validatePress() {
+          var publishState = $('#inputPublishState').val();
+          var inputPressEle = $('#inputPress');
+          if(publishState == '0') {
+              var press = inputPressEle.val();
+              if(!press || $.trim(press).length == 0) {
+                  var formGroup = inputPressEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputPressEle.parents('.form-group').addClass('has-error');
+                      inputPressEle.next('.feedback-tip').find('span').text('出版社不能为空');
+                      inputPressEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputPressEle.parents('.form-group').removeClass('has-error');
+                  inputPressEle.next('.feedback-tip').find('span').text('');
+                  inputPressEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputPressEle.parents('.form-group').removeClass('has-error');
+              inputPressEle.next('.feedback-tip').find('span').text('');
+              inputPressEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateIsbn() {
+          var publishState = $('#inputPublishState').val();
+          var inputIsbnEle = $('#inputIsbn');
+          if(publishState == '0') {
+              var isbn = inputIsbnEle.val();
+              if(!isbn || $.trim(isbn).length == 0) {
+                  var formGroup = inputIsbnEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputIsbnEle.parents('.form-group').addClass('has-error');
+                      inputIsbnEle.next('.feedback-tip').find('span').text('ISBN号不能为空');
+                      inputIsbnEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputIsbnEle.parents('.form-group').removeClass('has-error');
+                  inputIsbnEle.next('.feedback-tip').find('span').text('');
+                  inputIsbnEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputIsbnEle.parents('.form-group').removeClass('has-error');
+              inputIsbnEle.next('.feedback-tip').find('span').text('');
+              inputIsbnEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateWebsite() {
+          var publishState = $('#inputPublishState').val();
+          var inputWebsiteEle = $('#inputWebsite');
+          if(publishState == '1') {
+              var website = inputWebsiteEle.val();
+              if(!website || $.trim(website).length == 0) {
+                  var formGroup = inputWebsiteEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputWebsiteEle.parents('.form-group').addClass('has-error');
+                      inputWebsiteEle.next('.feedback-tip').find('span').text('签约网站不能为空');
+                      inputWebsiteEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputWebsiteEle.parents('.form-group').removeClass('has-error');
+                  inputWebsiteEle.next('.feedback-tip').find('span').text('');
+                  inputWebsiteEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputWebsiteEle.parents('.form-group').removeClass('has-error');
+              inputWebsiteEle.next('.feedback-tip').find('span').text('');
+              inputWebsiteEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateSummary() {
+          var inputSummaryEle = $('#inputSummary');
+          var summary = inputSummaryEle.val();
+          if(!summary || $.trim(summary).length == 0) {
+              var formGroup = inputSummaryEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputSummaryEle.parents('.form-group').addClass('has-error');
+                  inputSummaryEle.next('.feedback-tip').find('span').text('内容简介不能为空');
+                  inputSummaryEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputSummaryEle.parents('.form-group').removeClass('has-error');
+              inputSummaryEle.next('.feedback-tip').find('span').text('');
+              inputSummaryEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateSamples() {
+          var inputSamplesEle = $('#inputSamples');
+          var samples = inputSamplesEle.val();
+          if(!samples || $.trim(samples).length == 0) {
+              var formGroup = inputSamplesEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputSamplesEle.parents('.form-group').addClass('has-error');
+                  inputSamplesEle.next('.feedback-tip').find('span').text('样章不能为空');
+                  inputSamplesEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputSamplesEle.parents('.form-group').removeClass('has-error');
+              inputSamplesEle.next('.feedback-tip').find('span').text('');
+              inputSamplesEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateAudioDesc() {
+          var checked = $('#hasAudio').prop('checked');
+          var inputAudioDescEle = $('#inputAudioDesc');
+          if(checked) {
+              var audioDesc = inputAudioDescEle.val();
+              if(!audioDesc || $.trim(audioDesc).length == 0) {
+                  var formGroup = inputAudioDescEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputAudioDescEle.parents('.form-group').addClass('has-error');
+                      inputAudioDescEle.next('.feedback-tip').find('span').text('音频备注不能为空');
+                      inputAudioDescEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputAudioDescEle.parents('.form-group').removeClass('has-error');
+                  inputAudioDescEle.next('.feedback-tip').find('span').text('');
+                  inputAudioDescEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputAudioDescEle.parents('.form-group').removeClass('has-error');
+              inputAudioDescEle.next('.feedback-tip').find('span').text('');
+              inputAudioDescEle.next('.feedback-tip').hide();
+              return true;
+          }
       }
     </script>
   </body>

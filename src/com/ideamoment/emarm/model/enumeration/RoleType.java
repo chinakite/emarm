@@ -38,6 +38,9 @@ public class RoleType {
     public static final String SALE_MGR = "32";
     public static final String SALE_MGR_TEXT = "运营经理";
     
+    public static final String MEDIA_MGR = "40";
+    public static final String MEDIA_MGR_TEXT = "媒资管理员";
+    
     public static final String LAWYER = "80";
     public static final String LAWYER_TEXT = "法务人员";
     

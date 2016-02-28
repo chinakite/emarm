@@ -165,9 +165,7 @@ public class SaleService {
                                             int pageSize,
                                             HashMap<String, String> condition)
     {
-        
-        
-        return null;
+        return saleDao.pageContracts(curPage, pageSize, condition);
     }
     
 }

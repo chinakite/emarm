@@ -51,4 +51,7 @@ public class ProductState {
     
     public static final String SALED = "14";
     public static final String SALED_TEXT = "已销售";
+    
+    public static final String NEW_WITHOUT_EVA = "50";
+    public static final String NEW_WITHOUT_EVA_TEXT = "未签约";
 }

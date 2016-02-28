@@ -217,6 +217,12 @@ public class MakeAction {
         return JsonData.SUCCESS;
     }
     
+    @RequestMapping(value="/make/productMakeContracts", method=RequestMethod.GET)
+    public JsonData listProductMakeContract(String productId) {
+        List<MakeContract> contracts = makeService.listMakeContractsByProduct(productId);
+        return JsonData.success(contracts);
+    }
+    
     @RequestMapping(value="/make/contractDetail", method=RequestMethod.GET)
     public ModelAndView makeContractDetail(String productId) {
         MakeContract contract = makeService.findMakeContractByProduct(productId);

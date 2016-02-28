@@ -437,4 +437,9 @@ public class MakeService {
         IdeaJdbc.save(mtaa);
         
     }
+
+    @IdeaJdbcTx
+    public List<MakeContract> listMakeContractsByProduct(String productId) {
+        return makeDao.listMakeContractsByProduct(productId);
+    }
 }

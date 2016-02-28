@@ -240,6 +240,16 @@ public class Product extends HistoriableEntity {
             return ProductState.MK_TEXT;
         }else if(ProductState.MK_FINISH.equals(this.state)){
             return ProductState.MK_FINISH_TEXT;
+        }else if(ProductState.MK_WAITING.equals(this.state)){
+            return ProductState.MK_WAITING_TEXT;
+        }else if(ProductState.SALED.equals(this.state)){
+            return ProductState.SALED_TEXT;
+        }else if(ProductState.CP_CONTRACT_INFLOW.equals(this.state)){
+            return ProductState.CP_CONTRACT_INFLOW_TEXT;
+        }else if(ProductState.CP_CONTRACT_FINISH.equals(this.state)){
+            return ProductState.CP_CONTRACT_FINISH_TEXT;
+        }else if(ProductState.RESERVED.equals(this.state)){
+            return ProductState.RESERVED_TEXT;
         }
         else{
             return ProductState.DRAFT_TEXT;

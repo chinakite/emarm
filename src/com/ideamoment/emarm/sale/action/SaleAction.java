@@ -126,7 +126,7 @@ public class SaleAction {
     }
     
     @RequestMapping(value="/sale/saleContract", method=RequestMethod.POST)
-    public JsonData createCopyrightContract(
+    public JsonData createSaleContract(
                         String contractId,
                         String totalPrice,
                         String contractProductIds,

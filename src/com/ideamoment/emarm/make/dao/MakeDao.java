@@ -281,4 +281,12 @@ public class MakeDao {
                        .listTo(MakeTaskAudioAudit.class, "mtaa");
     }
 
+    public List<MakeContract> listMakeContractsByProduct(String productId) {
+        String sql = "select * from T_MAKE_CONTRACT where C_PRODUCT_ID = :productId order by C_MODIFYTIME desc limit 0,1";
+
+        return IdeaJdbc.query(sql)
+                        .setParameter("productId", productId)
+                        .listTo(MakeContract.class);
+    }
+
 }

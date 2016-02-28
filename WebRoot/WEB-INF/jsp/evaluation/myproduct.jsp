@@ -142,7 +142,9 @@
                 </div>
                 <div class="tblToolbar">
                     <button class="btn btn-default" data-toggle="modal" data-target="#productModal"><i class="fa fa-plus"></i>&nbsp;新建</button>
-                    <button class="btn btn-default ml10" onclick="batchDeleteAuthors();"><i class="fa fa-remove"></i>&nbsp;删除</button>
+                    <!--
+                    <button class="btn btn-default ml10" onclick="batchDeleteProducts();"><i class="fa fa-remove"></i>&nbsp;删除</button>
+                    -->
                 </div>
                 <div class="box-body">
                   <table id="productTbl" class="table table-bordered table-hover">
@@ -199,7 +201,7 @@
                           <div class="col-xs-8">
                               <input type="text" class="form-control" id="inputAuthorName" placeholder="作者" onblur="validateAuthorName();">
                               <div class="feedback-tip">
-                                <label class="control-label" for="inputAuthorName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                                <label for="inputAuthorName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
                               </div>
                           </div>
                       </div>
@@ -220,7 +222,7 @@
                           <div class="col-xs-8">
                               <input type="text" class="form-control" id="inputWordCount" placeholder="单位：万字" onblur="validateWordCount();">
                               <div class="feedback-tip">
-                                <label class="control-label" for="inputWordCount"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                                <label for="inputWordCount"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
                               </div>
                           </div>
                         </div>
@@ -330,7 +332,7 @@
                           <div class="col-xs-10">
                               <input type="text" class="form-control" id="inputPress" placeholder="出版社" onblur="validatePress();">
                               <div class="feedback-tip">
-                                <label class="control-label" for="inputPress"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                                <label for="inputPress"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
                               </div>
                           </div>
                         </div>
@@ -343,7 +345,7 @@
                           <div class="col-xs-10">
                               <input type="text" class="form-control" id="inputIsbn" placeholder="ISBN号" onblur="validateIsbn();">
                               <div class="feedback-tip">
-                                <label class="control-label" for="inputIsbn"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                                <label for="inputIsbn"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
                               </div>
                           </div>
                         </div>
@@ -367,9 +369,9 @@
                         <div class="form-group required">
                           <label for="inputSummary" class="col-xs-2 control-label">内容简介</label>
                           <div class="col-xs-10">
-                              <textarea id="inputSummary" class="form-control" rows="4" placeholder="内容简介 ..."></textarea>
+                              <textarea id="inputSummary" class="form-control" rows="4" placeholder="内容简介 ..." onblur="validateSummary();"></textarea>
                               <div class="feedback-tip">
-                                <label class="control-label" for="inputSummary"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                                <label for="inputSummary"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
                               </div>
                           </div>
                         </div>
@@ -407,7 +409,7 @@
                 </div>
                 <div id="audioCopyrightDiv" class="clearfix" style="display: none;">
                     <div class="col-xs-12">
-                        <div class="form-group">
+                        <div class="form-group required">
                           <label for="inputAudioCopyright" class="col-xs-2 control-label">音频情况</label>
                           <div class="col-xs-10">
                               <select id="inputAudioCopyright" class="form-control">
@@ -423,7 +425,10 @@
                         <div class="form-group required">
                           <label for="inputAudioDesc" class="col-sm-2 control-label">音频备注</label>
                           <div class="col-sm-10">
-                              <textarea id="inputAudioDesc" class="form-control" rows="2" placeholder="音频备注 ..."></textarea>
+                              <textarea id="inputAudioDesc" class="form-control" rows="2" placeholder="音频备注 ..." onblur="validateAudioDesc();"></textarea>
+                              <div class="feedback-tip">
+                                <label for="inputAudioDesc"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
                           </div>
                         </div>
                     </div>
@@ -433,7 +438,7 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearProductModal();">关闭</button>
-            <button type="button" class="btn btn-primary" onclick="submitProduct('0');">暂存</button>
+            <button type="button" class="btn btn-success" onclick="submitProduct('0');">暂存</button>
             <button type="button" class="btn btn-emarm" onclick="submitProduct('1');">提交审核</button>
           </div>
         </div><!-- /.modal-content -->
@@ -535,7 +540,6 @@
                                               .append('<option value="-1">全部</option>')
                                               .append(html);
                   }
-                  //$("#inputSubject").select2();
               }
           )
       }
@@ -585,7 +589,9 @@
                   "next":       "下一页",
                   "last":       "尾页"
                 },
-                "info": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项"
+                "info": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项",
+                "emptyTable": "没有符合条件的数据",
+                "infoEmpty": ""  
               },
               "columns": [
                 {width:'1px'},
@@ -680,7 +686,13 @@
           }else{
               r = validateName()
                     && validateAuthorName()
-                    && validateWordCount();
+                    && validateWordCount()
+                    && validatePress()
+                    && validateIsbn()
+                    && validateWebsite()
+                    && validateSummary()
+                    && validateSamples()
+                    && validateAudioDesc();
           }
       
           if(!r) {
@@ -733,66 +745,27 @@
                           clearProductModal();
                           $('#productModal').modal('hide');
                           table.ajax.reload();
+                      }else if(result.type == 'exception') {
+                          if(result.code == 'EMARM-EVA-00002') {
+                              var inputNameEle = $('#inputName');
+                              var formGroup = inputNameEle.parents('.form-group');
+                              if(!formGroup.hasClass('has-error')) {
+                                  inputNameEle.parents('.form-group').addClass('has-error');
+                                  inputNameEle.next('.feedback-tip').find('span').text(result.msg);
+                                  inputNameEle.next('.feedback-tip').show();
+                              }
+                          }else if(result.code == 'EMARM-EVA-00003') {
+                              var inputIsbnEle = $('#inputIsbn');
+                              var formGroup = inputIsbnEle.parents('.form-group');
+                              if(!formGroup.hasClass('has-error')) {
+                                  inputIsbnEle.parents('.form-group').addClass('has-error');
+                                  inputIsbnEle.next('.feedback-tip').find('span').text(result.msg);
+                                  inputIsbnEle.next('.feedback-tip').show();
+                              }
+                          }
                       }
                   }
               );       
-          }
-      }
-      
-      function validateName() {
-          var inputNameEle = $('#inputName');
-          var authorName = inputNameEle.val();
-          if(!authorName || $.trim(authorName).length == 0) {
-              var formGroup = inputNameEle.parents('.form-group');
-              if(!formGroup.hasClass('has-error')) {
-                  inputNameEle.parents('.form-group').addClass('has-error');
-                  inputNameEle.next('.feedback-tip').find('span').text('作品名称不能为空');
-                  inputNameEle.next('.feedback-tip').show();
-              }
-              return false;
-          }else{
-              inputNameEle.parents('.form-group').removeClass('has-error');
-              inputNameEle.next('.feedback-tip').find('span').text('');
-              inputNameEle.next('.feedback-tip').hide();
-              return true;
-          }
-      }
-      
-      function validateAuthorName() {
-          var inputAuthorNameEle = $('#inputAuthorName');
-          var authorName = inputAuthorNameEle.val();
-          if(!authorName || $.trim(authorName).length == 0) {
-              var formGroup = inputAuthorNameEle.parents('.form-group');
-              if(!formGroup.hasClass('has-error')) {
-                  inputAuthorNameEle.parents('.form-group').addClass('has-error');
-                  inputAuthorNameEle.next('.feedback-tip').find('span').text('作者不能为空');
-                  inputAuthorNameEle.next('.feedback-tip').show();
-              }
-              return false;
-          }else{
-              inputAuthorNameEle.parents('.form-group').removeClass('has-error');
-              inputAuthorNameEle.next('.feedback-tip').find('span').text('');
-              inputAuthorNameEle.next('.feedback-tip').hide();
-              return true;
-          }
-      }
-      
-      function validateWordCount() {
-          var inputWordCountEle = $('#inputWordCount');
-          var wordCount = inputWordCountEle.val();
-          if(!wordCount || $.trim(wordCount).length == 0) {
-              var formGroup = inputWordCountEle.parents('.form-group');
-              if(!formGroup.hasClass('has-error')) {
-                  inputWordCountEle.parents('.form-group').addClass('has-error');
-                  inputWordCountEle.next('.feedback-tip').find('span').text('字数不能为空');
-                  inputWordCountEle.next('.feedback-tip').show();
-              }
-              return false;
-          }else{
-              inputWordCountEle.parents('.form-group').removeClass('has-error');
-              inputWordCountEle.next('.feedback-tip').find('span').text('');
-              inputWordCountEle.next('.feedback-tip').hide();
-              return true;
           }
       }
       
@@ -842,7 +815,7 @@
           });
       }
       
-      function batchDeleteAuthors() {
+      function batchDeleteProducts() {
           var ids = [];
           $('.tblRowCheckbox:checked').each(function(){
               ids.push($(this).val());
@@ -853,10 +826,10 @@
               return ;
           }
       
-          var r = confirm("您真的要删除这些作者吗？");
+          var r = confirm("您真的要删除这些作品吗？");
           if(r) {
               $.post(
-                  '<idp:url value="/system/batchDeleteAuthor"/>',
+                  '<idp:url value="/evaluation/batchDeleteProducts"/>',
                   {
                       '_method': "delete",
                       'ids': ids.join(',')
@@ -957,8 +930,13 @@
                       
                       $('#inputId').val(prod.id);
                       $('#inputName').val(prod.name);
-                      $('#inputAuthorName').val(prod.author.name);
-                      $('#inputAuthorPseudonym').val(prod.author.pseudonym);
+                      if(prod.author) {
+                          $('#inputAuthorName').val(prod.author.name);
+                          $('#inputAuthorPseudonym').val(prod.author.pseudonym);
+                      }else{
+                          $('#inputAuthorName').val('');
+                          $('#inputAuthorPseudonym').val('');
+                      }
                       $('#inputWordCount').val(prod.wordCount);
                       $('#inputSubject').find('option[value=' + prod.subject.id + ']').attr('selected', true);
                       $('#inputPublishState').find('option[value=' + prod.publishState + ']').attr('selected', true);
@@ -1001,6 +979,211 @@
                   }
               }
           );
+      }
+      
+      
+      //================= Product Validator ===========
+      function validateName() {
+          var inputNameEle = $('#inputName');
+          var authorName = inputNameEle.val();
+          if(!authorName || $.trim(authorName).length == 0) {
+              var formGroup = inputNameEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputNameEle.parents('.form-group').addClass('has-error');
+                  inputNameEle.next('.feedback-tip').find('span').text('作品名称不能为空');
+                  inputNameEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputNameEle.parents('.form-group').removeClass('has-error');
+              inputNameEle.next('.feedback-tip').find('span').text('');
+              inputNameEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateAuthorName() {
+          var inputAuthorNameEle = $('#inputAuthorName');
+          var authorName = inputAuthorNameEle.val();
+          if(!authorName || $.trim(authorName).length == 0) {
+              var formGroup = inputAuthorNameEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputAuthorNameEle.parents('.form-group').addClass('has-error');
+                  inputAuthorNameEle.next('.feedback-tip').find('span').text('作者不能为空');
+                  inputAuthorNameEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputAuthorNameEle.parents('.form-group').removeClass('has-error');
+              inputAuthorNameEle.next('.feedback-tip').find('span').text('');
+              inputAuthorNameEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateWordCount() {
+          var inputWordCountEle = $('#inputWordCount');
+          var wordCount = inputWordCountEle.val();
+          if(!wordCount || $.trim(wordCount).length == 0) {
+              var formGroup = inputWordCountEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputWordCountEle.parents('.form-group').addClass('has-error');
+                  inputWordCountEle.next('.feedback-tip').find('span').text('字数不能为空');
+                  inputWordCountEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputWordCountEle.parents('.form-group').removeClass('has-error');
+              inputWordCountEle.next('.feedback-tip').find('span').text('');
+              inputWordCountEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validatePress() {
+          var publishState = $('#inputPublishState').val();
+          var inputPressEle = $('#inputPress');
+          if(publishState == '0') {
+              var press = inputPressEle.val();
+              if(!press || $.trim(press).length == 0) {
+                  var formGroup = inputPressEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputPressEle.parents('.form-group').addClass('has-error');
+                      inputPressEle.next('.feedback-tip').find('span').text('出版社不能为空');
+                      inputPressEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputPressEle.parents('.form-group').removeClass('has-error');
+                  inputPressEle.next('.feedback-tip').find('span').text('');
+                  inputPressEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputPressEle.parents('.form-group').removeClass('has-error');
+              inputPressEle.next('.feedback-tip').find('span').text('');
+              inputPressEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateIsbn() {
+          var publishState = $('#inputPublishState').val();
+          var inputIsbnEle = $('#inputIsbn');
+          if(publishState == '0') {
+              var isbn = inputIsbnEle.val();
+              if(!isbn || $.trim(isbn).length == 0) {
+                  var formGroup = inputIsbnEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputIsbnEle.parents('.form-group').addClass('has-error');
+                      inputIsbnEle.next('.feedback-tip').find('span').text('ISBN号不能为空');
+                      inputIsbnEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputIsbnEle.parents('.form-group').removeClass('has-error');
+                  inputIsbnEle.next('.feedback-tip').find('span').text('');
+                  inputIsbnEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputIsbnEle.parents('.form-group').removeClass('has-error');
+              inputIsbnEle.next('.feedback-tip').find('span').text('');
+              inputIsbnEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateWebsite() {
+          var publishState = $('#inputPublishState').val();
+          var inputWebsiteEle = $('#inputWebsite');
+          if(publishState == '1') {
+              var website = inputWebsiteEle.val();
+              if(!website || $.trim(website).length == 0) {
+                  var formGroup = inputWebsiteEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputWebsiteEle.parents('.form-group').addClass('has-error');
+                      inputWebsiteEle.next('.feedback-tip').find('span').text('签约网站不能为空');
+                      inputWebsiteEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputWebsiteEle.parents('.form-group').removeClass('has-error');
+                  inputWebsiteEle.next('.feedback-tip').find('span').text('');
+                  inputWebsiteEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputWebsiteEle.parents('.form-group').removeClass('has-error');
+              inputWebsiteEle.next('.feedback-tip').find('span').text('');
+              inputWebsiteEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateSummary() {
+          var inputSummaryEle = $('#inputSummary');
+          var summary = inputSummaryEle.val();
+          if(!summary || $.trim(summary).length == 0) {
+              var formGroup = inputSummaryEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputSummaryEle.parents('.form-group').addClass('has-error');
+                  inputSummaryEle.next('.feedback-tip').find('span').text('内容简介不能为空');
+                  inputSummaryEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputSummaryEle.parents('.form-group').removeClass('has-error');
+              inputSummaryEle.next('.feedback-tip').find('span').text('');
+              inputSummaryEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateSamples() {
+          var inputSamplesEle = $('#inputSamples');
+          var samples = inputSamplesEle.val();
+          if(!samples || $.trim(samples).length == 0) {
+              var formGroup = inputSamplesEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputSamplesEle.parents('.form-group').addClass('has-error');
+                  inputSamplesEle.next('.feedback-tip').find('span').text('样章不能为空');
+                  inputSamplesEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputSamplesEle.parents('.form-group').removeClass('has-error');
+              inputSamplesEle.next('.feedback-tip').find('span').text('');
+              inputSamplesEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateAudioDesc() {
+          var checked = $('#hasAudio').prop('checked');
+          var inputAudioDescEle = $('#inputAudioDesc');
+          if(checked) {
+              var audioDesc = inputAudioDescEle.val();
+              if(!audioDesc || $.trim(audioDesc).length == 0) {
+                  var formGroup = inputAudioDescEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputAudioDescEle.parents('.form-group').addClass('has-error');
+                      inputAudioDescEle.next('.feedback-tip').find('span').text('音频备注不能为空');
+                      inputAudioDescEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputAudioDescEle.parents('.form-group').removeClass('has-error');
+                  inputAudioDescEle.next('.feedback-tip').find('span').text('');
+                  inputAudioDescEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputAudioDescEle.parents('.form-group').removeClass('has-error');
+              inputAudioDescEle.next('.feedback-tip').find('span').text('');
+              inputAudioDescEle.next('.feedback-tip').hide();
+              return true;
+          }
       }
     </script>
   </body>
