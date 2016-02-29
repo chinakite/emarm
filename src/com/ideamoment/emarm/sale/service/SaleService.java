@@ -161,6 +161,7 @@ public class SaleService {
         return saleDao.listProductContracts(productId);
     }
 
+    @IdeaJdbcTx
     public Page<SaleContract> pageContracts(int curPage,
                                             int pageSize,
                                             HashMap<String, String> condition)

@@ -5,6 +5,7 @@ package com.emarm;
 
 import com.ideamoment.emarm.model.CopyrightContractAudit;
 import com.ideamoment.emarm.model.CopyrightContractDoc;
+import com.ideamoment.emarm.model.EmailSetting;
 import com.ideamoment.emarm.model.MakeContract;
 import com.ideamoment.emarm.model.MakeContractDoc;
 import com.ideamoment.emarm.model.MakeTask;
@@ -58,7 +59,8 @@ public class GenerateDb {
 //                    ProductReservedInfo.class,
 //                MakeTaskAudio.class,
 //                MakeTaskAudioAudit.class,
-                MakeTaskAudioFile.class
+//                MakeTaskAudioFile.class,
+                  EmailSetting.class
                 };
         
         for(Class clz : cls) {

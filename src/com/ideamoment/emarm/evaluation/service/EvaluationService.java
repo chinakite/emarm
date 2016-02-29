@@ -17,6 +17,7 @@ import com.ideamoment.emarm.evaluation.EvaluationException;
 import com.ideamoment.emarm.evaluation.EvaluationExceptionCode;
 import com.ideamoment.emarm.evaluation.dao.EvaluationDao;
 import com.ideamoment.emarm.model.Author;
+import com.ideamoment.emarm.model.EmailSetting;
 import com.ideamoment.emarm.model.Evaluation;
 import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
@@ -122,16 +123,19 @@ public class EvaluationService {
                 String emailAddr = user.getEmail();
                 HtmlEmail email = new HtmlEmail(); 
                 
+                EmailSetting emailSetting = IdeaJdbc.find(EmailSetting.class, "1");
+                
                 // 这里是SMTP发送服务器的名字：163的如下："smtp.163.com"  
-                email.setHostName("smtp.163.com");  
+                email.setHostName(emailSetting.getHostName());  
+                email.setSmtpPort(Integer.parseInt(emailSetting.getPort()));
                 // 字符编码集的设置  
                 email.setCharset("UTF-8");  
                 // 收件人的邮箱  
                 email.addTo(emailAddr);  
                 // 发送人的邮箱  
-                email.setFrom("piaostudio@163.com", "悦库时光");  
+                email.setFrom(emailSetting.getFromEmail(), emailSetting.getFromName());  
                 // 如果需要认证信息的话，设置认证：用户名-密码。分别为发件人在邮件服务器上的注册名称和密码  
-                email.setAuthentication("piaostudio", "kn4944428");  
+                email.setAuthentication(emailSetting.getUserName(), emailSetting.getPassword());  
                 // 要发送的邮件主题  
                 email.setSubject("邀请您评价");  
                 // 要发送的信息，由于使用了HtmlEmail，可以在邮件内容中使用HTML标签  
@@ -227,7 +231,7 @@ public class EvaluationService {
             
             product.setType(ProductType.TEXT);
             product.setState(ProductState.APPROVE_WAITING);
-            if(product.getId() != null) {
+            if(StringUtils.isNotEmpty(product.getId())) {
                 IdeaJdbc.update(product);
             }else{
                 product.setCreateTime(curTime);
@@ -274,7 +278,7 @@ public class EvaluationService {
             product.setType(ProductType.TEXT);
             product.setState(ProductState.DRAFT);
             
-            if(product.getId() != null) {
+            if(StringUtils.isNotEmpty(product.getId())) {
                 IdeaJdbc.update(product);
             }else{
                 product.setCreateTime(curTime);

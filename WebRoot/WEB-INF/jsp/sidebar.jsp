@@ -53,7 +53,7 @@
               </ul>
             </li>
             </c:if>
-            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1}">
+            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '21') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '22') > -1}">
             <li id="menu_make" class="treeview">
               <a href="#">
                 <i class="fa fa-magic"></i>
@@ -65,6 +65,8 @@
                 <li id="menu_mk_contract"><a href='<idp:url value="/make/contractProductPage"/>'><i class="fa fa-archive"></i> 制作合同</a></li>
               </ul>
             </li>
+            </c:if>
+            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '31') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '32') > -1}">
             <li id="menu_sale" class="treeview">
               <a href="#">
                 <i class="fa fa-rocket"></i> <span>运营管理</span>
@@ -85,7 +87,7 @@
                 <li id="menu_subject"><a href='<idp:url value="/system/subjectPage"/>'><i class="fa fa-list"></i> 作品题材管理</a></li>
                 <li id="menu_author"><a href='<idp:url value="/system/authorPage"/>'><i class="fa fa-list"></i> 作者管理</a></li>
                 <li id="menu_user"><a href='<idp:url value="/system/userPage"/>'><i class="fa fa-users"></i> 用户管理</a></li>
-                <li><a href='<idp:url value="/comingsoon"/>'><i class="fa fa-envelope-o"></i> 邮件服务设置</a></li>
+                <li id="menu_email"><a href='<idp:url value="/system/emailSettingPage"/>'><i class="fa fa-envelope-o"></i> 邮件服务设置</a></li>
               </ul>
             </li>
             </c:if>
