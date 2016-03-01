@@ -73,9 +73,10 @@ public class MakeDao {
 
         sql += " ORDER BY p.C_MODIFYTIME DESC ";
 
-        String[] states = new String[] { ProductState.CP_CONTRACT_FINISH,
+        String[] states = new String[] { 
                 ProductState.MK, ProductState.MK_FINISH,
-                ProductState.MK_CONTRACT, ProductState.DRAFT };
+                ProductState.MK_CONTRACT, ProductState.MK_WAITING, 
+                ProductState.SALED};
 
         Query query = IdeaJdbc.query(sql).setParameter("type", ProductType.TEXT)
                 .setParameter("states", states).populate("author", "a")

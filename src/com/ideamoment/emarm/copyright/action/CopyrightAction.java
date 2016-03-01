@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -356,6 +357,20 @@ public class CopyrightAction {
     public JsonData toLawyer(String id) {
         copyrightService.toLawyer(id);
         return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/copyright/productDetail", method=RequestMethod.GET)
+    public ModelAndView viewProduct(String id) {
+        Product product = copyrightService.findProduct(id);
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("product", product);
+        return new ModelAndView("/WEB-INF/jsp/copyright/productDetail.jsp", model);
+    }
+    
+    @RequestMapping(value="/copyright/product/{id}", method=RequestMethod.GET)
+    public JsonData product(@PathVariable String id) {
+        Product product = copyrightService.findProduct(id);
+        return JsonData.success(product);
     }
     
     private DataTableSource<Product> convertProductsToDataTableSource(int draw, Page<Product> productsPage) {

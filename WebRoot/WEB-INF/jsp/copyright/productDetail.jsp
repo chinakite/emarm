@@ -94,12 +94,14 @@
                           <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
                               <li class="active"><a href="#evaluationInfo" data-toggle="tab">评价信息</a></li>
-                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1}">
+                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '11') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '12') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '13') > -1}">
                               <li><a href="#copyrightInfo" data-toggle="tab">版权信息</a></li>
+                              </c:if>
+                              <!--
                               <li><a href="#makeInfo" data-toggle="tab">制作信息</a></li>
                               <li><a href="#settings" data-toggle="tab">运营信息</a></li>
                               <li><a href="#gallery" data-toggle="tab">相册</a></li>
-                              </c:if>
+                              -->
                             </ul>
                             <div class="tab-content">
                               <div class="active tab-pane" id="evaluationInfo">
@@ -698,7 +700,7 @@
             <td>{{cc.owner}}</td>
             <td>{{cc.buyerContact}}</td>
             <td>{{cc.createTime}}</td>
-            <td><a>查看</a></td>
+            <td><a href='<idp:url value="/copyright/contractDetail"/>?id={{cc.id}}' target="_blank">查看</a></td>
         </tr>
         {{/each}}
     </script>
@@ -754,7 +756,7 @@
           loadMakeContracts();
           
           var state = '${product.state}';
-          if(state == 4) {
+          if(state >= 4) {
               loadFinalEvaludation();
           }else{
               <c:choose>

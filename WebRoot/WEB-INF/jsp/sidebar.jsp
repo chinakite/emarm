@@ -22,7 +22,7 @@
                 </c:if>
               </ul>
             </li>
-            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '11') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '12') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '13') > -1}">
+            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '11') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '12') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '13') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '90') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '80') > -1}">
             <li id="menu_copyright">
               <a href='#'>
                 <i class="fa fa-book"></i> <span>版权管理</span><i class="fa fa-angle-left pull-right"></i>
@@ -33,7 +33,9 @@
                     <a href='<idp:url value="/copyright/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同维度<i class="fa fa-angle-left pull-right"></i></a>
                     <ul class="treeview-menu">
                         <li id="menu_cc_mycontract"><a href='<idp:url value="/copyright/myContractPage"/>'><i class="fa fa-angle-double-right f10"></i> 我的合同</a></li>
+                        <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '12') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '13') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '90') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '80') > -1}">
                         <li id="menu_cc_auditcontract"><a href='<idp:url value="/copyright/auditContractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同审批</a></li>
+                        </c:if>
                         <!--<li id="menu_eva_prodmgr"><a href='<idp:url value="/copyright/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同管理</a></li>-->
                     </ul>
                 </li>

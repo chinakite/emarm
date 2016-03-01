@@ -1015,7 +1015,12 @@
                   'userIds': s+''
               },
               function(json) {
-                  alert(json);
+                  var result = IDEA.parseJSON(json);
+                  if(result.type = 'success') {
+                      alert('发送成功.');
+                  }else{
+                      alert('发送失败，请联系管理员.');
+                  }
               }
           );
       }

@@ -75,7 +75,7 @@
                               <p class="col-xs-7 detailInfo-light">出版年份：${product.publishYear}</p>
                               <p class="col-xs-5 detailInfo-light">ISBN：${product.isbn}</p>
                               <div class="col-xs-12 detailInfo-light">
-                                  <span>样章：</span><a class="label bg-gray">1</a><a class="label bg-gray ml10">2</a><a class="label bg-gray ml10">3</a>
+                                  <span>样章：</span><a href='<idp:url value=""/>${product.samples[0].fileUrl}' class="label bg-gray">下载</a>
                               </div>
                           </div>
                       </div>

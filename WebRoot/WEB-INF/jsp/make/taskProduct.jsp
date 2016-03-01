@@ -449,7 +449,7 @@
                       "render": function(data, type, full) {
                           var role = '${sessionScope.__SESSION__USER__.role}';
                       
-                          var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
+                          var html = '<a href=\'<idp:url value="/mediares/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
                           if(!(full.taskCount) || full.taskCount == 0){
                               html += ' <span class="small">|</span> ';

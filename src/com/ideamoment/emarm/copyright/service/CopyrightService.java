@@ -228,6 +228,7 @@ public class CopyrightService {
         if(userRole.contains(RoleType.LAWYER)) {
             auditStates.add(CopyrightContractState.LAWYER_AUDIT);
             auditStates.add(CopyrightContractState.LAWYER_CONFIRM);
+            auditStates.add(CopyrightContractState.FINISH_CONFIRM);
         }
         
         if(auditStates.size() == 0) {
@@ -489,6 +490,11 @@ public class CopyrightService {
     public void finish(String id) {
         
         
+    }
+
+    @IdeaJdbcTx
+    public Product findProduct(String id) {
+        return copyrightDao.findProduct(id);
     }
     
 }

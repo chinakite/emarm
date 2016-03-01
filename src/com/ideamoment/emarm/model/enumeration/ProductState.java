@@ -37,7 +37,7 @@ public class ProductState {
     public static final String RESERVED = "7";
     public static final String RESERVED_TEXT = "已预订";
     
-    public static final String MK_WAITING = "8";
+    public static final String MK_WAITING = "10";
     public static final String MK_WAITING_TEXT = "待制作";
     
     public static final String MK_CONTRACT = "11";

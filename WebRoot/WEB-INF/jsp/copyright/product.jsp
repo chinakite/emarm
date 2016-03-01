@@ -955,7 +955,7 @@
                       "render": function(data, type, full) {
                           var role = '${sessionScope.__SESSION__USER__.role}';
                       
-                          var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
+                          var html = '<a href=\'<idp:url value="/copyright/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
                           if(full.state == '4') {
                               html += '<span class="small">|</span> ';
@@ -1249,6 +1249,7 @@
                   var result = IDEA.parseJSON(json);
                   if(result.type == 'success') {
                       alert('保存成功');
+                      window.location.reload();
                   }else{
                       alert('保存失败，请重试或联系管理员');
                   }

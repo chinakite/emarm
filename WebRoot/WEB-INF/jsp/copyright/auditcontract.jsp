@@ -594,7 +594,7 @@
                   {
                       "targets": [9],
                       "render": function(data, type, full) {
-                          var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
+                          var html = '<a href=\'<idp:url value="/copyright/contractDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
                           if(full.state == '4') {
                               html += '<span class="small">|</span> ';

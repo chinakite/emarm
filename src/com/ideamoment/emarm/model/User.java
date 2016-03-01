@@ -200,6 +200,9 @@ public class User extends HistoriableEntity{
         }
         return this.role.replace("01", RoleType.NORMAL_TEXT)
                         .replace("03", RoleType.EVALUATOR_MGR_TEXT)
+                        .replace("11", RoleType.COPYRIGHT_OPR_TEXT)
+                        .replace("12", RoleType.COPYRIGHT_DIRECTOR_TEXT)
+                        .replace("13", RoleType.COPYRIGHT_MANAGER_TEXT)
                         .replace("52", RoleType.EXT_MAKER_TEXT)
                         .replace("99", RoleType.SUPER_ADMIN_TEXT)
                         .replaceAll(",", "、");

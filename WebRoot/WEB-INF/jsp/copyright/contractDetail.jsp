@@ -57,15 +57,19 @@
                 <button class="btn btn-default pull-right ml10" onclick="deleteProduct('${contract.id}');"><i class="fa fa-remove"></i> 删除</button>
                 <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${contract.id}');"><i class="fa fa-edit"></i> 编辑</button>
             </c:if>
-            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || (fn:indexOf(sessionScope.__SESSION__USER__.role, '12') != '-1' && contract.auditState == '1') || (fn:indexOf(sessionScope.__SESSION__USER__.role, '13') != '-1' && contract.auditState == '2') || (fn:indexOf(sessionScope.__SESSION__USER__.role, '90') != '-1' && contract.auditState == '3')}">
+            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || (fn:indexOf(sessionScope.__SESSION__USER__.role, '12') != '-1' && contract.auditState == '1') || (fn:indexOf(sessionScope.__SESSION__USER__.role, '13') != '-1' && contract.auditState == '2') || (fn:indexOf(sessionScope.__SESSION__USER__.role, '90') != '-1' && contract.auditState == '3') || (fn:indexOf(sessionScope.__SESSION__USER__.role, '80') != '-1' && (contract.auditState == '5' || contract.auditState == '7'))}">
             <button class="btn btn-default pull-right ml10" onclick="auditContract('${contract.id}');"><i class="fa fa-remove"></i> 审批</button>
             </c:if>
+            <c:if test="${contract.auditState == '4'}">
             <button class="btn btn-default pull-right ml10" onclick="generateDoc('${contract.id}');"><i class="fa fa-remove"></i> 生成草稿</button>
+            </c:if>
+            <c:if test="${(contract.auditState == '4' || contract.auditState == '5' || contract.auditState == '6') && fn:indexOf(sessionScope.__SESSION__USER__.role, '80') == '-1'}">
             <button class="btn btn-default pull-right ml10" onclick="popUploadContractDoc('${contract.id}');"><i class="fa fa-remove"></i> 上传合同</button>
-            <c:if test="${sessionScope.__SESSION__USER__.role == contract.creator && contract.auditState == '4'}">
+            </c:if>
+            <c:if test="${sessionScope.__SESSION__USER__.id == contract.creator && contract.auditState == '4'}">
             <button class="btn btn-default pull-right ml10" onclick="toLawyer('${contract.id}');"><i class="fa fa-remove"></i> 提交法务</button>
             </c:if>
-            <c:if test="${sessionScope.__SESSION__USER__.role == contract.creator && contract.auditState == '6'}">
+            <c:if test="${sessionScope.__SESSION__USER__.id == contract.creator && contract.auditState == '6'}">
             <button class="btn btn-default pull-right ml10" onclick="popUploadFinishContractDoc('${contract.id}');"><i class="fa fa-remove"></i> 上传最终合同</button>
             </c:if>
         </section>
