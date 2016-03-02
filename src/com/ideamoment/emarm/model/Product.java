@@ -92,6 +92,9 @@ public class Product extends HistoriableEntity {
     @Ref
     private CopyrightContractProduct crcProduct;
     
+    @Ref
+    private SaleContractProduct scProduct;
+    
     @Transient
     private Integer taskCount;
     
@@ -519,6 +522,24 @@ public class Product extends HistoriableEntity {
      */
     public void setReserved(String reserved) {
         this.reserved = reserved;
+    }
+
+
+    
+    /**
+     * @return the scProduct
+     */
+    public SaleContractProduct getScProduct() {
+        return scProduct;
+    }
+
+
+    
+    /**
+     * @param scProduct the scProduct to set
+     */
+    public void setScProduct(SaleContractProduct scProduct) {
+        this.scProduct = scProduct;
     }
     
     

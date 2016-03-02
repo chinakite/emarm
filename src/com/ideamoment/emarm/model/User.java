@@ -203,8 +203,13 @@ public class User extends HistoriableEntity{
                         .replace("11", RoleType.COPYRIGHT_OPR_TEXT)
                         .replace("12", RoleType.COPYRIGHT_DIRECTOR_TEXT)
                         .replace("13", RoleType.COPYRIGHT_MANAGER_TEXT)
+                        .replace("21", RoleType.MAKE_OPR_TEXT)
+                        .replace("22", RoleType.MAKE_MGR_TEXT)
+                        .replace("31", RoleType.SALE_OPR)
+                        .replace("32", RoleType.SALE_MGR_TEXT)
                         .replace("52", RoleType.EXT_MAKER_TEXT)
                         .replace("99", RoleType.SUPER_ADMIN_TEXT)
+                        .replace("90", RoleType.CEO_TEXT)
                         .replaceAll(",", "、");
     }
 }

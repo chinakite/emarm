@@ -342,11 +342,37 @@
                               html += ' <span class="small">|</span> ';
                               html += '<a onclick="popTaskModal(\'' + full.id + '\');">删除</a>';
                           
+                          if(full.state == '0') {
+                              html += ' <span class="small">|</span> ';
+                              html += '<a onclick="publishTask(\'' + full.id + '\');">发布</a>';
+                          }
+                          
                           return html;
                       }
                   }
               ]
           });
+      }
+      
+      function publishTask(id) {
+          var r = window.confirm('任务发布后将不能编辑，您确定要发布此任务吗？');
+          if(r) {
+              $.post(
+                  '<idp:url value="/make/publishTask"/>',
+                  {
+                      "id": id
+                  },
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('发布成功');
+                          window.location.reload();
+                      }
+                  }
+              );
+          }else{
+              return;
+          }
       }
       
       function searchProducts() {

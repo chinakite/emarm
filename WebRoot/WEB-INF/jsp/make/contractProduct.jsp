@@ -451,7 +451,7 @@
     
       $(document).ready(function(){
           $('#menu_make').addClass('active');
-          $('#menu_mk_task').addClass('active');
+          $('#menu_mk_contract').addClass('active');
       
           initProductTbl();
           loadExtMakers();
@@ -609,7 +609,7 @@
                       "render": function(data, type, full) {
                           var role = '${sessionScope.__SESSION__USER__.role}';
                       
-                          var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
+                          var html = '<a href=\'<idp:url value="/mediares/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
                           if(full.state == '10'){
                               html += ' <span class="small">|</span> ';

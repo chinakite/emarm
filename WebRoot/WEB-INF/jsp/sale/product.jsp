@@ -630,7 +630,7 @@
                       "render": function(data, type, full) {
                           var role = '${sessionScope.__SESSION__USER__.role}';
                       
-                          var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
+                          var html = '<a href=\'<idp:url value="/mediares/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               html += ' <span class="small">|</span> ';
                               html += '<a onclick="popContractModal(\'' + full.id + '\');">创建合同</a>';
                           

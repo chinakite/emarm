@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ideamoment.emarm.model.CopyrightContract;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.SaleContract;
+import com.ideamoment.emarm.model.SaleContractDoc;
 import com.ideamoment.emarm.sale.service.SaleService;
 import com.ideamoment.emarm.util.DataTableSource;
 import com.ideamoment.ideadp.restful.json.JsonData;
@@ -187,8 +187,37 @@ public class SaleAction {
         return JsonData.SUCCESS;
     }
     
+    @RequestMapping(value="/sale/contractDetail", method=RequestMethod.GET)
+    public ModelAndView viewContract(String id) {
+        SaleContract contract = saleService.findContract(id);
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("contract", contract);
+        return new ModelAndView("/WEB-INF/jsp/sale/contractDetail.jsp", model);
+    }
     
+    @RequestMapping(value="/sale/contractProducts", method=RequestMethod.GET)
+    public JsonData listContractProducts(String contractId) {
+        List<Product> products = saleService.listContractProducts(contractId);
+        return JsonData.success(products);
+    }
     
+    @RequestMapping(value="/sale/contractDocs", method=RequestMethod.GET)
+    public JsonData listContractDocs(String contractId) {
+        List<SaleContractDoc> docs = saleService.listContractDocs(contractId);
+        return JsonData.success(docs);
+    }
+    
+    @RequestMapping(value="/sale/uploadContractDoc", method=RequestMethod.POST)
+    public JsonData uploadContractDoc(String id, String fileUrl, String version) {
+        saleService.uploadContractDoc(id, fileUrl, version);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/sale/finishContract", method=RequestMethod.POST)
+    public JsonData finishContract(String contractId) {
+        saleService.finishContract(contractId);
+        return JsonData.SUCCESS;
+    }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {
         DataTableSource<Product> dts = new DataTableSource<Product>();

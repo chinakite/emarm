@@ -18,12 +18,16 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.mail.HtmlEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ideamoment.emarm.copyright.CopyrightException;
 import com.ideamoment.emarm.copyright.CopyrightExceptionCode;
+import com.ideamoment.emarm.make.MakeException;
+import com.ideamoment.emarm.make.MakeExceptionCode;
 import com.ideamoment.emarm.make.dao.MakeDao;
+import com.ideamoment.emarm.model.EmailSetting;
 import com.ideamoment.emarm.model.MakeContract;
 import com.ideamoment.emarm.model.MakeContractDoc;
 import com.ideamoment.emarm.model.MakeTask;
@@ -31,8 +35,12 @@ import com.ideamoment.emarm.model.MakeTaskAudio;
 import com.ideamoment.emarm.model.MakeTaskAudioAudit;
 import com.ideamoment.emarm.model.MakeTaskAudioFile;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.ProductAudio;
 import com.ideamoment.emarm.model.User;
+import com.ideamoment.emarm.model.enumeration.MakeContractState;
+import com.ideamoment.emarm.model.enumeration.MakeTaskState;
 import com.ideamoment.emarm.model.enumeration.ProductState;
+import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideadp.appcontext.IdeaApplicationContext;
 import com.ideamoment.ideadp.usercontext.UserContext;
 import com.ideamoment.ideajdbc.IdeaJdbc;
@@ -112,7 +120,9 @@ public class MakeService {
         
         if(StringUtils.isEmpty(id)) {
             MakeTask task = new MakeTask();
-            task.setContractId(contractId);
+            if(!contractId.equals("-1")) {
+                task.setContractId(contractId);
+            }
             task.setCreateTime(curTime);
             task.setCreator(userId);
             task.setDesc(desc);
@@ -125,13 +135,16 @@ public class MakeService {
             task.setShowExpection(showExpection);
             task.setShowType(showType);
             task.setTimePerSection(timePerSection);
+            task.setState(MakeTaskState.NEW);
             
             IdeaJdbc.save(task);
             
             return task;
         }else{
             MakeTask task = IdeaJdbc.find(MakeTask.class, id);
-            task.setContractId(contractId);
+            if(!contractId.equals("-1")) {
+                task.setContractId(contractId);
+            }
             task.setDesc(desc);
             task.setMakerId(makerId);
             task.setMakeTime(makeTime);
@@ -320,22 +333,38 @@ public class MakeService {
 
     @IdeaJdbcTx
     public void finishContract(String contractId) {
-        if(checkCanFinish()) {
+        if(checkCanFinish(contractId)) {
             UserContext uc = UserContext.getCurrentContext();
             User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
             
             MakeContract mc = IdeaJdbc.find(MakeContract.class, contractId);
+            mc.setModifier(curUser.getId());
+            mc.setModifyTime(new Date());
+            mc.setState(MakeContractState.FINISHED);
+            IdeaJdbc.update(mc);
+            
             String productId = mc.getProductId();
             IdeaJdbc.update(Product.class, productId)
                     .setProperty("state", ProductState.MK_FINISH)
                     .setProperty("modifyTime", new Date())
                     .setProperty("modifier", curUser.getId())
                     .execute();
+        }else{
+            throw new MakeException(MakeExceptionCode.CANT_FINISH_CONTRACT, "Can not finish make contract.");
         }
     }
     
-    private boolean checkCanFinish() {
-        return true;
+    private boolean checkCanFinish(String contractId) {
+        List<MakeTask> tasks = makeDao.queryTasksByContract(contractId);
+        if(tasks == null || tasks.size() == 0) {
+            throw new MakeException(MakeExceptionCode.CONTRACT_NO_TASK, "Can not finish make contract.");
+        }
+        
+        Long i = (Long)makeDao.queryUnfinishedAudioCount(contractId);
+        if(i != null && i == 0)
+            return true;
+        else
+            return false;
     }
 
     @IdeaJdbcTx
@@ -441,5 +470,104 @@ public class MakeService {
     @IdeaJdbcTx
     public List<MakeContract> listMakeContractsByProduct(String productId) {
         return makeDao.listMakeContractsByProduct(productId);
+    }
+
+    @IdeaJdbcTx
+    public List<MakeContract> listAvaliableMakeContracts() {
+        return makeDao.listAvaliableMakeContracts();
+    }
+
+    @IdeaJdbcTx
+    public MakeTask publishTask(String id) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        String contextPath = uc.getRequest().getContextPath();
+        if(!contextPath.endsWith("/")) {
+            contextPath += "/";
+        }
+        
+        Date curTime = new Date();
+        
+        MakeTask task = IdeaJdbc.find(MakeTask.class, id);
+        String productId = task.getProductId();
+        
+        Product prod = IdeaJdbc.find(Product.class, productId);
+        
+        String makerId = task.getMakerId();
+        User maker = IdeaJdbc.find(User.class, makerId);
+        
+        HtmlEmail email = new HtmlEmail(); 
+        
+        EmailSetting emailSetting = IdeaJdbc.find(EmailSetting.class, "1");
+        try {
+            // 这里是SMTP发送服务器的名字：163的如下："smtp.163.com"  
+            email.setHostName(emailSetting.getHostName());  
+            email.setSmtpPort(Integer.parseInt(emailSetting.getPort()));
+            // 字符编码集的设置  
+            email.setCharset("UTF-8");  
+            // 收件人的邮箱  
+            email.addTo(maker.getEmail());  
+            // 发送人的邮箱  
+            email.setFrom(emailSetting.getFromEmail(), emailSetting.getFromName());  
+            // 如果需要认证信息的话，设置认证：用户名-密码。分别为发件人在邮件服务器上的注册名称和密码  
+            email.setAuthentication(emailSetting.getUserName(), emailSetting.getPassword());  
+            // 要发送的邮件主题  
+            email.setSubject("制作任务-" + prod.getName());  
+            // 要发送的信息，由于使用了HtmlEmail，可以在邮件内容中使用HTML标签  
+            email.setMsg("<p>悦库时光给您发来了新的制作任务：</p><a href='http://www.6wanr.com" + contextPath + "mklogin'>" + prod.getName() + "</a>");  
+            // 发送  
+            email.send();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        
+        task.setModifier(userId);
+        task.setModifyTime(curTime);
+        task.setState(MakeTaskState.PUBLISH);
+        
+        IdeaJdbc.update(task);
+        
+        return task;
+    }
+
+    @IdeaJdbcTx
+    public void passTaskAudio(String audioId) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        Date curTime = new Date();
+        
+        MakeTaskAudioFile file = IdeaJdbc.find(MakeTaskAudioFile.class, audioId);
+        file.setState(YesOrNo.YES);
+        file.setModifier(userId);
+        file.setModifyTime(curTime);
+        
+        IdeaJdbc.update(file);
+        
+        String parentId = file.getMakeTaskAudioId();
+        MakeTaskAudio mta = IdeaJdbc.find(MakeTaskAudio.class, parentId);
+        mta.setModifier(userId);
+        mta.setModifyTime(curTime);
+        mta.setState(YesOrNo.YES);
+        
+        IdeaJdbc.update(mta);
+        
+        String taskId = mta.getMakeTaskId();
+        MakeTask task = IdeaJdbc.find(MakeTask.class, taskId);
+        
+        ProductAudio pa = new ProductAudio();
+        pa.setFileUrl(file.getFileUrl());
+        pa.setName(mta.getTitle());
+        pa.setCreateTime(curTime);
+        pa.setCreator(userId);
+        pa.setModifier(userId);
+        pa.setModifyTime(curTime);
+        pa.setProductId(task.getProductId());
+        
+        IdeaJdbc.save(pa);
     }
 }

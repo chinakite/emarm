@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
+import com.ideamoment.ideadata.annotation.Ref;
 
 /**
  * @author Chinakite
@@ -80,6 +81,12 @@ public class MakeContract extends HistoriableEntity {
     
     @Property(dataItem="C_MAKER_ID", type=DataItemType.VARCHAR, length=32)
     private String makerId;
+    
+    @Property(dataItem="C_STATE", type=DataItemType.VARCHAR, length=3)
+    private String state;
+    
+    @Ref
+    private Product product;
     
     /**
      * @return the code
@@ -422,13 +429,42 @@ public class MakeContract extends HistoriableEntity {
     public String getMakerId() {
         return makerId;
     }
-
     
     /**
      * @param makerId the makerId to set
      */
     public void setMakerId(String makerId) {
         this.makerId = makerId;
+    }
+    
+    /**
+     * @return the product
+     */
+    public Product getProduct() {
+        return product;
+    }
+    
+    /**
+     * @param product the product to set
+     */
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
+    
+    /**
+     * @return the state
+     */
+    public String getState() {
+        return state;
+    }
+
+    
+    /**
+     * @param state the state to set
+     */
+    public void setState(String state) {
+        this.state = state;
     }
     
     

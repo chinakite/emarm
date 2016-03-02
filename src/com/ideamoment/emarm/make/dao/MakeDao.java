@@ -113,7 +113,7 @@ public class MakeDao {
         Map<String, Long> result = new HashMap<String, Long>();
         String sql = "SELECT t.C_PRODUCT_ID prodId, COUNT(C_ID) cnt"
                      + " FROM T_MAKE_TASK t"
-                     + " WHERE t.C_PRODUCT_ID IN (:productIds)";
+                     + " WHERE t.C_PRODUCT_ID IN (:productIds) group by prodId";
 
         List<Map<String, Object>> queryResult = IdeaJdbc.query(sql)
                 .setParameter("productIds", productIds).list();
@@ -225,6 +225,7 @@ public class MakeDao {
                      + " FROM T_MAKE_TASK t, T_USER u "
                      + " WHERE t.C_MAKER_ID = :userId "
                      + " AND t.C_MAKER_ID = u.C_ID "
+                     + " AND t.C_STATE <> '0' "
                      + " ORDER BY t.C_MODIFYTIME DESC";
 
         return IdeaJdbc.query(sql).setParameter("userId", userId)
@@ -249,6 +250,7 @@ public class MakeDao {
                      + " FROM T_MAKE_TASK t, T_USER u "
                      + " WHERE t.C_MAKER_ID = :userId "
                      + " AND t.C_MAKER_ID = u.C_ID "
+                     + " AND t.C_STATE <> '0' "
                      + " ORDER BY t.C_MODIFYTIME DESC";
 
         return IdeaJdbc.query(sql).setParameter("userId", userId)
@@ -288,6 +290,35 @@ public class MakeDao {
         return IdeaJdbc.query(sql)
                         .setParameter("productId", productId)
                         .listTo(MakeContract.class);
+    }
+
+    public List<MakeContract> listAvaliableMakeContracts() {
+        String sql = "select mc.C_ID as mc$id,"
+                + " mc.C_CODE as mc$code, "
+                + " p.C_ID as p$id,"
+                + " p.C_NAME as p$name "
+                + " from t_make_contract mc, t_product p "
+                + " where mc.C_STATE <> 10 and mc.C_ID not in (select C_CONTRACT_ID from t_make_task) ORDER BY mc.C_CODE DESC";
+        
+        return IdeaJdbc.query(sql)
+                        .populate("product", "p")
+                        .listTo(MakeContract.class, "mc");
+    }
+
+    public Long queryUnfinishedAudioCount(String contractId) {
+        String sql = "select count(mta.C_ID) from t_make_task mt, t_make_task_audio mta"
+                + " where mt.C_CONTRACT_ID = :contractId "
+                + " and mta.C_MAKE_TASK_ID = mt.C_ID "
+                + " and mta.C_STATE = '0'";
+        return (Long)IdeaJdbc.query(sql)
+                                .setParameter("contractId", contractId)
+                                .uniqueValue();
+    }
+
+    public List<MakeTask> queryTasksByContract(String contractId) {
+        String sql = "select * from t_make_task where c_contract_id = :contractId";
+        
+        return IdeaJdbc.query(sql).setParameter("contractId", contractId).listTo(MakeTask.class);
     }
 
 }

@@ -10,8 +10,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.ideamoment.emarm.model.CopyrightContractDoc;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.SaleContract;
+import com.ideamoment.emarm.model.SaleContractDoc;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
 import com.ideamoment.ideajdbc.IdeaJdbc;
@@ -70,8 +72,7 @@ public class SaleDao {
 
         String[] states = new String[] { ProductState.CP_CONTRACT_FINISH,
                 ProductState.MK, ProductState.MK_FINISH,
-                ProductState.MK_CONTRACT, ProductState.SALED,
-                ProductState.DRAFT };
+                ProductState.MK_CONTRACT, ProductState.SALED};
 
         Query query = IdeaJdbc.query(sql).setParameter("type", ProductType.TEXT)
                 .setParameter("states", states).populate("author", "a")
@@ -144,7 +145,8 @@ public class SaleDao {
                      + " sc.C_PRIVILEGES,"
                      + " sc.C_PRIVILEGE_TYPE,"
                      + " sc.C_PRIVILEGE_RANGE,"
-                     + " sc.C_PRIVILEGE_DEADLINE "
+                     + " sc.C_PRIVILEGE_DEADLINE, "
+                     + " sc.C_STATE "
                      + "FROM T_SALE_CONTRACT sc, T_SALE_CTRT_PROD scp "
                      + "WHERE scp.C_PRODUCT_ID = :productId "
                      + " AND scp.C_CONTRACT_ID = sc.C_ID";
@@ -165,7 +167,8 @@ public class SaleDao {
                      + " sc.C_PRIVILEGES,"
                      + " sc.C_PRIVILEGE_TYPE,"
                      + " sc.C_PRIVILEGE_RANGE,"
-                     + " sc.C_PRIVILEGE_DEADLINE "
+                     + " sc.C_PRIVILEGE_DEADLINE, "
+                     + " sc.C_STATE "
                      + "FROM T_SALE_CONTRACT sc ";
 
         sql += "ORDER BY sc.C_MODIFYTIME DESC";
@@ -173,5 +176,34 @@ public class SaleDao {
         Page<SaleContract> contracts = IdeaJdbc.query(sql).pageTo(SaleContract.class, curPage, pageSize);
 
         return contracts;
+    }
+
+    public List<Product> listContractProducts(String contractId) {
+        String sql = "SELECT p.C_ID AS p$id," + "  p.C_NAME AS p$name,"
+                + "  p.C_ISBN AS p$isbn,"
+                + "  p.C_WORD_COUNT as p$wordCount,"
+                + "  scp.C_ID AS scp$id,"
+                + "  scp.C_PRICE AS scp$price,"
+                + "  a.C_ID as a$id,"
+                + "  a.C_NAME as a$name,"
+                + "  a.C_IDCARD as a$idcard,"
+                + "  a.C_PSEUDONYM as a$pseudonym  "
+                + "FROM t_product p, t_sale_ctrt_prod scp, t_author a "
+                + "WHERE scp.C_CONTRACT_ID = :contractId "
+                + "  AND p.C_ID = scp.C_PRODUCT_ID "
+                + "  AND p.C_AUTHOR_ID = a.C_ID";
+
+        return IdeaJdbc.query(sql).setParameter("contractId", contractId)
+           .populate("scProduct", "scp").populate("author", "a")
+           .listTo(Product.class, "p");
+    }
+
+    public List<SaleContractDoc> listContractDocs(String contractId) {
+        String sql = "SELECT * " 
+                + "FROM T_SALE_CTRT_DOC "
+                + "WHERE C_CONTRACT_ID = :contractId "
+                + "ORDER BY C_CREATETIME DESC";
+        return IdeaJdbc.query(sql).setParameter("contractId", contractId)
+                        .listTo(SaleContractDoc.class);
     }
 }

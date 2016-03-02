@@ -3,6 +3,7 @@
  */
 package com.ideamoment.emarm.model;
 
+import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
@@ -22,6 +23,8 @@ public class MakeTaskAudioFile extends HistoriableEntity {
     @Property(dataItem="C_FILE_URL", type=DataItemType.VARCHAR, length=1000)
     private String fileUrl;
 
+    @Property(dataItem="C_STATE", type=DataItemType.VARCHAR, length=2)
+    private String state = YesOrNo.NO;
     
     /**
      * @return the makeTaskAudioId
@@ -68,6 +71,24 @@ public class MakeTaskAudioFile extends HistoriableEntity {
      */
     public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
+    }
+
+
+    
+    /**
+     * @return the state
+     */
+    public String getState() {
+        return state;
+    }
+
+
+    
+    /**
+     * @param state the state to set
+     */
+    public void setState(String state) {
+        this.state = state;
     }
     
     

@@ -94,16 +94,11 @@
                           </div>
                         </div>
                         <div class="form-group col-sm-4">
-                          <label for="inputSearchAudithState" class="col-sm-3 control-label">审批状态</label>
+                          <label for="inputSearchAudithState" class="col-sm-3 control-label">合同状态</label>
                           <div class="col-sm-9">
                             <select id="inputSearchAudithState" class="form-control">
                                 <option value="-1">全部</option>
-                                <option value="1">待主管审批</option>
-                                <option value="2">待经理审批</option>
-                                <option value="3">待总经理审批</option>
-                                <option value="4">业务审批完成</option>
-                                <option value="5">待法务审批</option>
-                                <option value="6">待法务确认</option>
+                                <option value="0">未完成</option>
                                 <option value="100">已完成</option>
                             </select>
                           </div>
@@ -130,6 +125,7 @@
                         <th>版权类型</th>
                         <th>版权范围</th>
                         <th>版权期限</th>
+                        <th>合同状态</th>
                         <th>操作</th>
                       </tr>
                     </thead>
@@ -526,6 +522,7 @@
                 {},
                 {},
                 {},
+                {},
                 {}
               ],
               "columnDefs": [
@@ -584,7 +581,13 @@
                   {
                       "targets": [8],
                       "render": function(data, type, full) {
-                          var html = '<a href=\'<idp:url value="/copyright/contractDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
+                          return full.stateText;
+                      }
+                  },
+                  {
+                      "targets": [9],
+                      "render": function(data, type, full) {
+                          var html = '<a href=\'<idp:url value="/sale/contractDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
                           if(full.state == '4') {
                               html += '<span class="small">|</span> ';

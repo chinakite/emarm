@@ -3,6 +3,7 @@
  */
 package com.ideamoment.emarm.model;
 
+import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
@@ -20,6 +21,8 @@ public class MakeTaskAudio extends HistoriableEntity {
     @Property(dataItem="C_TITLE", type=DataItemType.VARCHAR, length=300)
     private String title;
     
+    @Property(dataItem="C_STATE", type=DataItemType.VARCHAR, length=2)
+    private String state = YesOrNo.NO;
     
     /**
      * @return the makeTaskId
@@ -47,6 +50,20 @@ public class MakeTaskAudio extends HistoriableEntity {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+    
+    /**
+     * @return the state
+     */
+    public String getState() {
+        return state;
+    }
+    
+    /**
+     * @param state the state to set
+     */
+    public void setState(String state) {
+        this.state = state;
     }
     
 }

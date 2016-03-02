@@ -10,6 +10,7 @@ import java.util.List;
 import com.ideamoment.emarm.model.enumeration.CopyrightContractState;
 import com.ideamoment.emarm.model.enumeration.PrivilegeRange;
 import com.ideamoment.emarm.model.enumeration.PrivilegeType;
+import com.ideamoment.emarm.model.enumeration.SaleContractState;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
@@ -440,4 +441,13 @@ public class SaleContract extends HistoriableEntity {
         this.state = state;
     }
     
+    public String getStateText() {
+        if(this.state == null) {
+            return SaleContractState.DRAFT_TEXT;
+        }else if(this.state.equals(SaleContractState.FINISHED)) {
+            return SaleContractState.FINISHED_TEXT;
+        }else{
+            return SaleContractState.DRAFT_TEXT;
+        }
+    }
 }

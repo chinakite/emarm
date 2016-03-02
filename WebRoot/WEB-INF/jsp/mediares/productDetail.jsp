@@ -97,10 +97,16 @@
                           <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
                               <li class="active"><a href="#evaluationInfo" data-toggle="tab">评价信息</a></li>
-                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '40') > -1}">
+                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '40') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '11') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '12') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '13') > -1}">
                               <li><a href="#copyrightInfo" data-toggle="tab">版权信息</a></li>
+                              </c:if>
+                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '40') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '21') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '22') > -1}">
                               <li><a href="#makeInfo" data-toggle="tab">制作信息</a></li>
-                              <li><a href="#settings" data-toggle="tab">运营信息</a></li>
+                              </c:if>
+                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '40') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '31') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '32') > -1}">
+                              <li><a href="#saleInfo" data-toggle="tab">运营信息</a></li>
+                              </c:if>
+                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '40') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '31') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '32') > -1}">
                               <li><a href="#gallery" data-toggle="tab">相册</a></li>
                               <li><a href="#audioes" data-toggle="tab">音频</a></li>
                               </c:if>
@@ -178,6 +184,24 @@
                                               <th>乙方联系方式</th>
                                               <th>总集数</th>
                                               <th>总价</th>
+                                              <th></th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                      
+                                      </tbody>
+                                  </table>  
+                              </div><!-- /.tab-pane -->
+                              <div class="tab-pane" id="saleInfo">
+                                  <h5>运营合同</h5>
+                                  <table id="saleContractTbl" class="table table-bordered table-hover">
+                                      <thead>
+                                          <tr>
+                                              <th>合同编号</th>
+                                              <th>乙方</th>
+                                              <th>乙方联系人</th>
+                                              <th>乙方联系方式</th>
+                                              <th>签约时间</th>
                                               <th></th>
                                           </tr>
                                       </thead>
@@ -678,6 +702,25 @@
         {{/each}}
     </script>
     
+    <script id="nonSaleContractTmpl" type="text/html">
+        <tr>
+            <td colspan="7">目前没有运营合同。</td>
+        </tr>
+    </script>
+    
+    <script id="saleContractTmpl" type="text/html">
+        {{each sclist as sc idx}}
+        <tr>
+            <td>{{sc.code}}</td>
+            <td>{{sc.buyer}}</td>
+            <td>{{sc.buyerContact}}</td>
+            <td>{{sc.buyerContactPhone}}</td>
+            <td>{{sc.createTime}}</td>
+            <td><a href='<idp:url value="/sale/contractDetail"/>?id={{sc.id}}' target="_blank">查看</a></td>
+        </tr>
+        {{/each}}
+    </script>
+    
     <script id="imageListTmpl" type="text/html">
         <div class="row mt20">
             {{each imglist as img index}}
@@ -704,9 +747,11 @@
     
       $(document).ready(function(){
           loadEvaluations();
+          loadFinalEvaludation();
           loadCopyrightContracts();
           loadMakeTasks();
           loadMakeContracts();
+          loadSaleContracts();
           listProductImages();
           listProductAudioes();
           $('#importImgFile').fileupload({
@@ -739,8 +784,13 @@
                   var result = IDEA.parseJSON(json);
                   if(result.type == 'success') {
                       var data = result.data;
-                      var html = template('finalEvaTmpl', {fe: data});
-                      $('#finalEvaBody').html(html);
+                      if(data) {
+                          var html = template('finalEvaTmpl', {fe: data});
+                          $('#finalEvaBody').html(html);
+                      }else{
+                          var html = template('nonEvaMakeTmpl', {});
+                          $('#finalEvaBody').html(html);
+                      }
                       
                       $('#pricePanel').text(data.refPrice);
                   }
@@ -751,84 +801,6 @@
       function populateNonFinalEvaPanel() {
           var html = template('nonFinalEvaTmpl' ,{});
           $('#finalEvaBody').html(html);
-      }
-      
-      function calPrice() {
-          var productEva = $('input[name=productEva]:checked').val();
-          var authorEva = $('input[name=authorEva]:checked').val();
-          var makeAudioEdit = $('input[name=makeAudioEdit]:checked').val();
-          var storyLevel = $('input[name=storyLevel]:checked').val();
-          var onlyWeb = $('#onlyWebCast').prop('checked');
-          var ishot = $('#hotSubject').prop('checked');
-          
-          var basePrice = 0;
-          var wordCount = ${product.wordCount};
-          var publishYear = '${product.publishYear}';
-          if(publishYear == '') {
-              publishYear = '${product.finishYear}';
-          }
-
-          if(productEva == 0 && authorEva == 0) {
-              if(storyLevel == 1) {
-                  basePrice = 1000;
-              }else if(storyLevel == 2) {
-                  basePrice = 1500;
-              }else if(storyLevel == 3) {
-                  basePrice = 2000;
-              }
-              
-              basePrice = basePrice * (wordCount / 10);
-              
-              if(basePrice > 5000) {
-                  basePrice = 5000;
-              }
-          }else if(authorEva > 0){
-              if(ishot) {
-                  basePrice = 20000;
-              }else{
-                  if(authorEva == 2) {
-                      basePrice = 10000;
-                  }else{
-                      if(productEva == 1) {
-                          basePrice = 8000;
-                      }else{
-                          basePrice = 6000;
-                      }
-                  } 
-              }
-              
-              if(wordCount > 10) {
-                  basePrice = basePrice * 1.2;
-              }else if(wordCount < 1) {
-                  basePrice = basePrice * 0.8;
-              }else{
-                  basePrice = basePrice * 1;
-              }
-          }
-          
-          var priceRabio = 1;
-          var curDate = new Date();
-          var curYear = curDate.getFullYear();
-          if(curYear - publishYear <=2 ) {
-              priceRabio = priceRabio + 0.2;
-          }else if(curYear - publishYear > 4){
-              priceRabio = priceRabio - 0.2;
-          }
-          
-          if(makeAudioEdit == 3) {
-              priceRabio = priceRabio - 0.2;
-          }else if(makeAudioEdit == 1) {
-              priceRabio = priceRabio + 0.2;
-          }else{
-              priceRabio = priceRabio + 0;
-          }
-          
-          if(onlyWeb) {
-              priceRabio = priceRabio - 0.2;
-          }
-          
-          var price = basePrice * priceRabio;
-          $('#pricePanel').text(price);
       }
       
       function loadEvaluations() {
@@ -918,6 +890,26 @@
                       }else{
                           var makeContractHtml = template('makeContractTmpl', {mclist: mcs});
                           $('#makeContractTbl tbody').html(makeContractHtml);
+                      }
+                  }
+              }
+          );
+      }
+      
+      function loadSaleContracts() {
+          $.get(
+              '<idp:url value="/sale/productContracts"/>?productId=${product.id}',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var scs = result.data;
+                      if(scs.length == 0) {
+                          var saleContractHtml = template('nonSaleContractTmpl', {});
+                          $('#saleContractTbl tbody').html(saleContractHtml);
+                      }else{
+                          var saleContractHtml = template('saleContractTmpl', {sclist: scs});
+                          $('#saleContractTbl tbody').html(saleContractHtml);
                       }
                   }
               }

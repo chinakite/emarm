@@ -80,6 +80,8 @@
                 <li id="menu_sale_report"><a href='<idp:url value="/sale/productPage"/>'><i class="fa fa-file-text"></i> 统计分析</a></li>
               </ul>
             </li>
+            </c:if>
+            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1}">
             <li id="menu_system" class="treeview">
               <a href="#">
                 <i class="fa fa-cog"></i> <span>系统管理</span>

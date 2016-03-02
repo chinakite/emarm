@@ -156,6 +156,24 @@ public class MakeAction {
         return JsonData.SUCCESS;
     }
     
+    @RequestMapping(value="/make/publishTask", method=RequestMethod.POST)
+    public JsonData publishTask(String id) {
+        MakeTask task = makeService.publishTask(id);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/make/listAvaliableMakeContracts", method=RequestMethod.GET)
+    public JsonData listAvaliableMakeContracts() {
+        List<MakeContract> contracts = makeService.listAvaliableMakeContracts();
+        return JsonData.success(contracts);
+    }
+    
+    @RequestMapping(value="/make/passAudio", method=RequestMethod.POST)
+    public JsonData passTaskAudio(String audioId) {
+        makeService.passTaskAudio(audioId);
+        return JsonData.SUCCESS;
+    }
+    
     @RequestMapping(value="/make/makeContract", method=RequestMethod.POST)
     public JsonData saveMakeContract(
                         String id,

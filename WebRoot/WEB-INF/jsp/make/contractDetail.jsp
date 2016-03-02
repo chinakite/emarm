@@ -53,9 +53,11 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1 class="detailTitle col-xs-6">合同编号：${contract.code}<span class="label bg-orange"><c:if test="${contract.targetType == '0'}">对私</c:if><c:if test="${contract.targetType == '1'}">对公</c:if></span></h1>
+            <c:if test="${contract.state != '10'}">
             <button class="btn btn-default pull-right ml10" onclick="finishContract();"><i class="fa fa-remove"></i> 确认完成</button>
             <button class="btn btn-default pull-right ml10" onclick="generateDoc('${contract.id}');"><i class="fa fa-remove"></i> 生成草稿</button>
             <button class="btn btn-default pull-right ml10" onclick="popUploadContractDoc('${contract.id}');"><i class="fa fa-remove"></i> 上传合同</button>
+            </c:if>
         </section>
 
         <!-- Main content -->
@@ -726,6 +728,15 @@
                       if(result.type == 'success') {
                           alert('操作成功');
                           window.location.reload();
+                      }else{
+                          if(result.IdeaException) {
+                              var ex = result.IdeaException;
+                              if(ex.code == 'MAKE-00001') {
+                                  alert('还有未通过的音频, 不能完成。');
+                              }else if(ex.code == 'MAKE-00002') {
+                                  alert('此合同没有关联制作任务，不能完成。');
+                              }
+                          }
                       }
                   }
               );

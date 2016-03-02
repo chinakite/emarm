@@ -181,7 +181,7 @@
                       </select>
                   </div>
                 </div>
-                <div class="form-group required">
+                <div class="form-group">
                   <label for="inputContract" class="col-sm-2 control-label">制作合同</label>
                   <div class="col-sm-10">
                       <select id="inputContract" class="form-control">
@@ -238,7 +238,7 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearAuthorModal();">关闭</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearTaskModal();">关闭</button>
             <button type="button" class="btn btn-emarm" onclick="submitMakeTask();">保存</button>
           </div>
         </div><!-- /.modal-content -->
@@ -285,6 +285,13 @@
         {{/each}}
     </script>
     
+    <!-- template -->
+    <script id="contractTmpl" type="text/html">
+        {{each ctlist as ct idx}}
+           <option value="{{ct.id}}">{{ct.product.name}}({{ct.code}})</option>
+        {{/each}}
+    </script>
+    
     <!-- page script -->
     <script>
       var table;
@@ -296,6 +303,7 @@
           initProductTbl();
           loadExtMakers();
           loadCategories();
+          loadAvaliableMakeContract();
       });
       
       function loadExtMakers() {
@@ -329,6 +337,21 @@
                   //$("#inputSubject").select2();
               }
           )
+      }
+      
+      function loadAvaliableMakeContract() {
+          $.get(
+              '<idp:url value="/make/listAvaliableMakeContracts"/>',
+              {},
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var contracts = result.data;
+                      var html = template('contractTmpl', {"ctlist" : contracts});
+                      $('#inputContract').empty().append('<option value="-1"></option>').append(html);
+                  }
+              }
+          );
       }
       
       function initProductTbl() {

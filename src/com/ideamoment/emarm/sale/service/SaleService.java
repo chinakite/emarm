@@ -17,9 +17,11 @@ import org.springframework.stereotype.Service;
 
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.SaleContract;
+import com.ideamoment.emarm.model.SaleContractDoc;
 import com.ideamoment.emarm.model.SaleContractProduct;
 import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.ProductState;
+import com.ideamoment.emarm.model.enumeration.SaleContractState;
 import com.ideamoment.emarm.sale.dao.SaleDao;
 import com.ideamoment.ideadp.usercontext.UserContext;
 import com.ideamoment.ideajdbc.IdeaJdbc;
@@ -168,5 +170,50 @@ public class SaleService {
     {
         return saleDao.pageContracts(curPage, pageSize, condition);
     }
-    
+
+    @IdeaJdbcTx
+    public SaleContract findContract(String id) {
+        return IdeaJdbc.find(SaleContract.class, id);
+    }
+
+    @IdeaJdbcTx
+    public List<Product> listContractProducts(String contractId) {
+        return saleDao.listContractProducts(contractId);
+    }
+
+    @IdeaJdbcTx
+    public List<SaleContractDoc> listContractDocs(String contractId) {
+        return saleDao.listContractDocs(contractId);
+    }
+
+    @IdeaJdbcTx
+    public void uploadContractDoc(String id,
+                                  String fileUrl,
+                                  String version)
+    {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        SaleContractDoc ccd = new SaleContractDoc();
+        ccd.setContractId(id);
+        ccd.setCreateTime(new Date());
+        ccd.setCreatorId(curUser.getId());
+        ccd.setVersion(version);
+        ccd.setFileUrl(fileUrl);
+        
+        IdeaJdbc.save(ccd);
+        
+    }
+
+    @IdeaJdbcTx
+    public void finishContract(String contractId) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        SaleContract mc = IdeaJdbc.find(SaleContract.class, contractId);
+        mc.setModifier(curUser.getId());
+        mc.setModifyTime(new Date());
+        mc.setState(SaleContractState.FINISHED);
+        IdeaJdbc.update(mc);
+    }
 }

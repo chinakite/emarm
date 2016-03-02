@@ -54,13 +54,13 @@ public class GenerateDb {
 //                MakeContractDoc.class,
 //                  SaleContract.class,
 //                  SaleContractProduct.class,
-//                  SaleContractDoc.class,
+                  SaleContractDoc.class
 //                  Task.class,
 //                    ProductReservedInfo.class,
 //                MakeTaskAudio.class,
 //                MakeTaskAudioAudit.class,
 //                MakeTaskAudioFile.class,
-                  EmailSetting.class
+//                  EmailSetting.class
                 };
         
         for(Class clz : cls) {

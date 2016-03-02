@@ -15,7 +15,7 @@ import com.ideamoment.ideadata.annotation.Ref;
  *
  */
 @Entity(dataSet="T_SALE_CTRT_DOC")
-public class SaleContractDoc {
+public class SaleContractDoc extends BaseEntity {
     @Property(dataItem="C_CONTRACT_ID", type=DataItemType.VARCHAR, length=32)
     private String contractId;
     

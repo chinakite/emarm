@@ -272,7 +272,7 @@
         {{each audioes as audio index}}
             <div class="box box-default box-solid collapsed-box" rel="{{audio.id}}">
               <div class="box-header with-border">
-                  <span>{{audio.title}}</span>
+                  <span>{{audio.title}}&nbsp;&nbsp;{{if audio.state == '1'}}<span class="label bg-green">已通过</span>{{/if}}</span>
                   <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" onclick="popAudioModal('{{audio.id}}');"><i class="fa fa-up"></i>上传</button>
                     <button class="btn btn-box-tool mr30" onclick="popAuditModal('{{audio.id}}');"><i class="fa fa-up"></i>评论</button>
@@ -300,7 +300,11 @@
             <tr>
               <td>{{file.version}}</td>
               <td>{{file.createTime}}</td>
-              <td><a href='<idp:url value="{{file.fileUrl}}"/>' class="label bg-green">下载</a></td>
+              <td>{{if file.state == '1'}}已通过{{else}}未通过{{/if}}</td>
+              <td>
+                  <a href='<idp:url value="{{file.fileUrl}}"/>' class="label bg-green">下载</a>
+                  {{if file.state == '0'}}<a href='javascript:void(0);' class="label bg-green" onclick="passAudio('{{file.id}}');">通过</a>{{/if}}
+              </td>
             </tr>
         {{/each}}
     </script>
@@ -494,6 +498,23 @@
                   }
               }
           );
+      }
+      
+      function passAudio(id) {
+          var r = window.confirm('通定通过此音频吗？');
+          if(r) {
+              $.post(
+                  '<idp:url value="/make/passAudio"/>',
+                  {"audioId" : id},
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('保存成功.');
+                          window.location.reload();
+                      }
+                  }
+              );
+          }
       }
     </script>
   </body>

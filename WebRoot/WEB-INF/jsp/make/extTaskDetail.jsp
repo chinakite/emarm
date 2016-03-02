@@ -409,7 +409,7 @@
       
       function submitAudio() {
           var id = $('#inputSectionId').val();
-          var fileUrl = $('#inputDoc').val();
+          var fileUrl = $('#inputAudio').val();
           var version = $('#version1').val() + "." + $('#version2').val();
           
           $.post(
