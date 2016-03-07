@@ -123,6 +123,7 @@ public class EvaluationDao {
                    +     " p.C_HAS_AUDIO AS p$hasAudio,"
                    +     " p.C_AUDIO_COPYRIGHT AS p$audioCopyright,"
                    +     " p.C_AUDIO_DESC AS p$audioDesc,"
+                   +     " p.C_LOGO_URL AS p$logoUrl,"
                    +     " a.C_ID AS a$id,"
                    +     " a.C_NAME AS a$name,"
                    +     " a.C_PSEUDONYM AS a$pseudonym,"

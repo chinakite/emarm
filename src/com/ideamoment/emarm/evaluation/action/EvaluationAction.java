@@ -19,6 +19,7 @@ import com.ideamoment.emarm.model.Author;
 import com.ideamoment.emarm.model.Evaluation;
 import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.ProductCopyrightFile;
 import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.util.DataTableSource;
 import com.ideamoment.ideadp.exception.IdeaBaseException;
@@ -158,6 +159,7 @@ public class EvaluationAction {
                         String audioDesc,
                         String samples,
                         String isbn,
+                        String copyrights,
                         String submit) {
         
         Product product;
@@ -198,6 +200,15 @@ public class EvaluationAction {
             sampleList.add(sample);
         }
         product.setSamples(sampleList);
+        
+        List<ProductCopyrightFile> cpFileList = new ArrayList<ProductCopyrightFile>();
+        String[] cpFileArray = copyrights.split(",");
+        for(String copyrightFileUrl : cpFileArray) {
+            ProductCopyrightFile copyrightFile = new ProductCopyrightFile();
+            copyrightFile.setFileUrl(copyrightFileUrl);
+            cpFileList.add(copyrightFile);
+        }
+        product.setCopyrightFiles(cpFileList);
         try{
             product = evaluationService.saveProduct(product, submit);
         }catch(IdeaBaseException e) {

@@ -1,0 +1,202 @@
+/*
+ * Skin: Blue
+ * ----------
+ */
+.skin-emarm h1,
+.skin-emarm h2,
+.skin-emarm h3,
+.skin-emarm h4,
+.skin-emarm h5,
+.skin-emarm h6,
+.skin-emarm h7 {
+    font-family: 'Microsoft YaHei';
+}
+ 
+.skin-emarm .main-header .navbar {
+  background-color: #d70051;
+}
+.skin-emarm .main-header .navbar .nav > li > a {
+  color: #ffffff;
+}
+.skin-emarm .main-header .navbar .nav > li > a:hover,
+.skin-emarm .main-header .navbar .nav > li > a:active,
+.skin-emarm .main-header .navbar .nav > li > a:focus,
+.skin-emarm .main-header .navbar .nav .open > a,
+.skin-emarm .main-header .navbar .nav .open > a:hover,
+.skin-emarm .main-header .navbar .nav .open > a:focus,
+.skin-emarm .main-header .navbar .nav > .active > a {
+  background: rgba(0, 0, 0, 0.1);
+  color: #f6f6f6;
+}
+.skin-emarm .main-header .navbar .sidebar-toggle {
+  color: #ffffff;
+}
+.skin-emarm .main-header .navbar .sidebar-toggle:hover {
+  color: #f6f6f6;
+  background: rgba(0, 0, 0, 0.1);
+}
+.skin-emarm .main-header .navbar .sidebar-toggle {
+  color: #fff;
+}
+.skin-emarm .main-header .navbar .sidebar-toggle:hover {
+  background-color: #a80240;
+}
+@media (max-width: 767px) {
+  .skin-emarm .main-header .navbar .dropdown-menu li.divider {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  .skin-emarm .main-header .navbar .dropdown-menu li a {
+    color: #fff;
+  }
+  .skin-emarm .main-header .navbar .dropdown-menu li a:hover {
+    background: #a80240;
+  }
+}
+.skin-emarm .main-header .logo {
+  background-color: #a80240;
+  color: #ffffff;
+  border-bottom: 0 solid transparent;
+}
+.skin-emarm .main-header .logo:hover {
+  background-color: #a80240;
+}
+.skin-emarm .main-header li.user-header {
+  background-color: #d70051;
+}
+.skin-emarm .content-header {
+  background: transparent;
+}
+.skin-emarm .wrapper,
+.skin-emarm .main-sidebar,
+.skin-emarm .left-side {
+  background-color: #222d32;
+}
+
+.skin-emarm .wrapper.detailBody {
+    background-color: #f4f4f4;
+}
+.skin-emarm .detailContent {
+    background-color: #fff;
+}
+
+.skin-emarm .user-panel > .info,
+.skin-emarm .user-panel > .info > a {
+  color: #fff;
+}
+.skin-emarm .sidebar-menu > li.header {
+  color: #4b646f;
+  background: #1a2226;
+}
+.skin-emarm .sidebar-menu > li > a {
+  border-left: 3px solid transparent;
+}
+.skin-emarm .sidebar-menu > li:hover > a,
+.skin-emarm .sidebar-menu > li.active > a {
+  color: #ffffff;
+  background: #1e282c;
+  border-left-color: #d70051;
+}
+.skin-emarm .sidebar-menu > li > .treeview-menu {
+  margin: 0 1px;
+  background: #2c3b41;
+}
+.skin-emarm .sidebar a {
+  color: #b8c7ce;
+}
+.skin-emarm .sidebar a:hover {
+  text-decoration: none;
+}
+.skin-emarm .treeview-menu > li > a {
+  color: #8aa4af;
+}
+.skin-emarm .treeview-menu > li.active > a,
+.skin-emarm .treeview-menu > li > a:hover {
+  color: #ffffff;
+}
+.skin-emarm .sidebar-form {
+  border-radius: 3px;
+  border: 1px solid #374850;
+  margin: 10px 10px;
+}
+.skin-emarm .sidebar-form input[type="text"],
+.skin-emarm .sidebar-form .btn {
+  box-shadow: none;
+  background-color: #374850;
+  border: 1px solid transparent;
+  height: 35px;
+  -webkit-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.skin-emarm .sidebar-form input[type="text"] {
+  color: #666;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 2px;
+}
+.skin-emarm .sidebar-form input[type="text"]:focus,
+.skin-emarm .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
+  background-color: #fff;
+  color: #666;
+}
+.skin-emarm .sidebar-form input[type="text"]:focus + .input-group-btn .btn {
+  border-left-color: #fff;
+}
+.skin-emarm .sidebar-form .btn {
+  color: #999;
+  border-top-left-radius: 0;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 0;
+}
+.skin-emarm.layout-top-nav .main-header > .logo {
+  background-color: #d70051;
+  color: #ffffff;
+  border-bottom: 0 solid transparent;
+}
+.skin-emarm.layout-top-nav .main-header > .logo:hover {
+  background-color: #3b8ab8;
+}
+
+.content-wrapper, .right-side {background-color: #ebebeb;}
+
+.pagination>.active>a, 
+.pagination>.active>a:focus, 
+.pagination>.active>a:hover, 
+.pagination>.active>span, 
+.pagination>.active>span:focus, 
+.pagination>.active>span:hover {
+    background-color: #d70051;
+    border-color: #d70051;
+}
+
+.btn-emarm, 
+.btn-emarm:active, 
+.btn-emarm:visited,
+.btn-emarm:focus {
+    background-color: #d70051;
+    border-color: #d70051;
+    color: #fff;
+}
+
+.btn-emarm:hover {
+    background-color: #a80240;
+    color: #fff;
+}
+
+.flat-header {background-color: #d70051;}
+
+.skin-emarm h1.detailTitle {
+    font-family: 'ºÚÌå';
+    font-size: 24px;
+    color: #231815;
+}
+
+.nav-tabs-custom>.nav-tabs>li.active {
+    border-top-color: #d70051;
+}
+
+.box.box-emarm {
+    border-top-color: #d70051;
+}

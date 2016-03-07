@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 登录</title>
+    <title>数字音频版权云平台 | 登录</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -41,11 +41,12 @@
   </head>
   <body class="hold-transition login-page login-bg">
     <div class="login-box">
-      <div class="login-logo">
+      <!--<div class="login-logo">
         <a href="#"><img src="img/logo.png" height="60"/></a>
-      </div><!-- /.login-logo -->
+      </div> /.login-logo -->
       <div class="login-box-body">
-        <p class="login-box-msg">音频资源管理系统</p>
+        <p class="text-center"><img src="img/rbc_logo.png" height="60"/></p>
+        <p class="login-box-msg">数字音频版权云平台</p>
         <form action='<idp:url value="/userlogin"/>' method="post">
           <div class="form-group has-feedback">
             <input type="text" name="userName" id="userName" class="form-control small" placeholder="用户名">

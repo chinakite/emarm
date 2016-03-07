@@ -13,6 +13,7 @@ import com.ideamoment.emarm.model.MakeTaskAudio;
 import com.ideamoment.emarm.model.MakeTaskAudioAudit;
 import com.ideamoment.emarm.model.MakeTaskAudioFile;
 import com.ideamoment.emarm.model.ProductAudio;
+import com.ideamoment.emarm.model.ProductCopyrightFile;
 import com.ideamoment.emarm.model.ProductImage;
 import com.ideamoment.emarm.model.ProductReservedInfo;
 import com.ideamoment.emarm.model.SaleContract;
@@ -54,13 +55,14 @@ public class GenerateDb {
 //                MakeContractDoc.class,
 //                  SaleContract.class,
 //                  SaleContractProduct.class,
-                  SaleContractDoc.class
+//                  SaleContractDoc.class,
 //                  Task.class,
 //                    ProductReservedInfo.class,
 //                MakeTaskAudio.class,
 //                MakeTaskAudioAudit.class,
 //                MakeTaskAudioFile.class,
-//                  EmailSetting.class
+//                  EmailSetting.class,
+                    ProductCopyrightFile.class
                 };
         
         for(Class clz : cls) {

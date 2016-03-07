@@ -44,7 +44,10 @@
         <nav class="navbar navbar-static-top">
           <div class="container">
             <div class="navbar-header">
+              <span class="emarm_title_text">数字音频版权云平台</span>
+              <!--
               <img style="margin-top: 4px;" src='<idp:url value="/img/logo.png"/>' height="40"/>
+              -->
             </div>
           </div><!-- /.container-fluid -->
         </nav>

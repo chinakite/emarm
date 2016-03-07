@@ -39,15 +39,22 @@
             color: #f1f1f1;
             margin-top: 10px;
         }
+        
+        .login-box-msg {
+            font-family: 'Microsoft YaHei';
+            font-size: 22px;
+        }
     </style>
   </head>
   <body class="hold-transition login-page login-bg">
     <div class="login-box">
-      <div class="login-logo">
+      <!--<div class="login-logo">
         <a href="#"><img src="img/logo.png" height="60"/></a>
         <p class="login-welcome">诚挚地邀请您进行评价</p>
-      </div><!-- /.login-logo -->
+      </div> /.login-logo -->
       <div class="login-box-body" style="padding: 40px;">
+        <p class="text-center"><img src="img/rbc_logo.png" height="60"/></p>
+        <p class="login-box-msg">音频制作提交系统</p>
         <form action='<idp:url value="/mkUserLogin"/>' method="post">
           <input type="hidden" name="productId" id="productId" value="${productId}"/>
           

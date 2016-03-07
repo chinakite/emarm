@@ -395,6 +395,21 @@
                 <div class="clearfix">
                     <div class="col-xs-12">
                         <div class="form-group required">
+                          <label for="importCopyrightFile" class="col-xs-2 control-label">权属文件</label>
+                          <div id="copyrightsUploadDiv" class="col-xs-10">
+                              <input  id="importCopyrightFile" name="importFile" type="file" class="form-control"/>
+                              <input id="inputCopyrights" type="hidden"/>
+                              <ul id="uploadedCopyrightFiles"></ul>
+                          </div>
+                          <div id="copyrightsShowDiv" class="col-xs-10 checkbox" style="display:none;">
+                              <a href='#' class="label bg-gray">下载</a>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
                           <label for="inputHasAudio" class="col-xs-2 control-label">网络音频</label>
                           <div class="col-xs-10">
                               <div class="col-xs-2 radio">
@@ -501,6 +516,24 @@
                      var fileName = data['result']['data'][0]['fileName'];
                      $('#uploadedFile').append('<li>'+fileName+'</li>');
                      $('#inputSamples').val(fileUrl);
+              }
+          });
+          
+          $('#importCopyrightFile').fileupload({
+              url: '<idp:url value="/uploadDoc"/>',
+              dataType: 'json',
+              done: function (e, data) {
+                     var fileUrl = data['result']['data'][0]['fileUrl'];
+                     var fileName = data['result']['data'][0]['fileName'];
+                     $('#uploadedCopyrightFiles').append('<li>'+fileName+'</li>');
+                     var oldInputCoprygiths = $('#inputCopyrights').val();
+                     var copyrights = '';
+                     if(oldInputCoprygiths && oldInputCoprygiths != null && oldInputCoprygiths != '') {
+                         copyrights = oldInputCoprygiths + "," + fileUrl;
+                     }else{
+                         copyrights = fileUrl;
+                     }
+                     $('#inputCopyrights').val(copyrights);
               }
           });
       
@@ -692,7 +725,8 @@
                     && validateWebsite()
                     && validateSummary()
                     && validateSamples()
-                    && validateAudioDesc();
+                    && validateAudioDesc()
+                    && validateCopyrights();
           }
       
           if(!r) {
@@ -715,6 +749,7 @@
               var audioDesc = $('#inputAudioDesc').val();
               var samples = $('#inputSamples').val();
               var isbn = $('#inputIsbn').val();
+              var coprygiths = $('#inputCopyrights').val();;
               
               $.post(
                   '<idp:url value="/evaluation/product"/>',
@@ -736,7 +771,8 @@
                       'audioDesc': audioDesc,
                       'samples': samples,
                       'submit': submit,
-                      'isbn': isbn
+                      'isbn': isbn,
+                      'coprygiths': coprygiths
                   },
                   function(json) {
                       var result = IDEA.parseJSON(json);
@@ -1155,6 +1191,25 @@
               inputSamplesEle.parents('.form-group').removeClass('has-error');
               inputSamplesEle.next('.feedback-tip').find('span').text('');
               inputSamplesEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateCopyrights() {
+          var inputCopyrightsEle = $('#inputCopyrights');
+          var copyrights = inputCopyrightsEle.val();
+          if(!copyrights || $.trim(copyrights).length == 0) {
+              var formGroup = inputCopyrightsEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputCopyrightsEle.parents('.form-group').addClass('has-error');
+                  inputCopyrightsEle.next('.feedback-tip').find('span').text('权属文件不能为空');
+                  inputCopyrightsEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputCopyrightsEle.parents('.form-group').removeClass('has-error');
+              inputCopyrightsEle.next('.feedback-tip').find('span').text('');
+              inputCopyrightsEle.next('.feedback-tip').hide();
               return true;
           }
       }

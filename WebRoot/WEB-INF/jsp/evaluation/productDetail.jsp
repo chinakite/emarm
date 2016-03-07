@@ -41,7 +41,10 @@
         <nav class="navbar navbar-static-top">
           <div class="container">
             <div class="navbar-header">
+              <span class="emarm_title_text">数字音频版权云平台</span>
+              <!--
               <img style="margin-top: 4px;" src='<idp:url value="/img/logo.png"/>' height="40"/>
+              -->
             </div>
           </div><!-- /.container-fluid -->
         </nav>
@@ -72,14 +75,19 @@
                   <div class="box-body">
                       <div class="row">
                           <div class="col-xs-2">
-                              <img width="136" src='<idp:url value="/img/default_product_logo.jpg"/>'/>
+                              <c:if test="${product.logoUrl != null}">
+                                  <img width="136" src='<idp:ctx/>${product.logoUrl}'/>
+                              </c:if>
+                              <c:if test="${product.logoUrl == null}">
+                                  <img width="136" src='<idp:url value="/img/default_product_logo.jpg"/>'/>
+                              </c:if>
                           </div>
                           <div class="col-xs-10">
                               <p class="col-xs-12">作品简介：</p>
                               <p class="col-xs-12 productSummary">${product.summary}</p>
                               <p class="col-xs-5 detailInfo-light">作者：${product.author.name}</p>
                               <p class="col-xs-7 detailInfo-light">作者笔名：${product.author.pseudonym}</p>
-                              <p class="col-xs-5 detailInfo-light">题材：${product.subject.id}</p>
+                              <p class="col-xs-5 detailInfo-light">题材：${product.subject.name}</p>
                               <p class="col-xs-7 detailInfo-light">字数：${product.wordCount}&nbsp;万字</p>
                               <p class="col-xs-5 detailInfo-light">出版状态：${product.publishStateText}</p>
                               <p class="col-xs-7 detailInfo-light">出版年份：${product.publishYear}</p>
@@ -94,8 +102,8 @@
                           <div class="nav-tabs-custom">
                             <ul class="nav nav-tabs">
                               <li class="active"><a href="#evaluationInfo" data-toggle="tab">评价信息</a></li>
-                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1}">
                               <li><a href="#copyrightInfo" data-toggle="tab">版权信息</a></li>
+                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1}">
                               <li><a href="#makeInfo" data-toggle="tab">制作信息</a></li>
                               <li><a href="#settings" data-toggle="tab">运营信息</a></li>
                               <li><a href="#gallery" data-toggle="tab">相册</a></li>
@@ -129,6 +137,21 @@
                                 </div>
                               </div><!-- /.tab-pane -->
                               <div class="tab-pane" id="copyrightInfo">
+                                  <h5>权属文件</h5>
+                                  <table id="copyrightFileTbl" class="table table-bordered table-hover">
+                                      <thead>
+                                          <tr>
+                                              <th>文件名</th>
+                                              <th>创建时间</th>
+                                              <th></th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                      
+                                      </tbody>
+                                  </table>  
+                                  <hr/>
+                                  <h5>版权合同</h5>
                                   <table id="copyrightTbl" class="table table-bordered table-hover">
                                       <thead>
                                           <tr>

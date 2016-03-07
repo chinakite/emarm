@@ -61,3 +61,10 @@ a{cursor:pointer;}
 .gallery-img-title {
     padding: 5px 0;
 }
+
+.emarm_title_text {
+    color: #fff;
+    line-height: 50px;
+    font-size: 24px;
+    font-family: 微软雅黑;
+}

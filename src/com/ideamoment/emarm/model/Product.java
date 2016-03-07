@@ -62,6 +62,9 @@ public class Product extends HistoriableEntity {
     @Ref(entityClass=ProductSample.class)
     private List<ProductSample> samples;
     
+    @Ref(entityClass=ProductCopyrightFile.class)
+    private List<ProductCopyrightFile> copyrightFiles;
+    
     @Property(dataItem="C_SUMMARY", type=DataItemType.VARCHAR, length=2000)
     private String summary;
     
@@ -542,5 +545,18 @@ public class Product extends HistoriableEntity {
         this.scProduct = scProduct;
     }
     
+    /**
+     * @return the copyrightFiles
+     */
+    public List<ProductCopyrightFile> getCopyrightFiles() {
+        return copyrightFiles;
+    }
+    
+    /**
+     * @param copyrightFiles the copyrightFiles to set
+     */
+    public void setCopyrightFiles(List<ProductCopyrightFile> copyrightFiles) {
+        this.copyrightFiles = copyrightFiles;
+    }
     
 }

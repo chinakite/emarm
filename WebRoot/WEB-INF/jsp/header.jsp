@@ -7,7 +7,8 @@
           <!-- mini logo for sidebar mini 50x50 pixels -->
           <span class="logo-mini"><img src='<idp:url value="/img/logo_small.png"/>' height="28"/></span>
           <!-- logo for regular state and mobile devices -->
-          <span class="logo-lg"><img src='<idp:url value="/img/logo.png"/>' height="36"/></span>
+          <!--<span class="logo-lg"><img src='<idp:url value="/img/logo.png"/>' height="36"/></span>-->
+          <span class="emarm_title_text" style="font-size: 20px;">数字音频版权云平台</span>
         </a>
 
         <!-- Header Navbar: style can be found in header.less -->

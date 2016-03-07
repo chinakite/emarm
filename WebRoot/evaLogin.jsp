@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 登录</title>
+    <title>数字音频版权云平台 | 登录</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -39,15 +39,24 @@
             color: #f1f1f1;
             margin-top: 10px;
         }
+        
+        .login-box-msg {
+            font-family: 'Microsoft YaHei';
+            font-size: 22px;
+        }
     </style>
   </head>
   <body class="hold-transition login-page login-bg">
     <div class="login-box">
+      <!--
       <div class="login-logo">
         <a href="#"><img src="img/logo.png" height="60"/></a>
         <p class="login-welcome">诚挚地邀请您进行评价</p>
       </div><!-- /.login-logo -->
-      <div class="login-box-body" style="padding: 40px;">
+      -->
+      <div class="login-box-body" style="padding: 40px; padding-top:20px;">
+        <p class="text-center"><img src="img/rbc_logo.png" height="60"/></p>
+        <p class="login-box-msg">作品版权评价系统</p>
         <form action='<idp:url value="/evaUserLogin"/>' method="post">
           <input type="hidden" name="productId" id="productId" value="${productId}"/>
           

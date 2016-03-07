@@ -3,6 +3,7 @@
  */
 package com.ideamoment.emarm.evaluation.service;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,11 +22,11 @@ import com.ideamoment.emarm.model.EmailSetting;
 import com.ideamoment.emarm.model.Evaluation;
 import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.ProductCopyrightFile;
 import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
-import com.ideamoment.emarm.model.enumeration.PublishState;
 import com.ideamoment.emarm.model.enumeration.RoleType;
 import com.ideamoment.ideadp.exception.IdeaDataException;
 import com.ideamoment.ideadp.exception.IdeaDataExceptionCode;
@@ -138,8 +139,13 @@ public class EvaluationService {
                 email.setAuthentication(emailSetting.getUserName(), emailSetting.getPassword());  
                 // 要发送的邮件主题  
                 email.setSubject("邀请您评价");  
+                
+                Date curDate = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String dateStr = sdf.format(curDate);
+                
                 // 要发送的信息，由于使用了HtmlEmail，可以在邮件内容中使用HTML标签  
-                email.setMsg("<p>请您评价：</p><a href='http://www.6wanr.com" + contextPath + "evalogin?productId=" + id + "'>" + product.getName() + "</a>");  
+                email.setMsg("<p>尊敬的评审老师，您好！</p><p></p><p>&nbsp;&nbsp;公司拟采购作品《" + product.getName() + "》的相关音频权利，特邀您进行内容审核，您的意见将成为我们制定购买决策的重要依据！</p><p></p><p>&nbsp;&nbsp;<a href='http://www.6wanr.com" + contextPath + "evalogin?productId=" + id + "'>点击此处</a>开始评价，在此感谢您的参与！</p><p></p><p>&nbsp;&nbsp;祝好！</p><p></p><p>评审小组</p><p>" + dateStr + "</p>");  
                 // 发送  
                 email.send();  
             }
@@ -198,6 +204,14 @@ public class EvaluationService {
                 sample.setProductId(product.getId());
                 IdeaJdbc.save(sample);
             }
+            
+            List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
+            for(ProductCopyrightFile cpFile : copyrightFiles) {
+                cpFile.setProductId(product.getId());
+                cpFile.setCreatorId(curUser.getId());
+                cpFile.setCreateTime(curTime);
+                IdeaJdbc.save(cpFile);
+            }
         }else if("1".equals(submit)) {
             String name = product.getName();
             if(name == null || "".equals(name.trim())) {
@@ -243,6 +257,14 @@ public class EvaluationService {
             for(ProductSample sample : samples) {
                 sample.setProductId(product.getId());
                 IdeaJdbc.save(sample);
+            }
+            
+            List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
+            for(ProductCopyrightFile cpFile : copyrightFiles) {
+                cpFile.setProductId(product.getId());
+                cpFile.setCreatorId(curUser.getId());
+                cpFile.setCreateTime(curTime);
+                IdeaJdbc.save(cpFile);
             }
         }else{
             String name = product.getName();
@@ -292,6 +314,13 @@ public class EvaluationService {
                 IdeaJdbc.save(sample);
             }
             
+            List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
+            for(ProductCopyrightFile cpFile : copyrightFiles) {
+                cpFile.setProductId(product.getId());
+                cpFile.setCreatorId(curUser.getId());
+                cpFile.setCreateTime(curTime);
+                IdeaJdbc.save(cpFile);
+            }
         }
         
         return product;

@@ -13,7 +13,7 @@
 }
  
 .skin-emarm .main-header .navbar {
-  background-color: #d70051;
+  background-color: #005daf;
 }
 .skin-emarm .main-header .navbar .nav > li > a {
   color: #ffffff;
@@ -39,7 +39,7 @@
   color: #fff;
 }
 .skin-emarm .main-header .navbar .sidebar-toggle:hover {
-  background-color: #a80240;
+  background-color: #0F4A86;
 }
 @media (max-width: 767px) {
   .skin-emarm .main-header .navbar .dropdown-menu li.divider {
@@ -49,19 +49,19 @@
     color: #fff;
   }
   .skin-emarm .main-header .navbar .dropdown-menu li a:hover {
-    background: #a80240;
+    background: #0F4A86;
   }
 }
 .skin-emarm .main-header .logo {
-  background-color: #a80240;
+  background-color: #0F4A86;
   color: #ffffff;
   border-bottom: 0 solid transparent;
 }
 .skin-emarm .main-header .logo:hover {
-  background-color: #a80240;
+  background-color: #0F4A86;
 }
 .skin-emarm .main-header li.user-header {
-  background-color: #d70051;
+  background-color: #005daf;
 }
 .skin-emarm .content-header {
   background: transparent;
@@ -94,7 +94,7 @@
 .skin-emarm .sidebar-menu > li.active > a {
   color: #ffffff;
   background: #1e282c;
-  border-left-color: #d70051;
+  border-left-color: #f26c4f;
 }
 .skin-emarm .sidebar-menu > li > .treeview-menu {
   margin: 0 1px;
@@ -151,7 +151,7 @@
   border-bottom-left-radius: 0;
 }
 .skin-emarm.layout-top-nav .main-header > .logo {
-  background-color: #d70051;
+  background-color: #005daf;
   color: #ffffff;
   border-bottom: 0 solid transparent;
 }
@@ -167,25 +167,25 @@
 .pagination>.active>span, 
 .pagination>.active>span:focus, 
 .pagination>.active>span:hover {
-    background-color: #d70051;
-    border-color: #d70051;
+    background-color: #005daf;
+    border-color: #005daf;
 }
 
 .btn-emarm, 
 .btn-emarm:active, 
 .btn-emarm:visited,
 .btn-emarm:focus {
-    background-color: #d70051;
-    border-color: #d70051;
+    background-color: #005daf;
+    border-color: #005daf;
     color: #fff;
 }
 
 .btn-emarm:hover {
-    background-color: #a80240;
+    background-color: #0F4A86;
     color: #fff;
 }
 
-.flat-header {background-color: #d70051;}
+.flat-header {background-color: #005daf;}
 
 .skin-emarm h1.detailTitle {
     font-family: '黑体';
@@ -194,9 +194,9 @@
 }
 
 .nav-tabs-custom>.nav-tabs>li.active {
-    border-top-color: #d70051;
+    border-top-color: #005daf;
 }
 
 .box.box-emarm {
-    border-top-color: #d70051;
+    border-top-color: #005daf;
 }
