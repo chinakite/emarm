@@ -62,8 +62,11 @@
             <c:if test="${product.state == '2' || product.state == '3'}">
                 <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.id}', '${product.name}');"><i class="fa fa-tag"></i> 邀请评价</button>
             </c:if>
-            <c:if test="${product.state == '1'}">
-                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.name}');"><i class="fa fa-star-half-empty"></i> 审核</button>
+            <c:if test="${product.state == '1' && (fn:indexOf(sessionScope.__SESSION__USER__.role, '02') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1')}">
+                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.name}');"><i class="fa fa-star-half-empty"></i> 内容审核</button>
+            </c:if>
+            <c:if test="${product.state == '8' && fn:indexOf(sessionScope.__SESSION__USER__.role, '80') != '-1'}">
+                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.name}');"><i class="fa fa-star-half-empty"></i> 权属审核</button>
             </c:if>
         </section>
 
@@ -385,6 +388,8 @@
             <h4 class="modal-title">作品审核</h4>
           </div>
           <div class="modal-body">
+              <input type="hidden" id="auditProductId" value="${product.id}"/>
+              
               <p>待审核作品：<span id="auditProductName"></span></p>
               <form class="form-horizontal">
                   <div class="col-md-12">
@@ -726,6 +731,22 @@
         {{/each}}
     </script>
     
+    <script id="nonCopyrightFileTmpl" type="text/html">
+        <tr>
+            <td colspan="3">目前没有权属文件。</td>
+        </tr>
+    </script>
+    
+    <script id="copyrightFileTmpl" type="text/html">
+        {{each cflist as cf idx}}
+        <tr>
+            <td>{{cf.name}}</td>
+            <td>{{cf.createTime}}</td>
+            <td><a href="<idp:ctx/>{{cf.fileUrl}}">下载</a></td>
+        </tr>
+        {{/each}}
+    </script>
+    
     <script id="nonMakeTaskTmpl" type="text/html">
         <tr>
             <td colspan="7">目前没有制作任务。</td>
@@ -772,9 +793,10 @@
     
       $(document).ready(function(){
           loadEvaluations();
-          loadCopyrightContracts();
-          loadMakeTasks();
-          loadMakeContracts();
+          loadCopyrightFiles();
+          //loadCopyrightContracts();
+          //loadMakeTasks();
+          //loadMakeContracts();
           
           var state = '${product.state}';
           if(state == 4) {
@@ -940,6 +962,26 @@
                       }else{
                           var copyrightHtml = template('copyrightTmpl', {cclist: ccs});
                           $('#copyrightTbl tbody').html(copyrightHtml);
+                      }
+                  }
+              }
+          );
+      }
+      
+      function loadCopyrightFiles() {
+          $.get(
+              '<idp:url value="/evaluation/productCopyrightFiles"/>?productId=${product.id}',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var cfs = result.data;
+                      if(cfs.length == 0) {
+                          var copyrightFileHtml = template('nonCopyrightFileTmpl', {});
+                          $('#copyrightFileTbl tbody').html(copyrightFileHtml);
+                      }else{
+                          var copyrightFileHtml = template('copyrightFileTmpl', {cflist: cfs});
+                          $('#copyrightFileTbl tbody').html(copyrightFileHtml);
                       }
                   }
               }

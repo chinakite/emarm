@@ -17,7 +17,7 @@
               </a>
               <ul class="treeview-menu">
                 <li id="menu_eva_myproduct"><a href='<idp:url value="/evaluation/myProductPage"/>'><i class="fa fa-angle-double-right f10"></i> 我的作品</a></li>
-                <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1}">
+                <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '80') > -1}">
                 <li id="menu_eva_prodmgr"><a href='<idp:url value="/evaluation/productPage"/>'><i class="fa fa-angle-double-right f10"></i> 评价 & 审核</a></li>
                 </c:if>
               </ul>

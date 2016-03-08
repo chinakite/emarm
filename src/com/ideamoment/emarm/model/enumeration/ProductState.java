@@ -14,7 +14,7 @@ public class ProductState {
     public static final String DRAFT_TEXT = "草稿";
     
     public static final String APPROVE_WAITING = "1";
-    public static final String APPROVE_WAITING_TEXT = "待审核";
+    public static final String APPROVE_WAITING_TEXT = "待内容审核";
     
     public static final String APPROVE_REJECT = "101";
     public static final String APPROVE_REJECT_TEXT = "审核不过";
@@ -36,6 +36,9 @@ public class ProductState {
     
     public static final String RESERVED = "7";
     public static final String RESERVED_TEXT = "已预订";
+    
+    public static final String CPFILE_APPROVE_WAITING = "8";
+    public static final String CPFILE_APPROVE_WAITING_TEXT = "待权属审核";
     
     public static final String MK_WAITING = "10";
     public static final String MK_WAITING_TEXT = "待制作";

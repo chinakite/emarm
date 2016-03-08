@@ -256,6 +256,8 @@ public class Product extends HistoriableEntity {
             return ProductState.CP_CONTRACT_FINISH_TEXT;
         }else if(ProductState.RESERVED.equals(this.state)){
             return ProductState.RESERVED_TEXT;
+        }else if(ProductState.CPFILE_APPROVE_WAITING.equals(this.state)){
+            return ProductState.CPFILE_APPROVE_WAITING_TEXT;
         }
         else{
             return ProductState.DRAFT_TEXT;

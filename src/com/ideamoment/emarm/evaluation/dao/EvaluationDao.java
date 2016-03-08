@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.ideamoment.emarm.model.Evaluation;
 import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.ProductCopyrightFile;
 import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
@@ -75,6 +76,10 @@ public class EvaluationDao {
                 ProductState.EVALUATE_WAITING,
                 ProductState.EVALUATED
         };
+        
+        if(role.equals(RoleType.LAWYER)) {
+            states = new String[]{ProductState.CPFILE_APPROVE_WAITING};
+        }
         
         Query query = IdeaJdbc.query(sql)
                                 .setParameter("type", ProductType.TEXT)
@@ -274,7 +279,8 @@ public class EvaluationDao {
                 ProductState.APPROVE_REJECT,
                 ProductState.EVALUATE_FINISH,
                 ProductState.EVALUATE_WAITING,
-                ProductState.EVALUATED
+                ProductState.EVALUATED,
+                ProductState.CPFILE_APPROVE_WAITING
         };
         
         Query query = IdeaJdbc.query(sql)
@@ -334,6 +340,10 @@ public class EvaluationDao {
 
     public void batchDeleteProducts(String[] idArray) {
         String sql = "DELETE FROM T_PRODUCT WHERE C_ID in (:ids)";
-        
+    }
+
+    public List<ProductCopyrightFile> listProductCopyrightFiles(String productId) {
+        String sql = "SELECT * FROM T_PRODUCT_COPYRIGHT_FILE WHERE C_PRODUCT_ID = :productId ORDER BY C_CREATETIME DESC";
+        return IdeaJdbc.query(sql).setParameter("productId", productId).listTo(ProductCopyrightFile.class);
     }
 }

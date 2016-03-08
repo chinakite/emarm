@@ -89,6 +89,8 @@ public class EvaluationService {
             role = RoleType.EVALUATOR_MGR;
         }else if(userRole.indexOf(RoleType.EVALUATOR_OPR) > -1){
             role = RoleType.EVALUATOR_OPR;
+        }else if(userRole.indexOf(RoleType.LAWYER) > -1){
+            role = RoleType.LAWYER;
         }else{
             role = RoleType.NORMAL;
         }
@@ -210,6 +212,8 @@ public class EvaluationService {
                 cpFile.setProductId(product.getId());
                 cpFile.setCreatorId(curUser.getId());
                 cpFile.setCreateTime(curTime);
+                String fileUrl = cpFile.getFileUrl();
+                cpFile.setName(getFileNameFromUploadUrl(fileUrl));
                 IdeaJdbc.save(cpFile);
             }
         }else if("1".equals(submit)) {
@@ -368,17 +372,32 @@ public class EvaluationService {
     public int passProduct(String id) {
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
-        
-        Product product = IdeaJdbc.find(Product.class, id);
+        try {
+            Product product = IdeaJdbc.find(Product.class, id);
         
         if(product == null) {
             throw dataNotFoundException(id);
         }else{
-            return IdeaJdbc.update(Product.class, id)
+            if(product.getState().equals(ProductState.APPROVE_WAITING)) {
+                return IdeaJdbc.update(Product.class, id)
+                        .setProperty("state", ProductState.CPFILE_APPROVE_WAITING)
+                        .setProperty("modifier", curUser.getId())
+                        .setProperty("modifyTime", new Date())
+                        .execute();
+            }else if(product.getState().equals(ProductState.CPFILE_APPROVE_WAITING)) {
+                return IdeaJdbc.update(Product.class, id)
                             .setProperty("state", ProductState.EVALUATE_WAITING)
                             .setProperty("modifier", curUser.getId())
                             .setProperty("modifyTime", new Date())
                             .execute();
+            }else{
+                return 0;
+            }
+        }
+        
+        }catch(Exception e) {
+            e.printStackTrace();
+            return 0;
         }
     }
     
@@ -470,5 +489,28 @@ public class EvaluationService {
         String userId = curUser.getId();
         
         evaluationDao.batchDeleteProducts(idArray);
+    }
+
+    @IdeaJdbcTx
+    public List<ProductCopyrightFile> listProductCopyrightFiles(String productId) {
+        return evaluationDao.listProductCopyrightFiles(productId);
+    }
+    
+    private String getFileNameFromUploadUrl(String url) {
+        int dirPos = url.lastIndexOf("\\");
+        if(dirPos == -1)
+            dirPos = url.lastIndexOf("/");
+        
+        if(dirPos > -1) {
+            String fileName = url.substring(dirPos+1);
+            int namePos = fileName.indexOf("_");
+            if(namePos > -1) {
+                return fileName.substring(namePos+1);
+            }else{
+                return fileName;
+            }
+        }
+        
+        return url;
     }
 }

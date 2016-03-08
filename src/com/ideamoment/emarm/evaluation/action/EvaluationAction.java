@@ -324,6 +324,12 @@ public class EvaluationAction {
         return JsonData.SUCCESS;
     }
     
+    @RequestMapping(value="/evaluation/productCopyrightFiles", method=RequestMethod.GET)
+    public JsonData listProductCopyrightFiles(String productId) {
+        List<ProductCopyrightFile> copyrightFiles = evaluationService.listProductCopyrightFiles(productId);
+        return JsonData.success(copyrightFiles);
+    }
+    
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {
         DataTableSource<Product> dts = new DataTableSource<Product>();
         

@@ -16,6 +16,9 @@ import com.ideamoment.ideadata.annotation.Ref;
  */
 @Entity(dataSet="T_PRODUCT_COPYRIGHT_FILE")
 public class ProductCopyrightFile extends BaseEntity{
+    @Property(dataItem="C_NAME", type=DataItemType.VARCHAR, length=300)
+    private String name;
+    
     @Property(dataItem="C_PRODUCT_ID", type=DataItemType.VARCHAR, length=32)
     private String productId;
     
@@ -99,6 +102,20 @@ public class ProductCopyrightFile extends BaseEntity{
      */
     public void setCreator(User creator) {
         this.creator = creator;
+    }
+    
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+    
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
     
 }
