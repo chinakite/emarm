@@ -98,11 +98,17 @@ public class Product extends HistoriableEntity {
     @Ref
     private SaleContractProduct scProduct;
     
+    @Ref
+    private EvaluationInvitation evaInvitation;
+    
     @Transient
     private Integer taskCount;
     
     @Transient
     private Integer contractCount;
+    
+    @Transient
+    private String evaluationStateText;
     
     /**
      * @return the crcProduct
@@ -559,6 +565,34 @@ public class Product extends HistoriableEntity {
      */
     public void setCopyrightFiles(List<ProductCopyrightFile> copyrightFiles) {
         this.copyrightFiles = copyrightFiles;
+    }
+    
+    /**
+     * @return the evaluationStateText
+     */
+    public String getEvaluationStateText() {
+        return evaluationStateText;
+    }
+    
+    /**
+     * @param evaluationStateText the evaluationStateText to set
+     */
+    public void setEvaluationStateText(String evaluationStateText) {
+        this.evaluationStateText = evaluationStateText;
+    }
+
+    /**
+     * @return the evaInvitation
+     */
+    public EvaluationInvitation getEvaInvitation() {
+        return evaInvitation;
+    }
+
+    /**
+     * @param evaInvitation the evaInvitation to set
+     */
+    public void setEvaInvitation(EvaluationInvitation evaInvitation) {
+        this.evaInvitation = evaInvitation;
     }
     
 }

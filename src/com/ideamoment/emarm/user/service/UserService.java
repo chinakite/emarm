@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.Constants;
+import com.ideamoment.emarm.model.enumeration.RoleType;
 import com.ideamoment.emarm.model.enumeration.UserState;
 import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.emarm.user.LoginException;
@@ -53,6 +54,10 @@ public class UserService {
         User user = userDao.queryUser(account, null);
         if(user == null) {
             throw new LoginException(LoginExceptionCode.USER_NOT_FOUND, String.format("User[%s] is not found.", account));
+        }else if(user.getRole().contains(RoleType.EXT_EVALUATOR)
+                    || user.getRole().contains(RoleType.EXT_EMCEE)
+                    || user.getRole().contains(RoleType.EXT_MAKER)){
+            throw new LoginException(LoginExceptionCode.PERMISSION_INVALID, String.format("User[%s] role is not correct.", account));
         }else{
             String dbPwd = user.getPassword();
             String inputPwd = CodecUtils.md5(password);
@@ -241,6 +246,60 @@ public class UserService {
             return "success";
         }else{
             return "wrong_oldpwd";
+        }
+    }
+
+    @IdeaJdbcTx
+    public User evaLogin(String account, String password) {
+        User user = userDao.queryUser(account, null);
+        if(user == null) {
+            throw new LoginException(LoginExceptionCode.USER_NOT_FOUND, String.format("User[%s] is not found.", account));
+        }else if(!user.getRole().contains(RoleType.EXT_EVALUATOR)){
+            throw new LoginException(LoginExceptionCode.PERMISSION_INVALID, String.format("User[%s] role is not correct.", account));
+        }else{
+            String dbPwd = user.getPassword();
+            String inputPwd = CodecUtils.md5(password);
+            if(dbPwd.equals(inputPwd)) {
+                return user;
+            }else{
+                throw new LoginException(LoginExceptionCode.PASSWORD_NOT_CORRECT, String.format("Admin[%s] password is not correct.", account));
+            }
+        }
+    }
+
+    @IdeaJdbcTx
+    public User reservedLogin(String account, String password) {
+        User user = userDao.queryUser(account, null);
+        if(user == null) {
+            throw new LoginException(LoginExceptionCode.USER_NOT_FOUND, String.format("User[%s] is not found.", account));
+        }else if(!user.getRole().contains(RoleType.EXT_EMCEE)){
+            throw new LoginException(LoginExceptionCode.PERMISSION_INVALID, String.format("User[%s] role is not correct.", account));
+        }else{
+            String dbPwd = user.getPassword();
+            String inputPwd = CodecUtils.md5(password);
+            if(dbPwd.equals(inputPwd)) {
+                return user;
+            }else{
+                throw new LoginException(LoginExceptionCode.PASSWORD_NOT_CORRECT, String.format("Admin[%s] password is not correct.", account));
+            }
+        }
+    }
+
+    @IdeaJdbcTx
+    public User mkLogin(String account, String password) {
+        User user = userDao.queryUser(account, null);
+        if(user == null) {
+            throw new LoginException(LoginExceptionCode.USER_NOT_FOUND, String.format("User[%s] is not found.", account));
+        }else if(!user.getRole().contains(RoleType.EXT_MAKER)){
+            throw new LoginException(LoginExceptionCode.PERMISSION_INVALID, String.format("User[%s] role is not correct.", account));
+        }else{
+            String dbPwd = user.getPassword();
+            String inputPwd = CodecUtils.md5(password);
+            if(dbPwd.equals(inputPwd)) {
+                return user;
+            }else{
+                throw new LoginException(LoginExceptionCode.PASSWORD_NOT_CORRECT, String.format("Admin[%s] password is not correct.", account));
+            }
         }
     }
 }

@@ -4,6 +4,7 @@
 package com.ideamoment.emarm.task.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import com.ideamoment.emarm.model.enumeration.TaskState;
 import com.ideamoment.emarm.task.dao.TaskDao;
 import com.ideamoment.ideadp.usercontext.UserContext;
 import com.ideamoment.ideajdbc.IdeaJdbc;
+import com.ideamoment.ideajdbc.action.Page;
 import com.ideamoment.ideajdbc.spring.IdeaJdbcTx;
 
 /**
@@ -40,6 +42,7 @@ public class TaskService {
         this.taskDao = taskDao;
     }
     
+    @IdeaJdbcTx
     public Task createTask(Task task) {
         Date curTime = new Date();
         UserContext uc = UserContext.getCurrentContext();
@@ -58,6 +61,7 @@ public class TaskService {
         return task;
     }
     
+    @IdeaJdbcTx
     public Task readTask(String id) {
         Date curTime = new Date();
         UserContext uc = UserContext.getCurrentContext();
@@ -75,6 +79,7 @@ public class TaskService {
         return task;
     }
     
+    @IdeaJdbcTx
     public Task finishTask(String id) {
         Date curTime = new Date();
         UserContext uc = UserContext.getCurrentContext();
@@ -110,5 +115,27 @@ public class TaskService {
         String[] roles = role.split(",");
         
         return taskDao.listTasks(roles, 5);
+    }
+
+    @IdeaJdbcTx
+    public Page<Task> pageMyTasks(int curPage,
+                                  int pageSize,
+                                  HashMap<String, String> condition)
+    {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        String roleText = curUser.getRole();
+        String[] roles = roleText.split(",");
+        
+        return taskDao.pageMyTasks(curPage,
+                                     pageSize,
+                                     roles, 
+                                     condition);
+    }
+
+    @IdeaJdbcTx
+    public Task findTask(String id) {
+        return IdeaJdbc.find(Task.class, id);
     }
 }

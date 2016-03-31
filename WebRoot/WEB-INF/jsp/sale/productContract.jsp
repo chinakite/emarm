@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 运营合同</title>
+    <title>数字音频版权云平台 | 运营合同</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -846,7 +846,7 @@
                       var prodTblHtml = template('contractProdTblTmpl', {'prodlist': [prod]});
                       $('#contractProductTbl').html(prodTblHtml);
                       $('#inputOwner').val(prod.author.name);
-                      $('#inputBuyer').val('北京悦库时光文化传媒有限公司');
+                      $('#inputBuyer').val('北京广播公司');
                       
                       $('#contractModal').modal('show');
                   }

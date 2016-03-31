@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 评价管理</title>
+    <title>数字音频版权云平台 | 评价管理</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -40,11 +40,33 @@
     <header class="main-header flat-header">
         <nav class="navbar navbar-static-top">
           <div class="container">
-            <div class="navbar-header">
+            <div class="navbar-header" style="width:900px;">
               <span class="emarm_title_text">数字音频版权云平台</span>
               <!--
               <img style="margin-top: 4px;" src='<idp:url value="/img/logo.png"/>' height="40"/>
               -->
+              <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                  <li class="dropdown user user-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                      <img src="/emarm/img/user2-160x160.jpg" class="user-image" alt="User Image">
+                      <span class="hidden-xs">评价管理员</span>
+                    </a>
+                  </li>
+                  <!-- Control Sidebar Toggle Button -->
+                  <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-gears"></i></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="/emarm/user/toChangePwd"><i class="fa fa-cog"></i>修改密码</a>
+                        </li>
+                        <li>
+                            <a href="/emarm/evalogout"><i class="fa fa-power-off"></i>退出</a>
+                        </li>
+                    </ul>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div><!-- /.container-fluid -->
         </nav>
@@ -260,7 +282,7 @@
         <div class="pull-right hidden-xs">
           <b>Version</b> 1.0.0
         </div>
-        <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京悦库时光文化传媒有限公司</a>.</strong> All rights reserved.
+        <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京广播公司</a>.</strong> All rights reserved.
     </footer>
     
     <!-- jQuery 2.1.4 -->

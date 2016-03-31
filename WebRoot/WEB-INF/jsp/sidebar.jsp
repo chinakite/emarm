@@ -9,19 +9,24 @@
                 <i class="fa fa-home"></i> <span>首页</span> 
               </a>
             </li>
+            <li id="menu_myproduct">
+              <a href='<idp:url value="/product/myProductPage"/>'>
+                <i class="fa fa-cloud-upload"></i> <span>我的作品</span> 
+              </a>
+            </li>
+            <li id="menu_mytask">
+              <a href='<idp:url value="/task/myTaskPage"/>'>
+                <i class="fa fa-calendar-check-o"></i> <span>我的待办</span> 
+              </a>
+            </li>
+            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '80') > -1}">
             <li id="menu_evaluation">
-              <a href='#'>
+              <a href='<idp:url value="/evaluation/productPage"/>'>
                 <i class="fa fa-tag"></i>
                 <span>评价管理</span>
-                <i class="fa fa-angle-left pull-right"></i>
               </a>
-              <ul class="treeview-menu">
-                <li id="menu_eva_myproduct"><a href='<idp:url value="/evaluation/myProductPage"/>'><i class="fa fa-angle-double-right f10"></i> 我的作品</a></li>
-                <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '80') > -1}">
-                <li id="menu_eva_prodmgr"><a href='<idp:url value="/evaluation/productPage"/>'><i class="fa fa-angle-double-right f10"></i> 评价 & 审核</a></li>
-                </c:if>
-              </ul>
             </li>
+            </c:if>
             <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '11') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '12') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '13') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '90') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '80') > -1}">
             <li id="menu_copyright">
               <a href='#'>

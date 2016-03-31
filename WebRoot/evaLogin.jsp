@@ -57,7 +57,7 @@
       <div class="login-box-body" style="padding: 40px; padding-top:20px;">
         <p class="text-center"><img src="img/rbc_logo.png" height="60"/></p>
         <p class="login-box-msg">作品版权评价系统</p>
-        <form action='<idp:url value="/evaUserLogin"/>' method="post">
+        <form action='<idp:url value="/evaUserLogin"/>' method="post" onsubmit="return false;">
           <input type="hidden" name="productId" id="productId" value="${productId}"/>
           
           <div class="form-group has-feedback">
@@ -73,7 +73,7 @@
               <a class="small" href="#">忘记密码？</a>
             </div><!-- /.col -->
             <div class="col-xs-4">
-              <button type="submit" class="btn btn-emarm btn-block btn-flat">登录</button>
+              <button type="button" onclick="login();" class="btn btn-emarm btn-block btn-flat">登录</button>
             </div><!-- /.col -->
           </div>
         </form>
@@ -86,6 +86,9 @@
     <script src='<idp:url value="/js/bootstrap.min.js"/>'></script>
     <!-- iCheck -->
     <script src='<idp:url value="/plugins/iCheck/icheck.min.js"/>'></script>
+    
+    <script src='<idp:url value="/js/ideajs.js"/>'></script>
+    
     <script>
       $(function () {
         $('input').iCheck({
@@ -95,7 +98,48 @@
         });
       });
       
-      
+      function login() {
+          var userName = $('#userName').val();
+          var password = $('#password').val();
+          var productId = '${productId}';
+          
+          if(!userName || $.trim(userName).length == 0) {
+              alert('用户名不能为空');
+              return ;
+          }
+          
+          if(!password || $.trim(password).length == 0) {
+              alert('密码不能为空');
+              return ;
+          }
+          
+          $.post(
+              '<idp:url value="/evaUserLogin"/>',
+              {
+                  "userName": userName,
+                  "password": password,
+                  "productId": productId
+              },
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var retUrl = result.data.returnUrl;
+                      retUrl = "<idp:ctx/>" + retUrl;
+                      window.location.href = retUrl;
+                  }else if(result.type == 'exception') {
+                      if(result.code == 'LOGIN-00001') {
+                          alert("您使用的用户不存在");
+                      }else if(result.code == 'LOGIN-00002') {
+                          alert("您的密码错误");
+                      }else if(result.code == 'LOGIN-00003') {
+                          alert("您没有权限登录本系统");
+                      }else{
+                          alert("发生了未知异常!");
+                      }
+                  }
+              }
+          );
+      }
     </script>
   </body>
 </html>

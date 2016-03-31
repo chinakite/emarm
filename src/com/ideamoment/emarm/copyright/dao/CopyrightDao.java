@@ -40,6 +40,7 @@ public class CopyrightDao {
                      + " p.C_PUBLISH_YEAR AS p$publishYear,"
                      + " p.C_FINISH_YEAR AS p$finishYear,"
                      + " p.C_STATE AS p$state,"
+                     + " p.C_LOGO_URL AS p$logoUrl,"
                      + " a.C_ID AS a$id,"
                      + " a.C_NAME AS a$name,"
                      + " s.C_ID AS s$id, "

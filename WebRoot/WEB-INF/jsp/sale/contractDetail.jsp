@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 合同详情</title>
+    <title>数字音频版权云平台 | 合同详情</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -42,7 +42,10 @@
         <nav class="navbar navbar-static-top">
           <div class="container">
             <div class="navbar-header">
+              <span class="emarm_title_text">数字音频版权云平台</span>
+              <!--
               <img style="margin-top: 4px;" src='<idp:url value="/img/logo.png"/>' height="40"/>
+              -->
             </div>
           </div><!-- /.container-fluid -->
         </nav>
@@ -212,7 +215,7 @@
         <div class="pull-right hidden-xs">
           <b>Version</b> 1.0.0
         </div>
-        <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京悦库时光文化传媒有限公司</a>.</strong> All rights reserved.
+        <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京广播公司</a>.</strong> All rights reserved.
     </footer>
 
     <div id="auditModal" class="modal fade" tabindex="-1" role="dialog">

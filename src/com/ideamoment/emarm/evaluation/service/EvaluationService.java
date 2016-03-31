@@ -20,6 +20,7 @@ import com.ideamoment.emarm.evaluation.dao.EvaluationDao;
 import com.ideamoment.emarm.model.Author;
 import com.ideamoment.emarm.model.EmailSetting;
 import com.ideamoment.emarm.model.Evaluation;
+import com.ideamoment.emarm.model.EvaluationInvitation;
 import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductCopyrightFile;
@@ -28,6 +29,7 @@ import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
 import com.ideamoment.emarm.model.enumeration.RoleType;
+import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideadp.exception.IdeaDataException;
 import com.ideamoment.ideadp.exception.IdeaDataExceptionCode;
 import com.ideamoment.ideadp.usercontext.UserContext;
@@ -128,6 +130,24 @@ public class EvaluationService {
                 
                 EmailSetting emailSetting = IdeaJdbc.find(EmailSetting.class, "1");
                 
+                Date curDate = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                String dateStr = sdf.format(curDate);
+                String emailContent = "<p>尊敬的评审老师，您好！</p><p></p><p>&nbsp;&nbsp;公司拟采购作品《" + product.getName() + "》的相关音频权利，特邀您进行内容审核，您的意见将成为我们制定购买决策的重要依据！</p><p></p><p>&nbsp;&nbsp;<a href='http://www.6wanr.com" + contextPath + "evalogin?productId=" + id + "'>点击此处</a>开始评价，在此感谢您的参与！</p><p></p><p>&nbsp;&nbsp;祝好！</p><p></p><p>评审小组</p><p>" + dateStr + "</p>";
+                
+                try{
+                    EvaluationInvitation evaInvitation = new EvaluationInvitation();
+                    evaInvitation.setUserId(userId);
+                    evaInvitation.setProductId(id);
+                    evaInvitation.setContent(emailContent);
+                    evaInvitation.setCreateTime(curDate);
+                    evaInvitation.setCreator(curUser.getId());
+                    IdeaJdbc.save(evaInvitation);
+                }catch(Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+                
                 // 这里是SMTP发送服务器的名字：163的如下："smtp.163.com"  
                 email.setHostName(emailSetting.getHostName());  
                 email.setSmtpPort(Integer.parseInt(emailSetting.getPort()));
@@ -142,12 +162,8 @@ public class EvaluationService {
                 // 要发送的邮件主题  
                 email.setSubject("邀请您评价");  
                 
-                Date curDate = new Date();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                String dateStr = sdf.format(curDate);
-                
                 // 要发送的信息，由于使用了HtmlEmail，可以在邮件内容中使用HTML标签  
-                email.setMsg("<p>尊敬的评审老师，您好！</p><p></p><p>&nbsp;&nbsp;公司拟采购作品《" + product.getName() + "》的相关音频权利，特邀您进行内容审核，您的意见将成为我们制定购买决策的重要依据！</p><p></p><p>&nbsp;&nbsp;<a href='http://www.6wanr.com" + contextPath + "evalogin?productId=" + id + "'>点击此处</a>开始评价，在此感谢您的参与！</p><p></p><p>&nbsp;&nbsp;祝好！</p><p></p><p>评审小组</p><p>" + dateStr + "</p>");  
+                email.setMsg(emailContent);  
                 // 发送  
                 email.send();  
             }
@@ -363,6 +379,8 @@ public class EvaluationService {
         
         IdeaJdbc.save(eva);
         
+        evaluationDao.updateEvaluationInvitation(userId, eva.getProductId(), YesOrNo.YES);
+        
         IdeaJdbc.update(Product.class, eva.getProductId())
                 .setProperty("state", ProductState.EVALUATED)
                 .execute();
@@ -512,5 +530,18 @@ public class EvaluationService {
         }
         
         return url;
+    }
+
+    @IdeaJdbcTx
+    public Page<Product> pageExtEvaluationProducts(int curPage,
+                                                   int pageSize,
+                                                   HashMap<String, String> condition)
+    {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        String userId = curUser.getId();
+        
+        return evaluationDao.pageExtEvaluationProductsByUser(curPage, pageSize, userId, condition);
     }
 }

@@ -18,4 +18,9 @@ public class LoginExceptionCode {
      * 密码不正确
      */
     public static final String PASSWORD_NOT_CORRECT = "LOGIN-00002";
+    
+    /**
+     * 权限不合法
+     */
+    public static final String PERMISSION_INVALID = "LOGIN-00003";
 }

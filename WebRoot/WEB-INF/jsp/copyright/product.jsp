@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 版权管理</title>
+    <title>数字音频版权云平台 | 版权管理</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -81,6 +81,7 @@
                 <div>
                     <form class="form-horizontal">
                       <div class="box-body">
+                        <div class="col-sm-12">
                         <div class="form-group col-sm-4">
                           <label for="inputSearchProductName" class="col-sm-3 control-label">作品名称</label>
                           <div class="col-sm-9">
@@ -99,6 +100,8 @@
                             <input type="text" class="form-control" id="inputSearchIsbn" placeholder="ISBN号">
                           </div>
                         </div>
+                        </div>
+                        <div class="col-sm-12">
                         <div class="form-group col-sm-4">
                           <label for="inputSearchSubject" class="col-sm-3 control-label">作品题材</label>
                           <div class="col-sm-9">
@@ -130,6 +133,7 @@
                                 <option value="50">旧作品</option>
                             </select>
                           </div>
+                        </div>
                         </div>
                       </div><!-- /.box-body -->
                       <div style="text-align: center;">
@@ -1165,7 +1169,7 @@
                       if(prod.length == 1) {
                           $('#inputOwner').val(prod[0].author.name);
                       }
-                      $('#inputBuyer').val('北京悦库时光文化传媒有限公司');
+                      $('#inputBuyer').val('北京广播公司');
                       
                       $('#contractModal').modal('show');
                   }

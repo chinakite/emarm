@@ -129,9 +129,23 @@ public class UserAction {
         return new ModelAndView("/evaLogin.jsp", model);
     }
     
+//    @RequestMapping(value="/evaUserLogin", method=RequestMethod.POST)
+//    public ModelAndView evaluatorLogin(String userName, String password, String productId) {
+//        User user = userService.evaLogin(userName, password);
+//        
+//        UserContext context = UserContext.getCurrentContext();
+//        context.getRequest().getSession().setAttribute(UserContext.SESSION_USER, user);
+//        context.setContextAttribute(UserContext.SESSION_USER, user);
+//        
+//        HashMap<String, Object> model = new HashMap<String, Object>();
+//        model.put("user", user);
+//        
+//        return new ModelAndView("redirect:/evaluation/toDoEvaluation?productId=" + productId, model);
+//    }
+    
     @RequestMapping(value="/evaUserLogin", method=RequestMethod.POST)
-    public ModelAndView evaluatorLogin(String userName, String password, String productId) {
-        User user = userService.login(userName, password);
+    public JsonData evaluatorLogin(String userName, String password, String productId) {
+        User user = userService.evaLogin(userName, password);
         
         UserContext context = UserContext.getCurrentContext();
         context.getRequest().getSession().setAttribute(UserContext.SESSION_USER, user);
@@ -140,26 +154,51 @@ public class UserAction {
         HashMap<String, Object> model = new HashMap<String, Object>();
         model.put("user", user);
         
-        return new ModelAndView("redirect:/evaluation/toDoEvaluation?productId=" + productId, model);
+        String returnUrl = null;
+        if(productId == null || productId.trim().length() == 0) {
+            returnUrl = "/ext/evaluation/productPage";
+        }else{
+            returnUrl = "/ext/evaluation/toDoEvaluation?productId=" + productId;
+        }
+        model.put("returnUrl", returnUrl);
+        
+        return JsonData.success(model);
     }
     
+//    @RequestMapping(value="/userlogin", method=RequestMethod.POST)
+//    public ModelAndView login(String userName, String password, String rememberMe) {
+//        User user = userService.login(userName, password);
+//        
+//        UserContext context = UserContext.getCurrentContext();
+//        context.getRequest().getSession().setAttribute(UserContext.SESSION_USER, user);
+//        context.setContextAttribute(UserContext.SESSION_USER, user);
+//        
+//        HashMap<String, Object> model = new HashMap<String, Object>();
+//        model.put("user", user);
+//        
+//        return new ModelAndView("redirect:/home", model);
+//    }
+    
     @RequestMapping(value="/userlogin", method=RequestMethod.POST)
-    public ModelAndView login(String userName, String password, String rememberMe) {
+    public JsonData login(String userName, String password, String rememberMe) {
         User user = userService.login(userName, password);
         
         UserContext context = UserContext.getCurrentContext();
         context.getRequest().getSession().setAttribute(UserContext.SESSION_USER, user);
         context.setContextAttribute(UserContext.SESSION_USER, user);
         
-        HashMap<String, Object> model = new HashMap<String, Object>();
-        model.put("user", user);
-        
-        return new ModelAndView("redirect:/home", model);
+        return JsonData.SUCCESS;
     }
     
     @RequestMapping(value="/home", method=RequestMethod.GET)
     public ModelAndView home() {
-        return new ModelAndView("/WEB-INF/jsp/dashboard.jsp");
+        UserContext context = UserContext.getCurrentContext();
+        User user = (User)context.getContextAttribute(UserContext.SESSION_USER);
+        
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("user", user);
+        
+        return new ModelAndView("/WEB-INF/jsp/dashboard.jsp", model);
     }
     
     @RequestMapping(value="/comingsoon", method=RequestMethod.GET)
@@ -193,6 +232,14 @@ public class UserAction {
         return "redirect:/login";
     }
     
+    @RequestMapping(value="/evalogout", method=RequestMethod.GET)
+    public String evalogout() {
+        UserContext context = UserContext.getCurrentContext();
+        context.getRequest().getSession().removeAttribute(UserContext.SESSION_USER);
+        context.getRequest().getSession().invalidate();
+        return "redirect:/evalogin";
+    }
+    
     @RequestMapping(value="/reservedlogin", method=RequestMethod.GET)
     public ModelAndView toReservedLogin() {
         return new ModelAndView("/reservedLogin.jsp");
@@ -200,7 +247,7 @@ public class UserAction {
     
     @RequestMapping(value="/reservedUserLogin", method=RequestMethod.POST)
     public String reservedLogin(String userName, String password) {
-        User user = userService.login(userName, password);
+        User user = userService.reservedLogin(userName, password);
         
         UserContext context = UserContext.getCurrentContext();
         context.getRequest().getSession().setAttribute(UserContext.SESSION_USER, user);
@@ -216,7 +263,7 @@ public class UserAction {
     
     @RequestMapping(value="/mkUserLogin", method=RequestMethod.POST)
     public String makeLogin(String userName, String password) {
-        User user = userService.login(userName, password);
+        User user = userService.mkLogin(userName, password);
         
         UserContext context = UserContext.getCurrentContext();
         context.getRequest().getSession().setAttribute(UserContext.SESSION_USER, user);

@@ -3,6 +3,7 @@
  */
 package com.ideamoment.emarm.model;
 
+import com.ideamoment.emarm.model.enumeration.TaskTargetType;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
@@ -62,6 +63,23 @@ public class Task extends HistoriableEntity{
     public void setTargetType(String targetType) {
         this.targetType = targetType;
     }
+    
+    public String getTargetTypeText() {
+        if(this.targetType.equals(TaskTargetType.EVALUATION)) {
+            return TaskTargetType.EVALUATION_TEXT;
+        }else if(this.targetType.equals(TaskTargetType.COPYRIGHT_CONTRACT)) {
+            return TaskTargetType.COPYRIGHT_CONTRACT_TEXT;
+        }else if(this.targetType.equals(TaskTargetType.MAKE_TASK)) {
+            return TaskTargetType.MAKE_TASK_TEXT;
+        }else if(this.targetType.equals(TaskTargetType.MAKE_CONTRACT)) {
+            return TaskTargetType.MAKE_CONTRACT_TEXT;
+        }else if(this.targetType.equals(TaskTargetType.SALE_CONTRACT)) {
+            return TaskTargetType.SALE_CONTRACT_TEXT;
+        }else{
+            return "";
+        }
+    }
+    
 
     
     /**

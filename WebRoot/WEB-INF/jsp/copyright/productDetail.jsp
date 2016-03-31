@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 评价管理</title>
+    <title>数字音频版权云平台 | 评价管理</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -75,7 +75,12 @@
                   <div class="box-body">
                       <div class="row">
                           <div class="col-xs-2">
-                              <img width="136" src='<idp:url value="/img/default_product_logo.jpg"/>'/>
+                              <c:if test="${product.logoUrl != null}">
+                                  <img width="136" src='<idp:ctx/>${product.logoUrl}'/>
+                              </c:if>
+                              <c:if test="${product.logoUrl == null}">
+                                  <img width="136" src='<idp:url value="/img/default_product_logo.jpg"/>'/>
+                              </c:if>
                           </div>
                           <div class="col-xs-10">
                               <p class="col-xs-12">作品简介：</p>
@@ -134,6 +139,21 @@
                                 </div>
                               </div><!-- /.tab-pane -->
                               <div class="tab-pane" id="copyrightInfo">
+                                  <h5>权属文件</h5>
+                                  <table id="copyrightFileTbl" class="table table-bordered table-hover">
+                                      <thead>
+                                          <tr>
+                                              <th>文件名</th>
+                                              <th>创建时间</th>
+                                              <th></th>
+                                          </tr>
+                                      </thead>
+                                      <tbody>
+                                      
+                                      </tbody>
+                                  </table>  
+                                  <hr/>
+                                  <h5>版权合同</h5>
                                   <table id="copyrightTbl" class="table table-bordered table-hover">
                                       <thead>
                                           <tr>
@@ -207,7 +227,7 @@
         <div class="pull-right hidden-xs">
           <b>Version</b> 1.0.0
         </div>
-        <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京悦库时光文化传媒有限公司</a>.</strong> All rights reserved.
+        <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京广播公司</a>.</strong> All rights reserved.
     </footer>
 
     <div id="productModal" class="modal fade" tabindex="-1" role="dialog">
@@ -708,6 +728,22 @@
         {{/each}}
     </script>
     
+    <script id="nonCopyrightFileTmpl" type="text/html">
+        <tr>
+            <td colspan="3">目前没有权属文件。</td>
+        </tr>
+    </script>
+    
+    <script id="copyrightFileTmpl" type="text/html">
+        {{each cflist as cf idx}}
+        <tr>
+            <td>{{cf.name}}</td>
+            <td>{{cf.createTime}}</td>
+            <td><a href="<idp:ctx/>{{cf.fileUrl}}">下载</a></td>
+        </tr>
+        {{/each}}
+    </script>
+    
     <script id="nonMakeTaskTmpl" type="text/html">
         <tr>
             <td colspan="7">目前没有制作任务。</td>
@@ -754,6 +790,7 @@
     
       $(document).ready(function(){
           loadEvaluations();
+          loadCopyrightFiles();
           loadCopyrightContracts();
           loadMakeTasks();
           loadMakeContracts();
@@ -902,6 +939,26 @@
                               $('#evaTblStory').append(storyHtml);
                               $('#evaTblMake').append(makeHtml);
                           }
+                      }
+                  }
+              }
+          );
+      }
+      
+      function loadCopyrightFiles() {
+          $.get(
+              '<idp:url value="/evaluation/productCopyrightFiles"/>?productId=${product.id}',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var cfs = result.data;
+                      if(cfs.length == 0) {
+                          var copyrightFileHtml = template('nonCopyrightFileTmpl', {});
+                          $('#copyrightFileTbl tbody').html(copyrightFileHtml);
+                      }else{
+                          var copyrightFileHtml = template('copyrightFileTmpl', {cflist: cfs});
+                          $('#copyrightFileTbl tbody').html(copyrightFileHtml);
                       }
                   }
               }

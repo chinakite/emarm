@@ -47,7 +47,7 @@
       <div class="login-box-body">
         <p class="text-center"><img src="img/rbc_logo.png" height="60"/></p>
         <p class="login-box-msg">数字音频版权云平台</p>
-        <form action='<idp:url value="/userlogin"/>' method="post">
+        <form action='<idp:url value="/userlogin"/>' method="post" onsubmit="return false;">
           <div class="form-group has-feedback">
             <input type="text" name="userName" id="userName" class="form-control small" placeholder="用户名">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
@@ -65,7 +65,7 @@
               </div>
             </div><!-- /.col -->
             <div class="col-xs-4">
-              <button type="submit" class="btn btn-emarm btn-block btn-flat">登录</button>
+              <button type="button" onclick="login();" class="btn btn-emarm btn-block btn-flat">登录</button>
             </div><!-- /.col -->
           </div>
         </form>
@@ -81,6 +81,9 @@
     <script src='<idp:url value="/js/bootstrap.min.js"/>'></script>
     <!-- iCheck -->
     <script src='<idp:url value="/plugins/iCheck/icheck.min.js"/>'></script>
+    
+    <script src='<idp:url value="/js/ideajs.js"/>'></script>
+    
     <script>
       $(function () {
         $('input').iCheck({
@@ -90,7 +93,47 @@
         });
       });
       
-      
+      function login() {
+          var userName = $('#userName').val();
+          var password = $('#password').val();
+          
+          var rememberMe = $('#rememberMe').prop('checked');
+          
+          if(!userName || $.trim(userName).length == 0) {
+              alert('用户名不能为空');
+              return ;
+          }
+          
+          if(!password || $.trim(password).length == 0) {
+              alert('密码不能为空');
+              return ;
+          }
+          
+          $.post(
+              '<idp:url value="/userlogin"/>',
+              {
+                  "userName": userName,
+                  "password": password,
+                  "rememberMe": rememberMe
+              },
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      window.location.href = "<idp:url value="/home"/>";
+                  }else if(result.type == 'exception') {
+                      if(result.code == 'LOGIN-00001') {
+                          alert("您使用的用户不存在");
+                      }else if(result.code == 'LOGIN-00002') {
+                          alert("您的密码错误");
+                      }else if(result.code == 'LOGIN-00003') {
+                          alert("您没有权限登录本系统");
+                      }else{
+                          alert("发生了未知异常!");
+                      }
+                  }
+              }
+          );
+      }
     </script>
   </body>
 </html>

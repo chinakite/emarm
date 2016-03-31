@@ -212,6 +212,7 @@ public class MakeDao {
 
     public List<MakeTask> listExtMyMakeTasks(String userId) {
         String sql = "SELECT t.C_ID as t$id, "
+                     + "t.C_NAME as t$name, "
                      + "t.C_PRODUCT_ID as t$productId, "
                      + "t.C_CONTRACT_ID as t$contractId, "
                      + "t.C_MAKER_ID as t$makerId, "
@@ -237,6 +238,7 @@ public class MakeDao {
                                              String userId)
     {
         String sql = "SELECT t.C_ID as t$id, "
+                     + "t.C_NAME as t$name, "
                      + "t.C_PRODUCT_ID as t$productId, "
                      + "t.C_CONTRACT_ID as t$contractId, "
                      + "t.C_MAKER_ID as t$makerId, "

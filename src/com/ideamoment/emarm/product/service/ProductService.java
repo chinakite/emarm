@@ -4,6 +4,7 @@
 package com.ideamoment.emarm.product.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,6 +23,7 @@ import com.ideamoment.emarm.model.enumeration.ProductType;
 import com.ideamoment.emarm.product.dao.ProductDao;
 import com.ideamoment.ideadp.usercontext.UserContext;
 import com.ideamoment.ideajdbc.IdeaJdbc;
+import com.ideamoment.ideajdbc.action.Page;
 import com.ideamoment.ideajdbc.spring.IdeaJdbcTx;
 
 /**
@@ -258,5 +260,20 @@ public class ProductService {
 
     private EvaluationException nameRequired() {
         return new EvaluationException(EvaluationExceptionCode.NAME_REQUIRED, "作品名称不能为空。");
+    }
+
+    @IdeaJdbcTx
+    public Page<Product> pageMyProducts(int curPage, int pageSize, HashMap<String, String> condition) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        return productDao.pageProductsByUser(curPage,
+                                             pageSize,
+                                             curUser.getId(), 
+                                             condition);
+    }
+
+    @IdeaJdbcTx
+    public Product findProduct(String id) {
+        return productDao.findProduct(id);
     }
 }

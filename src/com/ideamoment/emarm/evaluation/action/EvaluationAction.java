@@ -134,6 +134,14 @@ public class EvaluationAction {
         return new ModelAndView("/WEB-INF/jsp/evaluation/productDetail.jsp", model);
     }
     
+    @RequestMapping(value="/ext/evaluation/evaluationDetail", method=RequestMethod.GET)
+    public ModelAndView extViewEvaluation(String id) {
+        Product product = evaluationService.findProduct(id);
+        HashMap<String, Object> model = new HashMap<String, Object>();
+        model.put("product", product);
+        return new ModelAndView("/WEB-INF/jsp/evaluation/extEvaluationDetail.jsp", model);
+    }
+    
     @RequestMapping(value="/evaluation/product/{id}", method=RequestMethod.GET)
     public JsonData product(@PathVariable String id) {
         Product product = evaluationService.findProduct(id);
@@ -225,12 +233,17 @@ public class EvaluationAction {
         return JsonData.SUCCESS;
     }
     
-    @RequestMapping(value="/evaluation/toDoEvaluation", method=RequestMethod.GET)
+    @RequestMapping(value="/ext/evaluation/toDoEvaluation", method=RequestMethod.GET)
     public ModelAndView toDoEvaluation(String productId) {
         Product product = evaluationService.findProduct(productId);
         HashMap<String, Object> model = new HashMap<String, Object>();
         model.put("product", product);
         return new ModelAndView("/WEB-INF/jsp/evaluation/evaluate.jsp", model);
+    }
+    
+    @RequestMapping(value="/ext/evaluation/productPage", method=RequestMethod.GET)
+    public ModelAndView extEvaluationProductPage() {
+        return new ModelAndView("/WEB-INF/jsp/evaluation/extProduct.jsp");
     }
     
     @RequestMapping(value="/evaluation/evaluate", method=RequestMethod.POST)
@@ -328,6 +341,30 @@ public class EvaluationAction {
     public JsonData listProductCopyrightFiles(String productId) {
         List<ProductCopyrightFile> copyrightFiles = evaluationService.listProductCopyrightFiles(productId);
         return JsonData.success(copyrightFiles);
+    }
+    
+    @RequestMapping(value="/ext/evaluation/dtProducts", method=RequestMethod.GET)
+    public JsonData dtExtEvaluationProducts(
+                         int draw, 
+                         int start, 
+                         int length, 
+                         String productName,
+                         String authorName,
+                         String evaluationState) {
+        int curPage = start/length + 1;
+        int pageSize = length;
+        
+        HashMap<String, String> condition = new HashMap<String, String>();
+        if(productName != null)
+            condition.put("productName", productName);
+        if(authorName != null)
+            condition.put("authorName", authorName);
+        if(evaluationState != null && !evaluationState.equals("-1"))
+            condition.put("evaluationState", evaluationState);
+        
+        Page<Product> products = evaluationService.pageExtEvaluationProducts(curPage, pageSize, condition);
+        DataTableSource<Product> dts = convertToDataTableSource(draw, products);
+        return new JsonData(dts);
     }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {

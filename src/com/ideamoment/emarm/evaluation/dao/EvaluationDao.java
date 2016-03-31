@@ -346,4 +346,77 @@ public class EvaluationDao {
         String sql = "SELECT * FROM T_PRODUCT_COPYRIGHT_FILE WHERE C_PRODUCT_ID = :productId ORDER BY C_CREATETIME DESC";
         return IdeaJdbc.query(sql).setParameter("productId", productId).listTo(ProductCopyrightFile.class);
     }
+
+    public Page<Product> pageExtEvaluationProductsByUser(int curPage,
+                                                         int pageSize,
+                                                         String userId,
+                                                         HashMap<String, String> condition)
+    {
+        String sql = "SELECT "
+                +     " p.C_ID AS p$id,"
+                +     " p.C_NAME AS p$name,"
+                +     " p.C_PUBLISH_STATE AS p$publishState,"
+                +     " p.C_PUBLISH_YEAR AS p$publishYear,"
+                +     " p.C_FINISH_YEAR AS p$finishYear,"
+                +     " p.C_STATE AS p$state,"
+                +     " a.C_ID AS a$id,"
+                +     " a.C_NAME AS a$name,"
+                +     " s.C_ID AS s$id, "
+                +     " s.C_NAME AS s$name, "
+                +     " ei.C_ID AS ei$id, "
+                +     " ei.C_EVA_STATE AS ei$evaluationState "
+                + " FROM "
+                +     " t_product p, t_author a, t_subject s, t_eva_invitation ei "
+                + " WHERE ei.C_USER_ID = :userId "
+                + " AND p.C_TYPE = :type "
+                + " AND p.C_ID = ei.C_PRODUCT_ID "
+                + " AND p.C_AUTHOR_ID = a.C_ID "
+                + " AND s.C_ID = p.C_SUBJECT_ID ";
+        
+        if(condition.get("productName") != null) {
+            sql += " AND p.C_NAME like :productName ";
+        }
+        if(condition.get("authorName") != null) {
+            sql += " AND a.C_NAME like :authorName ";
+        }
+        if(condition.get("evaluationState") != null) {
+            sql += " AND ei.C_EVA_STATE like :evaluationState ";
+        }
+        
+        sql += " ORDER BY ei.C_MODIFYTIME DESC ";
+        
+        Query query = IdeaJdbc.query(sql)
+                              .setParameter("userId", userId)
+                              .setParameter("type", ProductType.TEXT)
+                              .populate("author", "a")
+                              .populate("subject", "s")
+                              .populate("evaInvitation", "ei");
+        
+        if(condition.get("productName") != null) {
+            query.setParameter("productName", "%"+condition.get("productName")+"%");
+        }
+        if(condition.get("authorName") != null) {
+            query.setParameter("authorName", "%"+condition.get("authorName")+"%");
+        }
+        if(condition.get("evaluationState") != null) {
+            query.setParameter("evaluationState", condition.get("evaluationState"));
+        }
+        
+        Page<Product> products = query.pageTo(Product.class, "p", curPage, pageSize);
+        
+        return products;
+    }
+
+    public void updateEvaluationInvitation(String userId,
+                                           String productId,
+                                           String state)
+    {
+        String sql = "UPDATE T_EVA_INVITATION SET C_EVA_STATE = :state WHERE C_PRODUCT_ID = :productId and C_USER_ID = :userId";
+        
+        IdeaJdbc.sql(sql).setParameter("state", state)
+                         .setParameter("productId", productId)
+                         .setParameter("userId", userId)
+                         .execute();
+    }
+    
 }

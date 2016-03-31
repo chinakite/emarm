@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 我的任务</title>
+    <title>数字音频版权云平台 | 我的任务</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -64,6 +64,7 @@
               <table id="taskTbl" class="table table-bordered table-hover">
                 <thead>
                   <tr>
+                    <th>作品名称</th>
                     <th>合同编号</th>
                     <th>单集时长</th>
                     <th>演播形式</th>
@@ -86,7 +87,7 @@
         <div class="pull-right hidden-xs">
           <b>Version</b> 1.0.0
         </div>
-        <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京悦库时光文化传媒有限公司</a>.</strong> All rights reserved.
+        <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京广播公司</a>.</strong> All rights reserved.
     </footer>
     
     <div id="reservedModal" class="modal fade" tabindex="-1" role="dialog">
@@ -175,6 +176,17 @@
                   {
                       "targets": [0],
                       "render": function(data, type, full) {
+                          alert(full.name);
+                          if(full.name) {
+                              return full.name;
+                          }else{
+                              return '';    
+                          }
+                      }
+                  },
+                  {
+                      "targets": [1],
+                      "render": function(data, type, full) {
                           if(full.contract) {
                               return full.contract.code;
                           }else{
@@ -183,25 +195,25 @@
                       }
                   },
                   {
-                      "targets": [1],
+                      "targets": [2],
                       "render": function(data, type, full) {
                           return full.timePerSection + " 分钟";
                       }
                   },
                   {
-                      "targets": [2],
+                      "targets": [3],
                       "render": function(data, type, full) {
                           return full.showTypeText;
                       }
                   },
                   {
-                      "targets": [3],
+                      "targets": [4],
                       "render": function(data, type, full) {
                           return full.makeTime + ' 天';
                       }
                   },
                   {
-                      "targets": [4],
+                      "targets": [5],
                       "render": function(data, type, full) {
                           if(full.stateText)
                             return full.stateText;
@@ -210,7 +222,7 @@
                       }
                   },
                   {
-                      "targets": [5],
+                      "targets": [6],
                       "render": function(data, type, full) {
                           var role = '${sessionScope.__SESSION__USER__.role}';
                       

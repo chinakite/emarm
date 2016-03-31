@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>悦库时光音频资源管理系统 | 评价管理</title>
+    <title>数字音频版权云平台 | 评价管理</title>
     <!-- Tell the browser to be responsive to screen width -->
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <!-- Bootstrap 3.3.5 -->
@@ -73,42 +73,52 @@
         <!-- Main content -->
         <section class="content">
           <div class="row">
-            <div class="col-xs-12">
               <div class="box">
                 <div class="box-header">
                   <h3 class="box-title">作品列表</h3>
                 </div><!-- /.box-header -->
-                <div>
-                    <form class="form-horizontal">
-                      <div class="box-body">
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchProductName" class="col-sm-3 control-label">作品名称</label>
-                          <div class="col-sm-9">
+                <div class="box-body">
+                  <form class="form-horizontal">
+                    <div class="col-sm-12">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="inputSearchProductName" class="col-xs-3 control-label">作品名称</label>
+                          <div class="col-xs-9">
                             <input type="text" class="form-control" id="inputSearchProductName" placeholder="作品名称关键字">
                           </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchAuthorName" class="col-sm-3 control-label">作者姓名</label>
-                          <div class="col-sm-9">
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="inputSearchAuthorName" class="col-xs-3 control-label">作者姓名</label>
+                          <div class="col-xs-9">
                             <input type="text" class="form-control" id="inputSearchAuthorName" placeholder="作者姓名">
                           </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchIsbn" class="col-sm-3 control-label">ISBN号</label>
-                          <div class="col-sm-9">
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="inputSearchIsbn" class="col-xs-3 control-label">ISBN号</label>
+                          <div class="col-xs-9">
                             <input type="text" class="form-control" id="inputSearchIsbn" placeholder="ISBN号">
                           </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchSubject" class="col-sm-3 control-label">作品题材</label>
-                          <div class="col-sm-9">
+                      </div>
+                    </div>  
+                    <div class="col-sm-12">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="inputSearchSubject" class="col-xs-3 control-label">作品题材</label>
+                          <div class="col-xs-9">
                             <select id="inputSearchSubject" class="form-control">
                             </select>
                           </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchPublishState" class="col-sm-3 control-label">出版状态</label>
-                          <div class="col-sm-9">
+                      </div>
+                      <div class="col-sm-4">  
+                        <div class="form-group">
+                          <label for="inputSearchPublishState" class="col-xs-3 control-label">出版状态</label>
+                          <div class="col-xs-9">
                             <select id="inputSearchPublishState" class="form-control">
                                 <option value="-1">全部</option>
                                 <option value="0">已出版</option>
@@ -118,9 +128,11 @@
                             </select>
                           </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchState" class="col-sm-3 control-label">作品状态</label>
-                          <div class="col-sm-9">
+                      </div>
+                      <div class="col-sm-4">  
+                        <div class="form-group">
+                          <label for="inputSearchState" class="col-xs-3 control-label">作品状态</label>
+                          <div class="col-xs-9">
                             <select id="inputSearchState" class="form-control">
                                 <option value="-1">全部</option>
                                 <option value="1">待审核</option>
@@ -131,19 +143,20 @@
                             </select>
                           </div>
                         </div>
-                      </div><!-- /.box-body -->
-                      <div style="text-align: center;">
+                      </div>
+                    </div><!-- /.box-body -->
+                    <div style="text-align: center;">
                           <button type="button" class="btn btn-emarm pull-center" onclick="searchProducts();"><i class="fa fa-search"></i>&nbsp;查询</button>
                           <button type="button" class="btn btn-default pull-center" style="margin-left: 20px;" onclick="resetSearch();"><i class="fa fa-rotate-left"></i>&nbsp;重置</button>
-                      </div>
-                    </form>
+                    </div>
+                  </form>
                 </div>
+                <!--
                 <div class="tblToolbar">
                     <button class="btn btn-default" data-toggle="modal" data-target="#productModal"><i class="fa fa-plus"></i>&nbsp;新建</button>
-                    <!--
                     <button class="btn btn-default ml10" onclick="batchDeleteAuthors();"><i class="fa fa-remove"></i>&nbsp;删除</button>
-                    -->
                 </div>
+                -->
                 <div class="box-body">
                   <table id="productTbl" class="table table-bordered table-hover">
                     <thead>
@@ -161,7 +174,6 @@
                   </table>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
-            </div><!-- /.col -->
           </div><!-- /.row -->
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
@@ -713,9 +725,10 @@
                           var role = '${sessionScope.__SESSION__USER__.role}';
                       
                           var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
-                              
+                          <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1}">    
                               html += '<span class="small">|</span> ';
                               html += '<a onclick="popEditModal(\'' + full.id + '\');">编辑</a>';
+                          </c:if>    
                           if(full.state == '1'){
                               html += ' <span class="small">|</span> ';
                               html += '<a onclick="popAuditProduct(\'' + full.id + '\',\'' + full.name + '\');">审核</a>';

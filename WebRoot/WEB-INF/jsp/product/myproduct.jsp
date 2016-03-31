@@ -66,7 +66,6 @@
           </h1>
           <ol class="breadcrumb">
             <li><a href='<idp:url value="/home"/>'><i class="fa fa-home"></i> 首页</a></li>
-            <li>评价管理</li>
             <li class="active">我的作品</li>
           </ol>
         </section>
@@ -74,45 +73,52 @@
         <!-- Main content -->
         <section class="content">
           <div class="row">
-            <div class="col-xs-12">
               <div class="box">
                 <div class="box-header">
                   <h3 class="box-title">作品列表</h3>
                 </div><!-- /.box-header -->
-                <div>
-                    <form class="form-horizontal">
-                      <div class="box-body">
-                        <div class="col-sm-12">
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchProductName" class="col-sm-3 control-label">作品名称</label>
-                          <div class="col-sm-9">
+                <div class="box-body">
+                  <form class="form-horizontal">
+                    <div class="col-sm-12">
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="inputSearchProductName" class="col-xs-3 control-label">作品名称</label>
+                          <div class="col-xs-9">
                             <input type="text" class="form-control" id="inputSearchProductName" placeholder="作品名称关键字">
                           </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchAuthorName" class="col-sm-3 control-label">作者姓名</label>
-                          <div class="col-sm-9">
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="inputSearchAuthorName" class="col-xs-3 control-label">作者姓名</label>
+                          <div class="col-xs-9">
                             <input type="text" class="form-control" id="inputSearchAuthorName" placeholder="作者姓名">
                           </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchIsbn" class="col-sm-3 control-label">ISBN号</label>
-                          <div class="col-sm-9">
+                      </div>
+                      <div class="col-sm-4">
+                        <div class="form-group">
+                          <label for="inputSearchIsbn" class="col-xs-3 control-label">ISBN号</label>
+                          <div class="col-xs-9">
                             <input type="text" class="form-control" id="inputSearchIsbn" placeholder="ISBN号">
                           </div>
                         </div>
-                        </div>
-                        <div class="col-sm-12">
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchSubject" class="col-sm-3 control-label">作品题材</label>
-                          <div class="col-sm-9">
+                      </div>
+                    </div>  
+                    <div class="col-sm-12">
+                      <div class="col-sm-4">  
+                        <div class="form-group">
+                          <label for="inputSearchSubject" class="col-xs-3 control-label">作品题材</label>
+                          <div class="col-xs-9">
                             <select id="inputSearchSubject" class="form-control">
                             </select>
                           </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchPublishState" class="col-sm-3 control-label">出版状态</label>
-                          <div class="col-sm-9">
+                      </div>
+                      <div class="col-sm-4">   
+                        <div class="form-group">
+                          <label for="inputSearchPublishState" class="col-xs-3 control-label">出版状态</label>
+                          <div class="col-xs-9">
                             <select id="inputSearchPublishState" class="form-control">
                                 <option value="-1">全部</option>
                                 <option value="0">已出版</option>
@@ -122,28 +128,38 @@
                             </select>
                           </div>
                         </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchState" class="col-sm-3 control-label">作品状态</label>
-                          <div class="col-sm-9">
+                      </div>  
+                      <div class="col-sm-4">  
+                        <div class="form-group">
+                          <label for="inputSearchState" class="col-xs-3 control-label">作品状态</label>
+                          <div class="col-xs-9">
                             <select id="inputSearchState" class="form-control">
                                 <option value="-1">全部</option>
                                 <option value="0">草稿</option>
-                                <option value="1">待审核</option>
+                                <option value="8">待权属审核</option>
+                                <option value="1">待内容审核</option>
                                 <option value="101">审核不过</option>
                                 <option value="2">待评价</option>
                                 <option value="3">已评价</option>
                                 <option value="4">评价完成</option>
+                                <option value="5">版权签约流程中</option>
+                                <option value="6">版权合同完成</option>
+                                <option value="7">已预订</option>
+                                <option value="10">待制作</option>
+                                <option value="11">制作合同签订</option>
+                                <option value="12">制作中</option>
+                                <option value="13">制作完成</option>
+                                <option value="14">已销售</option>
                             </select>
                           </div>
                         </div>
-                        </div>
-                      </div><!-- /.box-body -->
+                      </div>
                       <div style="text-align: center;">
                           <button type="button" class="btn btn-emarm pull-center" onclick="searchMyProducts();"><i class="fa fa-search"></i>&nbsp;查询</button>
                           <button type="button" class="btn btn-default pull-center" style="margin-left: 20px;" onclick="resetSearch();"><i class="fa fa-rotate-left"></i>&nbsp;重置</button>
                       </div>
                     </form>
-                </div>
+                </div>    
                 <div class="tblToolbar">
                     <button class="btn btn-default" data-toggle="modal" data-target="#productModal"><i class="fa fa-plus"></i>&nbsp;新建</button>
                     <!--
@@ -167,7 +183,6 @@
                   </table>
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
-            </div><!-- /.col -->
           </div><!-- /.row -->
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
@@ -509,8 +524,7 @@
       var table;
     
       $(document).ready(function(){
-          $('#menu_evaluation').addClass('active');
-          $('#menu_eva_myproduct').addClass('active');
+          $('#menu_myproduct').addClass('active');
       
           $('#importFile').fileupload({
               url: '<idp:url value="/uploadDoc"/>',
@@ -591,7 +605,7 @@
               "info": true,
               "autoWidth": false,
               "serverSide": true,
-              "ajax": {url: '<idp:url value="/evaluation/dtMyProducts"/>',
+              "ajax": {url: '<idp:url value="/product/dtMyProducts"/>',
                   "data": function(d) {
                       var productName = $('#inputSearchProductName').val();
                       if(productName && $.trim(productName).length > 0) {
@@ -701,7 +715,7 @@
                       "render": function(data, type, full) {
                           var role = '${sessionScope.__SESSION__USER__.role}';
                       
-                          var html = '<a href=\'<idp:url value="/evaluation/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
+                          var html = '<a href=\'<idp:url value="/product/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
                           if(full.state == '0') {
                               html += '<span class="small">|</span> ';
@@ -753,7 +767,7 @@
               var audioDesc = $('#inputAudioDesc').val();
               var samples = $('#inputSamples').val();
               var isbn = $('#inputIsbn').val();
-              var coprygiths = $('#inputCopyrights').val();;
+              var copyrights = $('#inputCopyrights').val();;
               
               $.post(
                   '<idp:url value="/evaluation/product"/>',
@@ -776,7 +790,7 @@
                       'samples': samples,
                       'submit': submit,
                       'isbn': isbn,
-                      'coprygiths': coprygiths
+                      'copyrights': copyrights
                   },
                   function(json) {
                       var result = IDEA.parseJSON(json);
