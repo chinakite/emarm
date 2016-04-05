@@ -722,6 +722,34 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    
+    <div id="assignedModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">分配负责人</h4>
+          </div>
+          <div class="modal-body">
+              <p>待分配作品：<span id="assignedProductName"></span></p>
+              <form class="form-horizontal">
+                  <input type="hidden" id="assignedProductId"/>
+                  <div class="col-md-12">
+                      <div class="form-group">
+                        <label>选择负责人</label>
+                        <select id="assigner" class="form-control select2" data-placeholder="选择负责人" style="width: 100%;">
+                        </select>
+                      </div><!-- /.form-group -->
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeAssignerModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="assignedOptor();">保存</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- jQuery 2.1.4 -->
     <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
@@ -805,10 +833,10 @@
                   if(result.type == 'success') {
                       var users = result.data;
                       var html = template('userSelectorTmpl', {"userlist" : users});
-                      $('#inviteEvaluator').empty().append(html);
+                      $('#assigner').empty().append(html);
                   }
               
-                  $("#inviteEvaluator").select2();
+                  $("#assigner").select2();
               }
           )
       }
@@ -962,8 +990,13 @@
                           var html = '<a href=\'<idp:url value="/copyright/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
                           if(full.state == '4') {
-                              html += '<span class="small">|</span> ';
+                              html += '<span class="small">&nbsp;|&nbsp;</span> ';
                               html += '<a onclick="popContractModal(\'' + full.id + '\');">新建合同</a>';
+                              
+                              <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '12') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '13') > -1}">
+                              html += '<span class="small">&nbsp;|&nbsp;</span> ';
+                              html += '<a onclick="popAssignerModal(\'' + full.id + '\');">分配负责人</a>';
+                              </c:if>
                           }else if(full.state == '50') {
                               html += '<span class="small">|</span> ';
                               html += '<a onclick="popEditModal(\'' + full.id + '\');">编辑</a>';
@@ -1078,6 +1111,49 @@
       function clearAuditModal() {
           $('#auditProductName').text('');
           $('#auditProductId').val('');
+      }
+      
+      function popAssignerModal(id, name) {
+          $('#assignedProductName').text(name);
+          $('#assignedProductId').val(id);
+          
+          $('#assignedModal').modal('show');
+      }
+      
+      function closeAssignerModal() {
+          clearAuditModal();
+          $('#assignedModal').modal('hide');
+      }
+      
+      function clearAssignerModal() {
+          $('#assignedProductName').text('');
+          $('#assignedProductId').val('');
+      }
+      
+      function assignedOptor() {
+          var productId = $('#assignedProductId').val();
+          var userId = $('#assigner').val();
+          
+          if(!userId) {
+              alert('负责人不能为空。');
+              return;
+          }
+          
+          $.post(
+              '<idp:url value="/copyright/assignedOptor"/>',
+              {
+                  "productId" : productId,
+                  "userId" : userId
+              },
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      alert('分配成功');
+                      closeAssignerModal();
+                      table.ajax.reload();
+                  }
+              }
+          );
       }
       
       function deleteProduct(id, name) {

@@ -108,6 +108,39 @@ public class CopyrightAction {
         return new JsonData(dts);
     }
     
+    @RequestMapping(value="/copyright/dtMgrProducts", method=RequestMethod.GET)
+    public JsonData dtMgrProducts(
+                               int draw, 
+                               int start, 
+                               int length, 
+                               String productName,
+                               String authorName,
+                               String isbn,
+                               String subject,
+                               String auditState,
+                               String state) {
+        int curPage = start/length + 1;
+        int pageSize = length;
+        
+        HashMap<String, String> condition = new HashMap<String, String>();
+        if(productName != null)
+            condition.put("productName", productName);
+        if(authorName != null)
+            condition.put("authorName", authorName);
+        if(isbn != null)
+            condition.put("isbn", isbn);
+        if(subject != null && !subject.equals("-1"))
+            condition.put("subject", subject);
+        if(auditState != null && !auditState.equals("-1"))
+            condition.put("auditState", auditState);
+        if(state != null && !state.equals("-1"))
+            condition.put("state", state);
+        
+        Page<Product> products = copyrightService.pageMgrProducts(curPage, pageSize, condition);
+        DataTableSource<Product> dts = convertProductsToDataTableSource(draw, products);
+        return new JsonData(dts);
+    }
+    
     @RequestMapping(value="/product/createProduct", method=RequestMethod.POST)
     public JsonData saveProduct(
                         String id,
@@ -371,6 +404,12 @@ public class CopyrightAction {
     public JsonData product(@PathVariable String id) {
         Product product = copyrightService.findProduct(id);
         return JsonData.success(product);
+    }
+    
+    @RequestMapping(value="/copyright/assignedOptor", method=RequestMethod.POST)
+    public JsonData assignedOptor(String productId, String userId) {
+        copyrightService.assignedOptor(productId, userId);
+        return JsonData.SUCCESS;
     }
     
     private DataTableSource<Product> convertProductsToDataTableSource(int draw, Page<Product> productsPage) {

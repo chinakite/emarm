@@ -31,6 +31,7 @@ import com.ideamoment.emarm.model.CopyrightContractAudit;
 import com.ideamoment.emarm.model.CopyrightContractDoc;
 import com.ideamoment.emarm.model.CopyrightContractProduct;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.ProductCopyrightOprtor;
 import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.CopyrightContractState;
 import com.ideamoment.emarm.model.enumeration.ProductState;
@@ -79,6 +80,8 @@ public class CopyrightService {
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         String userId = curUser.getId();
         
+        boolean mgr = false;
+        
         String userRole = curUser.getRole();
         List<String> roles = new ArrayList<String>();
         if(userRole.indexOf(RoleType.SUPER_ADMIN) > -1) {
@@ -89,9 +92,11 @@ public class CopyrightService {
         }
         if(userRole.indexOf(RoleType.COPYRIGHT_MANAGER) > -1){
             roles.add(RoleType.COPYRIGHT_MANAGER);
+            mgr = true;
         }
         if(userRole.indexOf(RoleType.COPYRIGHT_DIRECTOR) > -1){
             roles.add(RoleType.COPYRIGHT_DIRECTOR);
+            mgr = true;
         }
         if(userRole.indexOf(RoleType.COPYRIGHT_OPR) > -1){
             roles.add(RoleType.COPYRIGHT_OPR);
@@ -100,6 +105,9 @@ public class CopyrightService {
             roles.add(RoleType.LAWYER);
         }
         
+        if(mgr) {
+            return copyrightDao.pageMgrProducts(curPage, pageSize, roles, userId, condition);
+        }
         return copyrightDao.pageProducts(curPage, pageSize, roles, userId, condition);
     }
     
@@ -495,6 +503,58 @@ public class CopyrightService {
     @IdeaJdbcTx
     public Product findProduct(String id) {
         return copyrightDao.findProduct(id);
+    }
+
+    @IdeaJdbcTx
+    public Page<Product> pageMgrProducts(int curPage,
+                                         int pageSize,
+                                         HashMap<String, String> condition)
+    {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        String userRole = curUser.getRole();
+        List<String> roles = new ArrayList<String>();
+        if(userRole.indexOf(RoleType.SUPER_ADMIN) > -1) {
+            roles.add(RoleType.SUPER_ADMIN);
+        }
+        if(userRole.indexOf(RoleType.CEO) > -1) {
+            roles.add(RoleType.CEO);
+        }
+        if(userRole.indexOf(RoleType.COPYRIGHT_MANAGER) > -1){
+            roles.add(RoleType.COPYRIGHT_MANAGER);
+        }
+        if(userRole.indexOf(RoleType.COPYRIGHT_DIRECTOR) > -1){
+            roles.add(RoleType.COPYRIGHT_DIRECTOR);
+        }
+        if(userRole.indexOf(RoleType.COPYRIGHT_OPR) > -1){
+            roles.add(RoleType.COPYRIGHT_OPR);
+        }
+        if(userRole.indexOf(RoleType.LAWYER) > -1){
+            roles.add(RoleType.LAWYER);
+        }
+        
+        return copyrightDao.pageMgrProducts(curPage, pageSize, roles, userId, condition);
+    }
+
+    @IdeaJdbcTx
+    public void assignedOptor(String productId, String userId) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String curUserId = curUser.getId();
+        
+        Date curTime = new Date();
+        
+        ProductCopyrightOprtor pco = new ProductCopyrightOprtor();
+        pco.setUserId(userId);
+        pco.setProductId(productId);
+        pco.setCreateTime(curTime);
+        pco.setCreator(curUserId);
+        pco.setModifier(curUserId);
+        pco.setModifyTime(curTime);
+        
+        IdeaJdbc.save(pco);
     }
     
 }

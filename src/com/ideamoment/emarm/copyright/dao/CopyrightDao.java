@@ -46,19 +46,14 @@ public class CopyrightDao {
                      + " s.C_ID AS s$id, "
                      + " s.C_NAME AS s$name "
                      + " FROM "
-                     + " t_product p "
-                     + " LEFT JOIN t_author a "
-                     + " ON p.C_AUTHOR_ID = a.C_ID "
-                     + " LEFT JOIN t_subject s "
-                     + " ON s.C_ID = p.C_SUBJECT_ID "
-                     + " LEFT JOIN t_copyright_ctrt_prod ccp "
-                     + " ON p.C_ID = ccp.C_PRODUCT_ID "
-                     + " LEFT JOIN t_copyright_contract cc "
-                     + " ON cc.C_ID = ccp.C_CONTRACT_ID "
-                     + " WHERE p.C_TYPE = :type "
-                     + " AND p.C_STATE in (:states) or (p.C_STATE = '50' and p.C_CREATOR = '"
-                     + userId
-                     + "')";
+                     + " t_product p, t_copyright_prod_optor cpo, t_author a, t_subject s "
+                     + " WHERE cpo.C_USER_ID = :userId "
+                     + " AND cpo.C_PRODUCT_ID = p.C_ID "
+                     + " AND p.C_TYPE = :type "
+                     + " AND p.C_STATE in (:states) "
+                     + " AND p.C_AUTHOR_ID = a.C_ID "
+                     + " AND s.C_ID = p.C_SUBJECT_ID "
+                     ;
 
         if (condition.get("productName") != null) {
             sql += " AND p.C_NAME like :productName ";
@@ -82,19 +77,12 @@ public class CopyrightDao {
         sql += " ORDER BY p.C_MODIFYTIME DESC ";
 
         Set<String> states = new HashSet<String>();
-        for (String role : roles) {
-            if (role.equals(RoleType.SUPER_ADMIN)
-                || role.equals(RoleType.COPYRIGHT_OPR)
-                || role.equals(RoleType.COPYRIGHT_DIRECTOR)
-                || role.equals(RoleType.COPYRIGHT_MANAGER)) {
-                states.add(ProductState.EVALUATE_FINISH);
-                states.add(ProductState.CP_CONTRACT_INFLOW);
-                states.add(ProductState.CP_CONTRACT_FINISH);
-            }
-        }
+        states.add(ProductState.EVALUATE_FINISH);
+        states.add(ProductState.CP_CONTRACT_INFLOW);
+        states.add(ProductState.CP_CONTRACT_FINISH);
 
         Query query = IdeaJdbc.query(sql).setParameter("type", ProductType.TEXT)
-                .setParameter("states", states).populate("author", "a")
+                .setParameter("states", states).populate("author", "a").setParameter("userId", userId)
                 .populate("subject", "s");
 
         if (condition.get("productName") != null) {
@@ -338,5 +326,94 @@ public class CopyrightDao {
         } else {
             return null;
         }
+    }
+
+    public Page<Product> pageMgrProducts(int curPage,
+                                         int pageSize,
+                                         List<String> roles,
+                                         String userId,
+                                         HashMap<String, String> condition)
+    {
+        String sql = "SELECT " + " p.C_ID AS p$id,"
+                     + " p.C_NAME AS p$name,"
+                     + " p.C_PUBLISH_STATE AS p$publishState,"
+                     + " p.C_PUBLISH_YEAR AS p$publishYear,"
+                     + " p.C_FINISH_YEAR AS p$finishYear,"
+                     + " p.C_STATE AS p$state,"
+                     + " p.C_LOGO_URL AS p$logoUrl,"
+                     + " a.C_ID AS a$id,"
+                     + " a.C_NAME AS a$name,"
+                     + " s.C_ID AS s$id, "
+                     + " s.C_NAME AS s$name "
+                     + " FROM "
+                     + " t_product p "
+                     + " LEFT JOIN t_author a "
+                     + " ON p.C_AUTHOR_ID = a.C_ID "
+                     + " LEFT JOIN t_subject s "
+                     + " ON s.C_ID = p.C_SUBJECT_ID "
+                     + " LEFT JOIN t_copyright_ctrt_prod ccp "
+                     + " ON p.C_ID = ccp.C_PRODUCT_ID "
+                     + " LEFT JOIN t_copyright_contract cc "
+                     + " ON cc.C_ID = ccp.C_CONTRACT_ID "
+                     + " WHERE p.C_TYPE = :type "
+                     + " AND p.C_STATE in (:states) or (p.C_STATE = '50' and p.C_CREATOR = '"
+                     + userId
+                     + "')";
+
+        if (condition.get("productName") != null) {
+            sql += " AND p.C_NAME like :productName ";
+        }
+        if (condition.get("authorName") != null) {
+            sql += " AND a.C_NAME like :authorName ";
+        }
+        if (condition.get("isbn") != null) {
+            sql += " AND p.C_ISBN = :isbn ";
+        }
+        if (condition.get("subject") != null) {
+            sql += " AND p.C_SUBJECT_ID = :subject ";
+        }
+        if (condition.get("auditState") != null) {
+            sql += " AND p.C_PUBLISH_STATE = :auditState ";
+        }
+        if (condition.get("state") != null) {
+            sql += " AND p.C_STATE = :state ";
+        }
+
+        sql += " ORDER BY p.C_MODIFYTIME DESC ";
+
+        Set<String> states = new HashSet<String>();
+        states.add(ProductState.EVALUATE_FINISH);
+        states.add(ProductState.CP_CONTRACT_INFLOW);
+        states.add(ProductState.CP_CONTRACT_FINISH);
+
+        Query query = IdeaJdbc.query(sql).setParameter("type", ProductType.TEXT)
+                .setParameter("states", states).populate("author", "a")
+                .populate("subject", "s");
+
+        if (condition.get("productName") != null) {
+            query.setParameter("productName",
+                               "%" + condition.get("productName") + "%");
+        }
+        if (condition.get("authorName") != null) {
+            query.setParameter("authorName",
+                               "%" + condition.get("authorName") + "%");
+        }
+        if (condition.get("isbn") != null) {
+            query.setParameter("isbn", condition.get("isbn"));
+        }
+        if (condition.get("subject") != null) {
+            query.setParameter("subject", condition.get("subject"));
+        }
+        if (condition.get("publishState") != null) {
+            query.setParameter("publishState", condition.get("publishState"));
+        }
+        if (condition.get("state") != null) {
+            query.setParameter("state", condition.get("state"));
+        }
+
+        Page<Product> products = query.pageTo(Product.class, "p", curPage,
+                                              pageSize);
+
+        return products;
     }
 }
