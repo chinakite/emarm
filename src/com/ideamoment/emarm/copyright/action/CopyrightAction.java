@@ -381,8 +381,8 @@ public class CopyrightAction {
     }
     
     @RequestMapping(value="/copyright/uploadContractDoc", method=RequestMethod.POST)
-    public JsonData uploadContractDoc(String id, String fileUrl, String version, String finishedDoc) {
-        copyrightService.uploadContractDoc(id, fileUrl, version, finishedDoc);
+    public JsonData uploadContractDoc(String id, String fileUrl, String version, String finishedDoc, String type) {
+        copyrightService.uploadContractDoc(id, fileUrl, version, finishedDoc, type);
         return JsonData.SUCCESS;
     }
     
@@ -410,6 +410,12 @@ public class CopyrightAction {
     public JsonData assignedOptor(String productId, String userId) {
         copyrightService.assignedOptor(productId, userId);
         return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/copyright/countMonthCopyright", method=RequestMethod.GET)
+    public JsonData countCopyrightCurMonth() {
+        Long count = copyrightService.countCopyrightCurMonth();
+        return JsonData.success(count);
     }
     
     private DataTableSource<Product> convertProductsToDataTableSource(int draw, Page<Product> productsPage) {

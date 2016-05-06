@@ -5,7 +5,7 @@ package com.ideamoment.emarm.model;
 
 import java.util.Date;
 
-import com.ideamoment.emarm.model.enumeration.CopyrightContractDocType;
+import com.ideamoment.emarm.model.enumeration.ContractDocType;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
@@ -33,7 +33,7 @@ public class CopyrightContractDoc extends BaseEntity{
     private String fileUrl;
     
     @Property(dataItem="C_TYPE", type=DataItemType.VARCHAR, length=1)
-    private String type = CopyrightContractDocType.COPYRIGHT_CONTRACT_DOC;
+    private String type = ContractDocType.CONTRACT_DOC;
     
     @Ref
     private User creator;
@@ -137,6 +137,14 @@ public class CopyrightContractDoc extends BaseEntity{
      */
     public void setType(String type) {
         this.type = type;
+    }
+    
+    public String getTypeText() {
+        if(ContractDocType.CONTRACT_DOC.equals(this.type)) {
+            return ContractDocType.CONTRACT_DOC_TEXT;
+        }else{
+            return ContractDocType.CONTRACT_ADDON_TEXT;
+        }
     }
     
 }

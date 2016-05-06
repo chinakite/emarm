@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -189,7 +190,8 @@ public class SaleService {
     @IdeaJdbcTx
     public void uploadContractDoc(String id,
                                   String fileUrl,
-                                  String version)
+                                  String version,
+                                  String type)
     {
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
@@ -200,6 +202,7 @@ public class SaleService {
         ccd.setCreatorId(curUser.getId());
         ccd.setVersion(version);
         ccd.setFileUrl(fileUrl);
+        ccd.setType(type);
         
         IdeaJdbc.save(ccd);
         
@@ -215,5 +218,17 @@ public class SaleService {
         mc.setModifyTime(new Date());
         mc.setState(SaleContractState.FINISHED);
         IdeaJdbc.update(mc);
+    }
+
+    @IdeaJdbcTx
+    public Long countSaleCurMonth() {
+        DateTime curDate = new DateTime();
+        int year = curDate.getYear();
+        int month = curDate.getMonthOfYear();
+        
+        DateTime startDate = new DateTime(year, month, 1, 0, 0, 0, 0);
+        DateTime endDate = new DateTime(year, month+1, 1, 0, 0, 0, 0);
+        
+        return saleDao.countSaleByTime(startDate.toDate(), endDate.toDate());
     }
 }

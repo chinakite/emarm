@@ -4,6 +4,7 @@
 
 package com.ideamoment.emarm.make.dao;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -321,6 +322,14 @@ public class MakeDao {
         String sql = "select * from t_make_task where c_contract_id = :contractId";
         
         return IdeaJdbc.query(sql).setParameter("contractId", contractId).listTo(MakeTask.class);
+    }
+
+    public Long countMakeByTime(Date startTime, Date endTime) {
+        String sql = "SELECT COUNT(c_id) FROM T_MAKE_CONTRACT WHERE C_MODIFYTIME BETWEEN :startTime AND :endTime AND C_STATE = '10'";
+        return (Long)IdeaJdbc.query(sql)
+                               .setParameter("startTime", startTime)
+                               .setParameter("endTime", endTime)
+                               .uniqueValue();
     }
 
 }

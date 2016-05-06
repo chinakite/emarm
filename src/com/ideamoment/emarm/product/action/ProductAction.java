@@ -109,6 +109,18 @@ public class ProductAction {
         return JsonData.success(product);
     }
     
+    @RequestMapping(value="/product/countMonthProduct", method=RequestMethod.GET)
+    public JsonData countProductCurMonth() {
+        Long count = productService.countProductCurMonth();
+        return JsonData.success(count);
+    }
+    
+    @RequestMapping(value="/product/quickQuery", method=RequestMethod.GET)
+    public JsonData quickQuery(String name) {
+        List<Product> products = productService.quickQuery(name);
+        return JsonData.success(products);
+    }
+    
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {
         DataTableSource<Product> dts = new DataTableSource<Product>();
         

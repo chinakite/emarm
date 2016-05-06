@@ -70,7 +70,7 @@
                 <span class="info-box-icon bg-aqua"><i class="ion ion-ios-paper-outline"></i></span>
                 <div class="info-box-content">
                   <span class="info-box-text">本月新增作品</span>
-                  <span class="info-box-number">90</span>
+                  <span id="monthProductCount" class="info-box-number">0</span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
             </div><!-- /.col -->
@@ -79,7 +79,7 @@
                 <span class="info-box-icon bg-red"><i class="fa fa-book"></i></span>
                 <div class="info-box-content">
                   <span class="info-box-text">本月新签版权</span>
-                  <span class="info-box-number">41</span>
+                  <span id="monthCopyrightCount" class="info-box-number">0</span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
             </div><!-- /.col -->
@@ -92,7 +92,7 @@
                 <span class="info-box-icon bg-green"><i class="ion ion-ios-color-wand"></i></span>
                 <div class="info-box-content">
                   <span class="info-box-text">本月制作完成</span>
-                  <span class="info-box-number">760</span>
+                  <span id="monthMakeCount" class="info-box-number">0</span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
             </div><!-- /.col -->
@@ -101,7 +101,7 @@
                 <span class="info-box-icon bg-yellow"><i class="ion ion-ios-cart-outline"></i></span>
                 <div class="info-box-content">
                   <span class="info-box-text">本月销售合同</span>
-                  <span class="info-box-number">2,000</span>
+                  <span id="monthSaleCount" class="info-box-number">0</span>
                 </div><!-- /.info-box-content -->
               </div><!-- /.info-box -->
             </div><!-- /.col -->
@@ -189,6 +189,11 @@
             
             loadLastProducts();
             loadMyTasks();
+            
+            loadMonthProducts();
+            loadMonthCopyrights();
+            loadMonthMakes();
+            loadMonthSales();
         });
         
         function loadLastProducts() {
@@ -226,6 +231,70 @@
                         }else{
                             $('#taskList').html('<li style="list-style:none; height:206px; text-align: center;">目前没有待办事项。</li>');
                         }
+                    }
+                }
+            );
+        }
+        
+        function loadMonthProducts() {
+            $.get(
+                '<idp:url value="/product/countMonthProduct"/>',
+                {},
+                function(json) {
+                    var result = IDEA.parseJSON(json);
+                    if(result.type == 'success') {
+                        var productCount = result.data;
+                        $('#monthProductCount').text(productCount);
+                    }else{
+                        $('#monthProductCount').text(0);
+                    }
+                }
+            );
+        }
+        
+        function loadMonthCopyrights() {
+            $.get(
+                '<idp:url value="/copyright/countMonthCopyright"/>',
+                {},
+                function(json) {
+                    var result = IDEA.parseJSON(json);
+                    if(result.type == 'success') {
+                        var copyrightCount = result.data;
+                        $('#monthCopyrightCount').text(copyrightCount);
+                    }else{
+                        $('#monthCopyrightCount').text(0);
+                    }
+                }
+            );
+        }
+        
+        function loadMonthMakes() {
+            $.get(
+                '<idp:url value="/make/countMonthMake"/>',
+                {},
+                function(json) {
+                    var result = IDEA.parseJSON(json);
+                    if(result.type == 'success') {
+                        var makeCount = result.data;
+                        $('#monthMakeCount').text(makeCount);
+                    }else{
+                        $('#monthMakeCount').text(0);
+                    }
+                }
+            );
+        }
+        
+        function loadMonthSales() {
+            $.get(
+                '<idp:url value="/sale/countMonthSale"/>',
+                {},
+                function(json) {
+                    var result = IDEA.parseJSON(json);
+                    if(result.type == 'success') {
+                        var saleCount = result.data;
+                        $('#monthSaleCount').text(saleCount);
+                    }else{
+                        $('#monthSaleCount').text(0);
                     }
                 }
             );

@@ -4,6 +4,7 @@
 
 package com.ideamoment.emarm.copyright.dao;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -415,5 +416,13 @@ public class CopyrightDao {
                                               pageSize);
 
         return products;
+    }
+
+    public Long countCopyrightByTime(Date startTime, Date endTime) {
+        String sql = "SELECT COUNT(c_id) FROM T_COPYRIGHT_CONTRACT WHERE C_FINISH_TIME BETWEEN :startTime AND :endTime AND C_AUDIT_STATE = '99'";
+        return (Long)IdeaJdbc.query(sql)
+                               .setParameter("startTime", startTime)
+                               .setParameter("endTime", endTime)
+                               .uniqueValue();
     }
 }

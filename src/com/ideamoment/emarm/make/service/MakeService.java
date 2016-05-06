@@ -19,6 +19,7 @@ import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -312,7 +313,7 @@ public class MakeService {
     }
 
     @IdeaJdbcTx
-    public void uploadContractDoc(String id, String fileUrl, String version) {
+    public void uploadContractDoc(String id, String fileUrl, String version, String type) {
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         
@@ -322,6 +323,7 @@ public class MakeService {
         mcd.setCreatorId(curUser.getId());
         mcd.setVersion(version);
         mcd.setFileUrl(fileUrl);
+        mcd.setType(type);
         
         IdeaJdbc.save(mcd);
     }
@@ -569,5 +571,17 @@ public class MakeService {
         pa.setProductId(task.getProductId());
         
         IdeaJdbc.save(pa);
+    }
+
+    @IdeaJdbcTx
+    public Long countMakeCurMonth() {
+        DateTime curDate = new DateTime();
+        int year = curDate.getYear();
+        int month = curDate.getMonthOfYear();
+        
+        DateTime startDate = new DateTime(year, month, 1, 0, 0, 0, 0);
+        DateTime endDate = new DateTime(year, month+1, 1, 0, 0, 0, 0);
+        
+        return makeDao.countMakeByTime(startDate.toDate(), endDate.toDate());
     }
 }

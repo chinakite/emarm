@@ -82,59 +82,59 @@
                     <form class="form-horizontal">
                       <div class="box-body">
                         <div class="col-sm-12">
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchProductName" class="col-sm-3 control-label">作品名称</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" id="inputSearchProductName" placeholder="作品名称关键字">
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchAuthorName" class="col-sm-3 control-label">作者姓名</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" id="inputSearchAuthorName" placeholder="作者姓名">
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchIsbn" class="col-sm-3 control-label">ISBN号</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" id="inputSearchIsbn" placeholder="ISBN号">
-                          </div>
-                        </div>
+                            <div class="form-group col-sm-4">
+                              <label for="inputSearchProductName" class="col-sm-4 control-label">作品名称</label>
+                              <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputSearchProductName" placeholder="作品名称关键字">
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                              <label for="inputSearchAuthorName" class="col-sm-4 control-label">作者姓名</label>
+                              <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputSearchAuthorName" placeholder="作者姓名">
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                              <label for="inputSearchIsbn" class="col-sm-4 control-label">ISBN号</label>
+                              <div class="col-sm-8">
+                                <input type="text" class="form-control" id="inputSearchIsbn" placeholder="ISBN号">
+                              </div>
+                            </div>
                         </div>
                         <div class="col-sm-12">
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchSubject" class="col-sm-3 control-label">作品题材</label>
-                          <div class="col-sm-9">
-                            <select id="inputSearchSubject" class="form-control">
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchPublishState" class="col-sm-3 control-label">出版状态</label>
-                          <div class="col-sm-9">
-                            <select id="inputSearchPublishState" class="form-control">
-                                <option value="-1">全部</option>
-                                <option value="0">已出版</option>
-                                <option value="1">网络签约</option>
-                                <option value="2">网络未签约</option>
-                                <option value="3">未公开</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchState" class="col-sm-3 control-label">作品状态</label>
-                          <div class="col-sm-9">
-                            <select id="inputSearchState" class="form-control">
-                                <option value="-1">全部</option>
-                                <option value="0">草稿</option>
-                                <option value="1">待审核</option>
-                                <option value="101">审核不过</option>
-                                <option value="2">待评价</option>
-                                <option value="3">已评价</option>
-                                <option value="4">评价完成</option>
-                            </select>
-                          </div>
-                        </div>
+                            <div class="form-group col-sm-4">
+                              <label for="inputSearchSubject" class="col-sm-4 control-label">作品题材</label>
+                              <div class="col-sm-8">
+                                <select id="inputSearchSubject" class="form-control">
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                              <label for="inputSearchPublishState" class="col-sm-4 control-label">出版状态</label>
+                              <div class="col-sm-8">
+                                <select id="inputSearchPublishState" class="form-control">
+                                    <option value="-1">全部</option>
+                                    <option value="0">已出版</option>
+                                    <option value="1">网络签约</option>
+                                    <option value="2">网络未签约</option>
+                                    <option value="3">未公开</option>
+                                </select>
+                              </div>
+                            </div>
+                            <div class="form-group col-sm-4">
+                              <label for="inputSearchState" class="col-sm-4 control-label">作品状态</label>
+                              <div class="col-sm-8">
+                                <select id="inputSearchState" class="form-control">
+                                    <option value="-1">全部</option>
+                                    <option value="0">草稿</option>
+                                    <option value="1">待审核</option>
+                                    <option value="101">审核不过</option>
+                                    <option value="2">待评价</option>
+                                    <option value="3">已评价</option>
+                                    <option value="4">评价完成</option>
+                                </select>
+                              </div>
+                            </div>
                         </div>
                       </div><!-- /.box-body -->
                       <div style="text-align: center;">

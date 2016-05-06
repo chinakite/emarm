@@ -4,6 +4,7 @@
 
 package com.ideamoment.emarm.sale.dao;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -205,5 +206,13 @@ public class SaleDao {
                 + "ORDER BY C_CREATETIME DESC";
         return IdeaJdbc.query(sql).setParameter("contractId", contractId)
                         .listTo(SaleContractDoc.class);
+    }
+
+    public Long countSaleByTime(Date startTime, Date endTime) {
+        String sql = "SELECT COUNT(c_id) FROM T_SALE_CONTRACT WHERE C_MODIFYTIME BETWEEN :startTime AND :endTime AND C_STATE = '10'";
+        return (Long)IdeaJdbc.query(sql)
+                               .setParameter("startTime", startTime)
+                               .setParameter("endTime", endTime)
+                               .uniqueValue();
     }
 }

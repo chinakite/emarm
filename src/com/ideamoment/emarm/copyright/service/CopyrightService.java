@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -426,7 +427,7 @@ public class CopyrightService {
     }
 
     @IdeaJdbcTx
-    public void uploadContractDoc(String id, String fileUrl, String version, String finishedDoc) {
+    public void uploadContractDoc(String id, String fileUrl, String version, String finishedDoc, String type) {
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         
@@ -436,6 +437,7 @@ public class CopyrightService {
         ccd.setCreatorId(curUser.getId());
         ccd.setVersion(version);
         ccd.setFileUrl(fileUrl);
+        ccd.setType(type);
         
         IdeaJdbc.save(ccd);
         
@@ -555,6 +557,18 @@ public class CopyrightService {
         pco.setModifyTime(curTime);
         
         IdeaJdbc.save(pco);
+    }
+
+    @IdeaJdbcTx
+    public Long countCopyrightCurMonth() {
+        DateTime curDate = new DateTime();
+        int year = curDate.getYear();
+        int month = curDate.getMonthOfYear();
+        
+        DateTime startDate = new DateTime(year, month, 1, 0, 0, 0, 0);
+        DateTime endDate = new DateTime(year, month+1, 1, 0, 0, 0, 0);
+        
+        return copyrightDao.countCopyrightByTime(startDate.toDate(), endDate.toDate());
     }
     
 }

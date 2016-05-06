@@ -262,8 +262,8 @@ public class MakeAction {
     }
     
     @RequestMapping(value="/make/uploadContractDoc", method=RequestMethod.POST)
-    public JsonData uploadContractDoc(String id, String fileUrl, String version) {
-        makeService.uploadContractDoc(id, fileUrl, version);
+    public JsonData uploadContractDoc(String id, String fileUrl, String version, String type) {
+        makeService.uploadContractDoc(id, fileUrl, version, type);
         return JsonData.SUCCESS;
     }
     
@@ -345,6 +345,12 @@ public class MakeAction {
     public JsonData rejectMakeTaskAudioAudit(String makeTaskAudioId, String remark) {
         makeService.createMakeTaskAudioAudit(makeTaskAudioId, remark, YesOrNo.NO);
         return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/make/countMonthMake", method=RequestMethod.GET)
+    public JsonData countMakeCurMonth() {
+        Long count = makeService.countMakeCurMonth();
+        return JsonData.success(count);
     }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {

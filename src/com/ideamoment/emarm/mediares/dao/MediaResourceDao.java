@@ -111,7 +111,7 @@ public class MediaResourceDao {
         return IdeaJdbc.query(sql).setParameter("productId", productId).listTo(ProductImage.class);
     }
 
-    public List<ProductImage> listProductAudioes(String productId) {
+    public List<ProductAudio> listProductAudioes(String productId) {
         String sql = "SELECT * "
                 + "FROM T_PRODUCT_AUDIO "
                 + "WHERE C_PRODUCT_ID = :productId";

@@ -3,9 +3,16 @@
  */
 package com.ideamoment.emarm.mediares.action;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,12 +20,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ideamoment.emarm.evaluation.service.EvaluationService;
+import com.ideamoment.emarm.mediares.DownloadException;
+import com.ideamoment.emarm.mediares.DownloadExceptionCode;
 import com.ideamoment.emarm.mediares.service.MediaResourceService;
+import com.ideamoment.emarm.mediares.service.MediaResourceService.DownloadFile;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.ProductAudio;
 import com.ideamoment.emarm.model.ProductImage;
 import com.ideamoment.emarm.util.DataTableSource;
 import com.ideamoment.ideadp.restful.json.JsonData;
 import com.ideamoment.ideajdbc.action.Page;
+
+import net.lingala.zip4j.exception.ZipException;
 
 /**
  * @author Chinakite
@@ -131,8 +144,36 @@ public class MediaResourceAction {
     
     @RequestMapping(value="/mediares/productAudioes", method=RequestMethod.GET)
     public JsonData listProductAudioes(String productId) {
-        List<ProductImage> images = mediaResourceService.listProductAudioes(productId);
+        List<ProductAudio> images = mediaResourceService.listProductAudioes(productId);
         return JsonData.success(images);
+    }
+    
+    @RequestMapping(value="/mediares/packageDownload", method=RequestMethod.GET)
+    public void packageDownload(HttpServletRequest request, HttpServletResponse response, String productId) throws ZipException {
+        DownloadFile dfile = mediaResourceService.packageDownload(productId);
+        
+        OutputStream os = null;  
+        try {
+            os = response.getOutputStream();
+            response.reset();
+            
+            response.setHeader("Content-Disposition", "attachment; filename=" + dfile.getFileName());  
+            response.setContentType("application/octet-stream; charset=utf-8");  
+            os.write(FileUtils.readFileToByteArray(new File(dfile.getFilePath())));  
+            os.flush(); 
+        }catch (IOException e) {
+            e.printStackTrace();
+            throw new DownloadException(DownloadExceptionCode.IO_ERROR, e.getMessage(), e);
+        } finally {  
+            if (os != null) {  
+                try {
+                    os.close();
+                } catch (IOException ie) {
+                    ie.printStackTrace();
+                    throw new DownloadException(DownloadExceptionCode.IO_ERROR, ie.getMessage(), ie);
+                }  
+            }  
+        }  
     }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {

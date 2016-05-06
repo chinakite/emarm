@@ -211,6 +211,12 @@
                               </div>
                           </div>
                       </div>
+                      <div class="prodTip" style="display:none;">
+                          <h5>名称相似作品</h5>
+                          <ul id="prodList" class="list-group">
+                             
+                          </ul>
+                      </div>
                     </div>
                 </div>
                 <div class="clearfix">
@@ -519,6 +525,13 @@
         {{/each}}
     </script>
     
+    <!-- template -->
+    <script id="likelyProdTmpl" type="text/html">
+        {{each prodlist as prod idx}}
+           <li class="list-group-item" title="{{prod.name}}">{{prod.name}}</li>
+        {{/each}}
+    </script>
+    
     <!-- page script -->
     <script>
       var table;
@@ -558,6 +571,30 @@
           initProductTbl();
           loadUsers();
           loadCategories();
+          
+          $('#inputName').bind('input propertychange', function(){
+              var curInputName = $('#inputName').val();
+              if(curInputName.length > 0) {
+                  if($('.prodTip').css('display') == 'none') {
+                      $('.prodTip').show();
+                  }
+              
+                  $.get(
+                      '<idp:url value="/product/quickQuery"/>?name=' + curInputName,
+                      {},
+                      function(json){
+                          var result = IDEA.parseJSON(json);
+                          if(result.type == 'success') {
+                              var products = result.data;
+                              var html = template('likelyProdTmpl', {"prodlist" : products});
+                              $('#prodList').empty().append(html);
+                          }
+                      }
+                  );
+              }else{
+                  $('#prodList').empty();
+              }
+          });
       });
       
       function loadUsers() {
@@ -1040,6 +1077,11 @@
       function validateName() {
           var inputNameEle = $('#inputName');
           var authorName = inputNameEle.val();
+          
+          if($('.prodTip').css('display') != 'none') {
+              $('.prodTip').hide();
+          }
+          
           if(!authorName || $.trim(authorName).length == 0) {
               var formGroup = inputNameEle.parents('.form-group');
               if(!formGroup.hasClass('has-error')) {

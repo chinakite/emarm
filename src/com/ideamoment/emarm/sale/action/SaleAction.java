@@ -208,8 +208,8 @@ public class SaleAction {
     }
     
     @RequestMapping(value="/sale/uploadContractDoc", method=RequestMethod.POST)
-    public JsonData uploadContractDoc(String id, String fileUrl, String version) {
-        saleService.uploadContractDoc(id, fileUrl, version);
+    public JsonData uploadContractDoc(String id, String fileUrl, String version, String type) {
+        saleService.uploadContractDoc(id, fileUrl, version, type);
         return JsonData.SUCCESS;
     }
     
@@ -217,6 +217,12 @@ public class SaleAction {
     public JsonData finishContract(String contractId) {
         saleService.finishContract(contractId);
         return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/sale/countMonthSale", method=RequestMethod.GET)
+    public JsonData countMakeCurMonth() {
+        Long count = saleService.countSaleCurMonth();
+        return JsonData.success(count);
     }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {

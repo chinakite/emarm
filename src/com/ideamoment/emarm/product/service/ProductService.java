@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -275,5 +276,22 @@ public class ProductService {
     @IdeaJdbcTx
     public Product findProduct(String id) {
         return productDao.findProduct(id);
+    }
+
+    @IdeaJdbcTx
+    public Long countProductCurMonth() {
+        DateTime curDate = new DateTime();
+        int year = curDate.getYear();
+        int month = curDate.getMonthOfYear();
+        
+        DateTime startDate = new DateTime(year, month, 1, 0, 0, 0, 0);
+        DateTime endDate = new DateTime(year, month+1, 1, 0, 0, 0, 0);
+        
+        return productDao.countProductByTime(startDate.toDate(), endDate.toDate());
+    }
+
+    @IdeaJdbcTx
+    public List<Product> quickQuery(String name) {
+        return productDao.quickQuery(name);
     }
 }

@@ -275,6 +275,15 @@
                           </div>
                       </div>
                       <div class="form-group required">
+                          <label for="inputFile" class="col-xs-2 control-label">文件类别</label>
+                          <div id="docTypeDiv" class="col-xs-10">
+                              <select class="form-control" id="docType">
+                                  <option value="1">合同文件</option>
+                                  <option value="2">补充协议</option>
+                              </select>
+                          </div>
+                      </div>
+                      <div class="form-group required">
                           <label for="inputFile" class="col-xs-2 control-label">合同版本</label>
                           <div class="col-xs-2">
                               <select class="form-control col-md-1" id="version1">
@@ -367,6 +376,7 @@
     <script id="docTblTmpl" type="text/html">
         {{each doclist as doc idx}}
            <tr>
+              <td>{{doc.typeText}}</td>
               <td>{{doc.version}}</td>
               <td>{{doc.createTime}}</td>
               <td><a href="<idp:ctx/>{{doc.fileUrl}}">下载</a></td>
@@ -754,6 +764,7 @@
       
       function uploadContractDoc(contractId) {
           var fileUrl = $('#inputDoc').val();
+          var type = $('#docType').val();
           var version = $('#version1').val() + "." + $('#version2').val();
           
           var finishedDoc = $('#finishedDoc').val();
@@ -764,7 +775,8 @@
                   "id": contractId,
                   "fileUrl": fileUrl,
                   "version": version,
-                  "finishedDoc": finishedDoc
+                  "finishedDoc": finishedDoc,
+                  "type": type
               },
               function(json) {
                   alert('保存成功');

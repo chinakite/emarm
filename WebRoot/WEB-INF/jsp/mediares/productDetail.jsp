@@ -243,7 +243,7 @@
                               </div><!-- /.tab-pane -->
                               <div class="tab-pane" id="audioes">
                                   <div class="row">
-                                      <button class="btn btn-default pull-right ml10" onclick="popAudioModal();"><i class="fa fa-star-half-empty"></i> 打包下载</button>
+                                      <button class="btn btn-default pull-right ml10" onclick="popPackageDownloadModal();"><i class="fa fa-star-half-empty"></i> 打包下载</button>
                                       <button class="btn btn-default pull-right" onclick="popAudioModal();"><i class="fa fa-star-half-empty"></i> 上传音频</button>
                                   </div>
                                   <ul id="audioList" class="row col-md-12 list-group mt20">
@@ -352,6 +352,24 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeAudioModal();">关闭</button>
             <button type="button" class="btn btn-emarm" onclick="uploadProductAudio();">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    
+    <div id="packageDownloadModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">打包下载音频</h4>
+          </div>
+          <div class="modal-body">
+            <p>打包下载过程将会耗费一定的时间，您确定需要下载吗？</p>  
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closePackageDownloadModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="packageDownload('${product.id}');">确定</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -1352,6 +1370,18 @@
                   }
               }
           );
+      }
+      
+      function popPackageDownloadModal() {
+          $('#packageDownloadModal').modal('show');
+      }
+      
+      function closePackageDownloadModal() {
+          $('#packageDownloadModal').modal('hide');
+      }
+      
+      function packageDownload(id) {
+          window.location.href = '<idp:url value="/mediares/packageDownload"/>?productId=' + id;
       }
     </script>
   </body>
