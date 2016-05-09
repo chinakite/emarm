@@ -299,6 +299,12 @@ public class MakeAction {
         return new ModelAndView("/WEB-INF/jsp/make/extTaskDetail.jsp", model);
     }
     
+    @RequestMapping(value="/make/extFinishMakeTask", method=RequestMethod.POST)
+    public JsonData extFinishMakeTask(String makeTaskId) {
+        makeService.extFinishMakeTask(makeTaskId);
+        return JsonData.SUCCESS;
+    }
+    
     @RequestMapping(value="/make/makeTaskAudioes", method=RequestMethod.GET)
     public JsonData listMakeTaskAudioes(String id) {
         List<MakeTaskAudio> audioes = makeService.listMakeTaskAudioes(id);

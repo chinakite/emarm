@@ -176,7 +176,6 @@
                   {
                       "targets": [0],
                       "render": function(data, type, full) {
-                          alert(full.name);
                           if(full.name) {
                               return full.name;
                           }else{

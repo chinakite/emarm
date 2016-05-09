@@ -5,6 +5,7 @@ package com.ideamoment.emarm.model;
 
 import com.ideamoment.emarm.model.enumeration.MakeTaskState;
 import com.ideamoment.emarm.model.enumeration.ShowType;
+import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
@@ -48,6 +49,9 @@ public class MakeTask extends HistoriableEntity {
     
     @Property(dataItem="C_TOTAL_SECTION", type=DataItemType.INTEGER)
     private String totalSection;
+    
+    @Property(dataItem="C_EXT_FINISH", type=DataItemType.VARCHAR, length=2)
+    private String extFinish = YesOrNo.NO;
     
     @Ref
     private User maker;
@@ -309,4 +313,17 @@ public class MakeTask extends HistoriableEntity {
         this.totalSection = totalSection;
     }
     
+    /**
+     * @return the extFinish
+     */
+    public String getExtFinish() {
+        return extFinish;
+    }
+    
+    /**
+     * @param extFinish the extFinish to set
+     */
+    public void setExtFinish(String extFinish) {
+        this.extFinish = extFinish;
+    }
 }

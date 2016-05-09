@@ -43,6 +43,8 @@ import com.ideamoment.emarm.model.enumeration.MakeTaskState;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideadp.appcontext.IdeaApplicationContext;
+import com.ideamoment.ideadp.exception.IdeaDataException;
+import com.ideamoment.ideadp.exception.IdeaDataExceptionCode;
 import com.ideamoment.ideadp.usercontext.UserContext;
 import com.ideamoment.ideajdbc.IdeaJdbc;
 import com.ideamoment.ideajdbc.action.Page;
@@ -394,6 +396,15 @@ public class MakeService {
 
     @IdeaJdbcTx
     public void createSection(String name, String makeTaskId) {
+        MakeTask task = IdeaJdbc.find(MakeTask.class, makeTaskId);
+        if(task == null) {
+            throw new IdeaDataException(IdeaDataExceptionCode.DATA_NOU_FOUND, "MakeTask[" + makeTaskId + "] is not found.");
+        }
+        
+        if(YesOrNo.YES.equals(task.getExtFinish())) {
+            throw new MakeException(MakeExceptionCode.CANT_CREATE_SECTION, "MakeTask[" + makeTaskId + "] is finished yet.");
+        }
+        
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         String userId = curUser.getId();
@@ -583,5 +594,20 @@ public class MakeService {
         DateTime endDate = new DateTime(year, month+1, 1, 0, 0, 0, 0);
         
         return makeDao.countMakeByTime(startDate.toDate(), endDate.toDate());
+    }
+
+    @IdeaJdbcTx
+    public void extFinishMakeTask(String makeTaskId) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        MakeTask task = IdeaJdbc.find(MakeTask.class, makeTaskId);
+        if(task != null) {
+            task.setExtFinish(YesOrNo.YES);
+            task.setModifier(userId);
+            task.setModifyTime(new Date());
+        }
+        IdeaJdbc.update(task);
     }
 }

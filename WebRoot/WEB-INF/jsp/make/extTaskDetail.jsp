@@ -102,6 +102,7 @@
                                   <div class="box-body">
                                       <div style="height: 40px;">
                                           <button class="btn btn-default pull-right ml10" onclick="popSectionModal();"><i class="fa fa-star-half-empty"></i> 新增单集</button>
+                                          <button class="btn btn-default pull-right ml10" onclick="popFinishModal();"><i class="fa fa-star-half-empty"></i> 上传完成</button>
                                       </div>
                                       <div id="audioList">
                                           
@@ -248,6 +249,24 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+    <div id="finishModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">确认上传完成</h4>
+          </div>
+          <div class="modal-body">
+              <p>点击确定后将不能新增单集，您确定上传完成了吗？</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeFinishModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="submitFinish('${task.id}');">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <!-- jQuery 2.1.4 -->
     <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
     <!-- Bootstrap 3.3.5 -->
@@ -379,6 +398,10 @@
                   if(result.type == 'success') {
                       alert('保存成功。');
                       window.location.reload();
+                  }else{
+                      if(result.code == "MAKE-00003") {
+                          alert("制作任务已经完成，不能再创建单集了。");
+                      }
                   }
               }
           );
@@ -488,6 +511,30 @@
               {
                   "makeTaskAudioId": id,
                   "remark": remark
+              },
+              function(json) {
+                  var result = $.parseJSON(json);
+                  if(result.type == 'success') {
+                      alert('保存成功。');
+                      window.location.reload();
+                  }
+              }
+          );
+      }
+      
+      function popFinishModal() {
+          $('#finishModal').modal('show');
+      }
+      
+      function closeFinishModal() {
+          $('#finishModal').modal('hide');
+      }
+      
+      function submitFinish(id) {
+          $.post(
+              '<idp:url value="/make/extFinishMakeTask"/>',
+              {
+                  "makeTaskId": id
               },
               function(json) {
                   var result = $.parseJSON(json);

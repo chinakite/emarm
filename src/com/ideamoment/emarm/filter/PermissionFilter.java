@@ -47,13 +47,13 @@ public class PermissionFilter implements Filter {
         
         if(reqUrl.equals(req.getContextPath())     
                 || reqUrl.equals(req.getContextPath() + "/")
-                || reqUrl.indexOf("/css/") > 0
-                || reqUrl.indexOf("/js/") > 0
-                || reqUrl.indexOf("/fonts/") > 0
-                || reqUrl.indexOf("/img/") > 0
-                || reqUrl.indexOf("/plugins/") > 0
-                || reqUrl.indexOf("/uploadTmp/") > 0
-                || reqUrl.toLowerCase().indexOf("login") > 0) {
+                || reqUrl.indexOf("/css/") >= 0
+                || reqUrl.indexOf("/js/") >= 0
+                || reqUrl.indexOf("/fonts/") >= 0
+                || reqUrl.indexOf("/img/") >= 0
+                || reqUrl.indexOf("/plugins/") >= 0
+                || reqUrl.indexOf("/uploadTmp/") >= 0
+                || reqUrl.toLowerCase().indexOf("login") >= 0) {
             chain.doFilter(request, response);
         }else{
             Object obj = req.getSession().getAttribute(UserContext.SESSION_USER);

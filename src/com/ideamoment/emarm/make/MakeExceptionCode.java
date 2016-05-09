@@ -12,4 +12,5 @@ public class MakeExceptionCode {
     
     public static final String CANT_FINISH_CONTRACT = "MAKE-00001";
     public static final String CONTRACT_NO_TASK = "MAKE-00002";
+    public static final String CANT_CREATE_SECTION = "MAKE-00003";
 }
