@@ -133,7 +133,7 @@ public class EvaluationService {
                 Date curDate = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                 String dateStr = sdf.format(curDate);
-                String emailContent = "<p>尊敬的评审老师，您好！</p><p></p><p>&nbsp;&nbsp;公司拟采购作品《" + product.getName() + "》的相关音频权利，特邀您进行内容审核，您的意见将成为我们制定购买决策的重要依据！</p><p></p><p>&nbsp;&nbsp;<a href='http://www.6wanr.com" + contextPath + "evalogin?productId=" + id + "'>点击此处</a>开始评价，在此感谢您的参与！</p><p></p><p>&nbsp;&nbsp;祝好！</p><p></p><p>评审小组</p><p>" + dateStr + "</p>";
+                String emailContent = "<p>尊敬的评审老师，您好！</p><p></p><p>&nbsp;&nbsp;公司拟采购作品《" + product.getName() + "》的相关音频权利，特邀您进行内容审核，您的意见将成为我们制定购买决策的重要依据！</p><p></p><p>&nbsp;&nbsp;<a href='http://www.euphonymedia.com" + contextPath + "evalogin?productId=" + id + "'>点击此处</a>开始评价，在此感谢您的参与！</p><p></p><p>&nbsp;&nbsp;祝好！</p><p></p><p>评审小组</p><p>" + dateStr + "</p>";
                 
                 try{
                     EvaluationInvitation evaInvitation = new EvaluationInvitation();

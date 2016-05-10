@@ -55,7 +55,7 @@
               <ul class="treeview-menu">
                 <li id="menu_mr_product"><a href='<idp:url value="/mediares/productPage"/>'><i class="fa fa-angle-double-right f10"></i> 作品维度</a></li>
                 <li id="menu_cc_contract">
-                    <a href='<idp:url value="/copyright/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同维度</a>
+                    <a href='<idp:url value="/sale/contractPage"/>'><i class="fa fa-angle-double-right f10"></i> 合同维度</a>
                 </li>
               </ul>
             </li>
