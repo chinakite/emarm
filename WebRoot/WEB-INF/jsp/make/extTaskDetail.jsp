@@ -56,18 +56,6 @@
         <section class="content-header">
             <h1 class="detailTitle col-xs-6">${task.product.name}</h1>
             <span class="label bg-green pull-right">${task.stateText}</span>
-            <!--
-            <c:if test="${product.state == '0' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '02') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1'}">
-                <button class="btn btn-default pull-right ml10" onclick="deleteProduct('${product.name}');"><i class="fa fa-remove"></i> 删除</button>
-                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.id}', '${product.name}');"><i class="fa fa-edit"></i> 编辑</button>
-            </c:if>
-            <c:if test="${product.state == '2' || product.state == '3'}">
-                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.id}', '${product.name}');"><i class="fa fa-tag"></i> 邀请评价</button>
-            </c:if>
-            <c:if test="${product.state == '1'}">
-                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.name}');"><i class="fa fa-star-half-empty"></i> 审核</button>
-            </c:if>
-            -->
         </section>
 
         <!-- Main content -->
@@ -103,6 +91,7 @@
                                       <div style="height: 40px;">
                                           <button class="btn btn-default pull-right ml10" onclick="popSectionModal();"><i class="fa fa-star-half-empty"></i> 新增单集</button>
                                           <button class="btn btn-default pull-right ml10" onclick="popFinishModal();"><i class="fa fa-star-half-empty"></i> 上传完成</button>
+                                          <button class="btn btn-default pull-right ml10" onclick="popUploadFileModal();"><i class="fa fa-star-half-empty"></i> 上传权属声明</button>
                                       </div>
                                       <div id="audioList">
                                           
@@ -262,6 +251,70 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeFinishModal();">关闭</button>
             <button type="button" class="btn btn-emarm" onclick="submitFinish('${task.id}');">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div id="docModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">上传权属声明文件</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                  <input id="finishedDoc" type="hidden" value="0"/>
+                  <div class="col-xs-12">
+                      <div class="form-group required">
+                          <label for="inputFile" class="col-xs-2 control-label">合同文件</label>
+                          <div id="docUploadDiv" class="col-xs-10">
+                              <input id="importFile" name="importFile" type="file" class="form-control"/>
+                              <ul id="uploadedFile"></ul>
+                              <input type="hidden" id="inputDoc"/>
+                          </div>
+                      </div>
+                      <div class="form-group required">
+                          <label for="inputFile" class="col-xs-2 control-label">合同版本</label>
+                          <div class="col-xs-2">
+                              <select class="form-control col-md-1" id="version1">
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4">4</option>
+                                  <option value="5">5</option>
+                                  <option value="6">6</option>
+                                  <option value="7">7</option>
+                                  <option value="8">8</option>
+                                  <option value="9">9</option>
+                                  <option value="10">10</option>
+                              </select>
+                          </div>
+                          <div class="pull-left" style="font-weight: bold; margin-top: 10px;">
+                              <span>.</span>
+                          </div>
+                          <div class="col-xs-2">
+                              <select class="form-control col-md-1" id="version2">
+                                  <option value="0">0</option>
+                                  <option value="1">1</option>
+                                  <option value="2">2</option>
+                                  <option value="3">3</option>
+                                  <option value="4">4</option>
+                                  <option value="5">5</option>
+                                  <option value="6">6</option>
+                                  <option value="7">7</option>
+                                  <option value="8">8</option>
+                                  <option value="9">9</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeDocModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="uploadContractDoc('${contract.id}');">确定</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->

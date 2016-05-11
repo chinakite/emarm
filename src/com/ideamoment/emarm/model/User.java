@@ -207,7 +207,11 @@ public class User extends HistoriableEntity{
                         .replace("22", RoleType.MAKE_MGR_TEXT)
                         .replace("31", RoleType.SALE_OPR)
                         .replace("32", RoleType.SALE_MGR_TEXT)
+                        .replace("40", RoleType.MEDIA_MGR_TEXT)
+                        .replace("51", RoleType.EXT_EVALUATOR_TEXT)
                         .replace("52", RoleType.EXT_MAKER_TEXT)
+                        .replace("53", RoleType.EXT_EMCEE_TEXT)
+                        .replace("80", RoleType.LAWYER_TEXT)
                         .replace("99", RoleType.SUPER_ADMIN_TEXT)
                         .replace("90", RoleType.CEO_TEXT)
                         .replaceAll(",", "、");

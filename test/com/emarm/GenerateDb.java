@@ -13,6 +13,7 @@ import com.ideamoment.emarm.model.MakeTask;
 import com.ideamoment.emarm.model.MakeTaskAudio;
 import com.ideamoment.emarm.model.MakeTaskAudioAudit;
 import com.ideamoment.emarm.model.MakeTaskAudioFile;
+import com.ideamoment.emarm.model.MakeTaskCopyrightFile;
 import com.ideamoment.emarm.model.ProductAudio;
 import com.ideamoment.emarm.model.ProductCopyrightFile;
 import com.ideamoment.emarm.model.ProductCopyrightOprtor;
@@ -66,7 +67,8 @@ public class GenerateDb {
 //                  EmailSetting.class,
 //                    ProductCopyrightFile.class,
 //                    EvaluationInvitation.class,
-                  ProductCopyrightOprtor.class
+//                  ProductCopyrightOprtor.class,
+                MakeTaskCopyrightFile.class
                 };
         
         for(Class clz : cls) {

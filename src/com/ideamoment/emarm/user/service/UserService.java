@@ -127,9 +127,11 @@ public class UserService {
         if(user != null) {
             throw new IdeaDataException(IdeaDataExceptionCode.DUPLICATED_DATA, String.format("User email[%s]", email));
         }
-        user = userDao.queryUserByMobile(mobile, ignoreId);
-        if(user != null) {
-            throw new IdeaDataException(IdeaDataExceptionCode.DUPLICATED_DATA, String.format("User mobile[%s]", mobile));
+        if(StringUtils.isNotEmpty(mobile)) {
+            user = userDao.queryUserByMobile(mobile, ignoreId);
+            if(user != null) {
+                throw new IdeaDataException(IdeaDataExceptionCode.DUPLICATED_DATA, String.format("User mobile[%s]", mobile));
+            }
         }
     }
     
