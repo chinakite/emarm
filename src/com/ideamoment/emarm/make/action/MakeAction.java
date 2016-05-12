@@ -21,6 +21,7 @@ import com.ideamoment.emarm.model.MakeTask;
 import com.ideamoment.emarm.model.MakeTaskAudio;
 import com.ideamoment.emarm.model.MakeTaskAudioAudit;
 import com.ideamoment.emarm.model.MakeTaskAudioFile;
+import com.ideamoment.emarm.model.MakeTaskCopyrightFile;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.emarm.util.DataTableSource;
@@ -357,6 +358,18 @@ public class MakeAction {
     public JsonData countMakeCurMonth() {
         Long count = makeService.countMakeCurMonth();
         return JsonData.success(count);
+    }
+    
+    @RequestMapping(value="/make/listMakeTaskCopyrightFiles", method=RequestMethod.GET)
+    public JsonData listMakeTaskCopyrightFiles(String makeTaskId) {
+        List<MakeTaskCopyrightFile> files = makeService.listMakeTaskCopyrightFiles(makeTaskId);
+        return JsonData.success(files);
+    }
+    
+    @RequestMapping(value="/make/uploadMakeTaskCopyrightFile", method=RequestMethod.POST)
+    public JsonData uploadMakeTaskCopyrightFile(String makeTaskId, String fileUrl) {
+        makeService.createMakeTaskCopyrightFile(makeTaskId, fileUrl);
+        return JsonData.SUCCESS;
     }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {

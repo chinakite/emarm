@@ -17,6 +17,7 @@ import com.ideamoment.emarm.model.MakeTask;
 import com.ideamoment.emarm.model.MakeTaskAudio;
 import com.ideamoment.emarm.model.MakeTaskAudioAudit;
 import com.ideamoment.emarm.model.MakeTaskAudioFile;
+import com.ideamoment.emarm.model.MakeTaskCopyrightFile;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
@@ -330,6 +331,12 @@ public class MakeDao {
                                .setParameter("startTime", startTime)
                                .setParameter("endTime", endTime)
                                .uniqueValue();
+    }
+    
+    public List<MakeTaskCopyrightFile> listMakeTaskCopyrightFiles(String makeTaskId) {
+        String sql = "select * from t_make_task_cpfile where c_make_task_id = :makeTaskId";
+        
+        return IdeaJdbc.query(sql).setParameter("makeTaskId", makeTaskId).listTo(MakeTaskCopyrightFile.class);
     }
 
 }

@@ -35,6 +35,7 @@ import com.ideamoment.emarm.model.MakeTask;
 import com.ideamoment.emarm.model.MakeTaskAudio;
 import com.ideamoment.emarm.model.MakeTaskAudioAudit;
 import com.ideamoment.emarm.model.MakeTaskAudioFile;
+import com.ideamoment.emarm.model.MakeTaskCopyrightFile;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductAudio;
 import com.ideamoment.emarm.model.User;
@@ -609,5 +610,26 @@ public class MakeService {
             task.setModifyTime(new Date());
         }
         IdeaJdbc.update(task);
+    }
+
+    @IdeaJdbcTx
+    public void createMakeTaskCopyrightFile(String makeTaskId, String fileUrl) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        MakeTaskCopyrightFile mtcf = new MakeTaskCopyrightFile();
+        mtcf.setCreateTime(new Date());
+        mtcf.setCreatorId(userId);
+        mtcf.setFileUrl(fileUrl);
+        mtcf.setMakeTaskId(makeTaskId);
+        
+        IdeaJdbc.save(mtcf);
+    }
+
+    @IdeaJdbcTx
+    public List<MakeTaskCopyrightFile> listMakeTaskCopyrightFiles(String makeTaskId) {
+        List<MakeTaskCopyrightFile> files = makeDao.listMakeTaskCopyrightFiles(makeTaskId);
+        return files;
     }
 }

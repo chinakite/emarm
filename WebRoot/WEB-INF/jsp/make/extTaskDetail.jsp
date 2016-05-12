@@ -91,7 +91,6 @@
                                       <div style="height: 40px;">
                                           <button class="btn btn-default pull-right ml10" onclick="popSectionModal();"><i class="fa fa-star-half-empty"></i> 新增单集</button>
                                           <button class="btn btn-default pull-right ml10" onclick="popFinishModal();"><i class="fa fa-star-half-empty"></i> 上传完成</button>
-                                          <button class="btn btn-default pull-right ml10" onclick="popUploadFileModal();"><i class="fa fa-star-half-empty"></i> 上传权属声明</button>
                                       </div>
                                       <div id="audioList">
                                           
@@ -99,6 +98,20 @@
                                   </div> 
                               </div><!-- /.box -->
                           </div>
+                      </div>
+                      <div class="col-md-12">
+                            <div class="box box-emarm">
+                              <div class="box-header with-border">
+                                  <h3 class="box-title"><span>权属声明列表</span></h3>
+                              </div>
+                              <div class="box-body">
+                                  <table id="docTbl" class="table table-bordered">
+                                    <tbody>
+                                        
+                                    </tbody>
+                                  </table>
+                              </div> 
+                            </div><!-- /.box -->
                       </div>
                   </div> 
               </div><!-- /.box -->
@@ -270,51 +283,17 @@
                       <div class="form-group required">
                           <label for="inputFile" class="col-xs-2 control-label">合同文件</label>
                           <div id="docUploadDiv" class="col-xs-10">
-                              <input id="importFile" name="importFile" type="file" class="form-control"/>
-                              <ul id="uploadedFile"></ul>
-                              <input type="hidden" id="inputDoc"/>
-                          </div>
-                      </div>
-                      <div class="form-group required">
-                          <label for="inputFile" class="col-xs-2 control-label">合同版本</label>
-                          <div class="col-xs-2">
-                              <select class="form-control col-md-1" id="version1">
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                  <option value="6">6</option>
-                                  <option value="7">7</option>
-                                  <option value="8">8</option>
-                                  <option value="9">9</option>
-                                  <option value="10">10</option>
-                              </select>
-                          </div>
-                          <div class="pull-left" style="font-weight: bold; margin-top: 10px;">
-                              <span>.</span>
-                          </div>
-                          <div class="col-xs-2">
-                              <select class="form-control col-md-1" id="version2">
-                                  <option value="0">0</option>
-                                  <option value="1">1</option>
-                                  <option value="2">2</option>
-                                  <option value="3">3</option>
-                                  <option value="4">4</option>
-                                  <option value="5">5</option>
-                                  <option value="6">6</option>
-                                  <option value="7">7</option>
-                                  <option value="8">8</option>
-                                  <option value="9">9</option>
-                              </select>
+                              <input id="importCopyrightFile" name="importCopyrightFile" type="file" class="form-control"/>
+                              <ul id="uploadedCopyrightFile"></ul>
+                              <input type="hidden" id="inputCopyrightFile"/>
                           </div>
                       </div>
                   </div>
               </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeDocModal();">关闭</button>
-            <button type="button" class="btn btn-emarm" onclick="uploadContractDoc('${contract.id}');">确定</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeCopyrightFileModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="uploadCopyrightFile('${task.id}');">确定</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -390,10 +369,20 @@
         {{/each}}
     </script>
     
+    <script id="docTblTmpl" type="text/html">
+        {{each doclist as doc idx}}
+           <tr>
+              <td>{{doc.createTime}}</td>
+              <td><a href="<idp:ctx/>{{doc.fileUrl}}">下载</a></td>
+           </tr>
+        {{/each}}
+    </script>
+    
     <!-- page script -->
     <script>
       $(document).ready(function(){
           loadMakeTaskAudioes();
+          loadContractDocs();
           
           $('#importFile').fileupload({
               url: '<idp:url value="/uploadAudio"/>',
@@ -403,6 +392,17 @@
                      var fileName = data['result']['data'][0]['fileName'];
                      $('#uploadedFile').html('<li>'+fileName+'</li>');
                      $('#inputAudio').val(fileUrl);
+              }
+          });
+          
+          $('#importCopyrightFile').fileupload({
+              url: '<idp:url value="/uploadDoc"/>',
+              dataType: 'json',
+              done: function (e, data) {
+                     var fileUrl = data['result']['data'][0]['fileUrl'];
+                     var fileName = data['result']['data'][0]['fileName'];
+                     $('#uploadedCopyrightFile').html('<li>'+fileName+'</li>');
+                     $('#inputCopyrightFile').val(fileUrl);
               }
           });
       });
@@ -421,6 +421,21 @@
                   
               }
           )
+      }
+      
+      function loadContractDocs() {
+          $.get(
+              '<idp:url value="/make/listMakeTaskCopyrightFiles"/>?makeTaskId=${task.id}',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var data = result.data;
+                      var html = template('docTblTmpl', {doclist: data});
+                      $('#docTbl tbody').html(html);
+                  }
+              }
+          );
       }
       
       function popSectionModal() {
@@ -595,6 +610,38 @@
                       alert('保存成功。');
                       window.location.reload();
                   }
+              }
+          );
+      }
+      
+      function popCopyrightFileModal() {
+          clearCopyrightFileModal();
+          $('#docModal').modal('show');
+      }
+      
+      function closeCopyrightFileModal() {
+          clearCopyrightFileModal();
+          $('#docModal').modal('hide');
+      }
+      
+      function clearCopyrightFileModal() {
+          $('#inputFile').val('');
+          $('#inputDoc').val('');
+          $('#uploadedFile').empty();
+      }
+      
+      function uploadCopyrightFile(makeTaskId) {
+          var fileUrl = $('#inputCopyrightFile').val();
+          
+          $.post(
+              '<idp:url value="/make/uploadMakeTaskCopyrightFile"/>',
+              {
+                  "id": makeTaskId,
+                  "fileUrl": fileUrl
+              },
+              function(json) {
+                  alert('保存成功');
+                  window.location.reload();
               }
           );
       }

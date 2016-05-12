@@ -25,9 +25,6 @@ public class MakeTaskCopyrightFile extends BaseEntity {
     @Property(dataItem="C_CREATETIME", type=DataItemType.DATETIME)
     private Date createTime;
     
-    @Property(dataItem="C_VERSION", type=DataItemType.VARCHAR, length=10)
-    private String version;
-    
     @Property(dataItem="C_FILE_URL", type=DataItemType.VARCHAR, length=500)
     private String fileUrl;
 
@@ -72,20 +69,6 @@ public class MakeTaskCopyrightFile extends BaseEntity {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
-    }
-
-    /**
-     * @return the version
-     */
-    public String getVersion() {
-        return version;
-    }
-
-    /**
-     * @param version the version to set
-     */
-    public void setVersion(String version) {
-        this.version = version;
     }
 
     /**
