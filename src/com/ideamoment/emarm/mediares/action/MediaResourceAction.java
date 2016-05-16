@@ -78,6 +78,11 @@ public class MediaResourceAction {
         return new ModelAndView("/WEB-INF/jsp/mediares/product.jsp");
     }
     
+    @RequestMapping(value="/mediares/preProductPage", method=RequestMethod.GET)
+    public ModelAndView toPreProducts() {
+        return new ModelAndView("/WEB-INF/jsp/mediares/preProduct.jsp");
+    }
+    
     @RequestMapping(value="/mediares/dtProducts", method=RequestMethod.GET)
     public JsonData dtProducts(
                                int draw, 
@@ -107,6 +112,39 @@ public class MediaResourceAction {
             condition.put("state", state);
         
         Page<Product> products = mediaResourceService.pageProducts(curPage, pageSize, condition);
+        DataTableSource<Product> dts = convertToDataTableSource(draw, products);
+        return new JsonData(dts);
+    }
+    
+    @RequestMapping(value="/mediares/dtPreProducts", method=RequestMethod.GET)
+    public JsonData dtPreProducts(
+                               int draw, 
+                               int start, 
+                               int length, 
+                               String productName,
+                               String authorName,
+                               String isbn,
+                               String subject,
+                               String publishState,
+                               String state) {
+        int curPage = start/length + 1;
+        int pageSize = length;
+        
+        HashMap<String, String> condition = new HashMap<String, String>();
+        if(productName != null)
+            condition.put("productName", productName);
+        if(authorName != null)
+            condition.put("authorName", authorName);
+        if(isbn != null)
+            condition.put("isbn", isbn);
+        if(subject != null && !subject.equals("-1"))
+            condition.put("subject", subject);
+        if(publishState != null && !publishState.equals("-1"))
+            condition.put("publishState", publishState);
+        if(state != null && !state.equals("-1"))
+            condition.put("state", state);
+        
+        Page<Product> products = mediaResourceService.pagePreProducts(curPage, pageSize, condition);
         DataTableSource<Product> dts = convertToDataTableSource(draw, products);
         return new JsonData(dts);
     }

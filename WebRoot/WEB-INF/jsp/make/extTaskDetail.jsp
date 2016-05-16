@@ -105,6 +105,9 @@
                                   <h3 class="box-title"><span>权属声明列表</span></h3>
                               </div>
                               <div class="box-body">
+                                  <div style="height: 40px;">
+                                      <button class="btn btn-default pull-right ml10" onclick="popCopyrightFileModal();"><i class="fa fa-star-half-empty"></i> 上传权属文件</button>
+                                  </div>
                                   <table id="docTbl" class="table table-bordered">
                                     <tbody>
                                         
@@ -281,9 +284,9 @@
                   <input id="finishedDoc" type="hidden" value="0"/>
                   <div class="col-xs-12">
                       <div class="form-group required">
-                          <label for="inputFile" class="col-xs-2 control-label">合同文件</label>
-                          <div id="docUploadDiv" class="col-xs-10">
-                              <input id="importCopyrightFile" name="importCopyrightFile" type="file" class="form-control"/>
+                          <label for="inputFile" class="col-xs-3 control-label">权属声明文件</label>
+                          <div id="docUploadDiv" class="col-xs-9">
+                              <input id="importCopyrightFile" name="importFile" type="file" class="form-control"/>
                               <ul id="uploadedCopyrightFile"></ul>
                               <input type="hidden" id="inputCopyrightFile"/>
                           </div>
@@ -382,7 +385,7 @@
     <script>
       $(document).ready(function(){
           loadMakeTaskAudioes();
-          loadContractDocs();
+          loadCopyrightFiles();
           
           $('#importFile').fileupload({
               url: '<idp:url value="/uploadAudio"/>',
@@ -423,7 +426,7 @@
           )
       }
       
-      function loadContractDocs() {
+      function loadCopyrightFiles() {
           $.get(
               '<idp:url value="/make/listMakeTaskCopyrightFiles"/>?makeTaskId=${task.id}',
               {},
@@ -636,7 +639,7 @@
           $.post(
               '<idp:url value="/make/uploadMakeTaskCopyrightFile"/>',
               {
-                  "id": makeTaskId,
+                  "makeTaskId": makeTaskId,
                   "fileUrl": fileUrl
               },
               function(json) {

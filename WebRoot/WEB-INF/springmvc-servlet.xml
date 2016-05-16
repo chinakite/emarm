@@ -22,7 +22,7 @@
                         http://www.springframework.org/schema/tx                            
                         http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
                         http://www.springframework.org/schema/task 
-                        http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+                        http://www.springframework.org/schema/task/spring-task-3.0.xsd">
  	<!-- 开启注解处理器 -->
     <context:annotation-config></context:annotation-config>
     

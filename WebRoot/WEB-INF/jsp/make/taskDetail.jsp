@@ -113,6 +113,24 @@
                   </div> 
               </div><!-- /.box -->
             </div><!-- /.col -->
+            
+            <div class="col-md-12">
+                <div class="box box-emarm">
+                  <div class="box-header with-border">
+                      <h3 class="box-title"><span>权属声明列表</span></h3>
+                  </div>
+                  <div class="box-body">
+                      <div style="height: 40px;">
+                          <button class="btn btn-default pull-right ml10" onclick="popCopyrightFileModal();"><i class="fa fa-star-half-empty"></i> 上传权属文件</button>
+                      </div>
+                      <table id="docTbl" class="table table-bordered">
+                        <tbody>
+                            
+                        </tbody>
+                      </table>
+                  </div> 
+                </div><!-- /.box -->
+            </div>
           </div><!-- /.row -->
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
@@ -322,10 +340,20 @@
         {{/each}}
     </script>
     
+    <script id="docTblTmpl" type="text/html">
+        {{each doclist as doc idx}}
+           <tr>
+              <td>{{doc.createTime}}</td>
+              <td><a href="<idp:ctx/>{{doc.fileUrl}}">下载</a></td>
+           </tr>
+        {{/each}}
+    </script>
+    
     <!-- page script -->
     <script>
       $(document).ready(function(){
           loadMakeTaskAudioes();
+          loadCopyrightFiles();
           
           $('#importFile').fileupload({
               url: '<idp:url value="/uploadAudio"/>',
@@ -353,6 +381,21 @@
                   
               }
           )
+      }
+      
+      function loadCopyrightFiles() {
+          $.get(
+              '<idp:url value="/make/listMakeTaskCopyrightFiles"/>?makeTaskId=${task.id}',
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var data = result.data;
+                      var html = template('docTblTmpl', {doclist: data});
+                      $('#docTbl tbody').html(html);
+                  }
+              }
+          );
       }
       
       function popSectionModal() {

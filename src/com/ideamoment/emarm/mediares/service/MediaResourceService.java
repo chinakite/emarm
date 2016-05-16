@@ -59,6 +59,14 @@ public class MediaResourceService {
     {
         return mediaResourceDao.pageProducts(curPage, pageSize, condition);
     }
+    
+    @IdeaJdbcTx
+    public Page<Product> pagePreProducts(int curPage,
+                                         int pageSize,
+                                         HashMap<String, String> condition)
+    {
+        return mediaResourceDao.pagePreProducts(curPage, pageSize, condition);
+    }
 
     @IdeaJdbcTx
     public void saveProductImage(String productId,
@@ -219,4 +227,6 @@ public class MediaResourceService {
         
         
     }
+
+    
 }
