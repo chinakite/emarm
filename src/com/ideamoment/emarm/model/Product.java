@@ -86,6 +86,9 @@ public class Product extends HistoriableEntity {
     @Property(dataItem="C_RESERVED", type=DataItemType.VARCHAR, length=1)
     private String reserved;
     
+    @Property(dataItem="C_IN_MEDIARES", type=DataItemType.VARCHAR, length=1)
+    private String inMediaRes;
+    
     @Ref
     private Author author;
     
@@ -593,6 +596,20 @@ public class Product extends HistoriableEntity {
      */
     public void setEvaInvitation(EvaluationInvitation evaInvitation) {
         this.evaInvitation = evaInvitation;
+    }
+    
+    /**
+     * @return the inMediaRes
+     */
+    public String getInMediaRes() {
+        return inMediaRes;
+    }
+    
+    /**
+     * @param inMediaRes the inMediaRes to set
+     */
+    public void setInMediaRes(String inMediaRes) {
+        this.inMediaRes = inMediaRes;
     }
     
 }

@@ -214,6 +214,12 @@ public class MediaResourceAction {
         }  
     }
     
+    @RequestMapping(value="/mediares/productToMediares", method=RequestMethod.POST)
+    public JsonData productToMediares(String productId) {
+        mediaResourceService.productToMediares(productId);
+        return JsonData.SUCCESS;
+    }
+    
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {
         DataTableSource<Product> dts = new DataTableSource<Product>();
         

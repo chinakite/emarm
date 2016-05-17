@@ -4,7 +4,6 @@
 package com.ideamoment.emarm.mediares.service;
 
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,11 +12,14 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ideamoment.emarm.mediares.MediaResourceException;
+import com.ideamoment.emarm.mediares.MediaResourceExceptionCode;
 import com.ideamoment.emarm.mediares.dao.MediaResourceDao;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductAudio;
 import com.ideamoment.emarm.model.ProductImage;
 import com.ideamoment.emarm.model.User;
+import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideadp.appcontext.IdeaApplicationContext;
 import com.ideamoment.ideadp.usercontext.UserContext;
 import com.ideamoment.ideajdbc.IdeaJdbc;
@@ -228,5 +230,22 @@ public class MediaResourceService {
         
     }
 
+    @IdeaJdbcTx
+    public void productToMediares(String productId) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        Product product = IdeaJdbc.find(Product.class, productId);
+        if(YesOrNo.YES.equals(product.getInMediaRes())) {
+            throw new MediaResourceException(MediaResourceExceptionCode.ALREADY_IN_MEDIARES, "Product[" + product + "] is already in mediares.");
+        }
+        
+        product.setInMediaRes(YesOrNo.YES);
+        product.setModifier(userId);
+        product.setModifyTime(new Date());
+        
+        IdeaJdbc.update(product);
+    }
     
 }

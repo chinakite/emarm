@@ -164,6 +164,25 @@
       <%@ include file="../footer.jsp"%>
     </div><!-- ./wrapper -->
 
+    <div id="mediaresModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <input type="hidden" id="toMediaresProductId"/>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">进入媒资库</h4>
+          </div>
+          <div class="modal-body">
+              <p>确定将此作品进入媒资库吗？</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeMediaresModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="submitToMediares();">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <!-- jQuery 2.1.4 -->
     <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
     <!-- Bootstrap 3.3.5 -->
@@ -320,7 +339,7 @@
                           var role = '${sessionScope.__SESSION__USER__.role}';
                           var html = '<a href=\'<idp:url value="/mediares/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               html += '<span class="small">|</span> ';
-                              html += '<a onclick="popPassModal(\'' + full.id + '\');">进入媒资库</a>';
+                              html += '<a onclick="popMediaresModal(\'' + full.id + '\');">进入媒资库</a>';
                           return html;
                       }
                   }
@@ -566,6 +585,42 @@
           $('#audioCopyrightDiv').hide();
           $('#audioDescDiv').hide();
       }
+      
+      function popMediaresModal(id) {
+          $('#toMediaresProductId').val(id);
+          $('#mediaresModal').modal('show');
+      }
+      
+      function closeMediaresModal(id) {
+          $('#toMediaresProductId').val('');
+          $('#mediaresModal').modal('hide');
+      }
+      
+      function submitToMediares() {
+          var productId = $('#toMediaresProductId').val();
+          $.post(
+              '<idp:url value="/mediares/productToMediares"/>',
+              {
+                  "productId": productId
+              },
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      alert('保存成功');
+                      table.ajax.reload();
+                      
+                      closeMediaresModal();
+                  }else{
+                      if(result.code = "MRES-00001") {
+                          alert('作品已经在媒资库了，不需要再次进入.');
+                      }else if(result.code = "MRES-00002") {
+                          alert('权属文件不全，不能进入媒资库。');
+                      }
+                  }
+              }
+          );
+      }
+      
       
       //--------------- 评价 ---------------------
       function popEvaluationModal(id, name) {

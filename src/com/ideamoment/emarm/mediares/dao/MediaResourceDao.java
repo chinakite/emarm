@@ -14,6 +14,7 @@ import com.ideamoment.emarm.model.ProductAudio;
 import com.ideamoment.emarm.model.ProductImage;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
+import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideajdbc.IdeaJdbc;
 import com.ideamoment.ideajdbc.action.Page;
 import com.ideamoment.ideajdbc.action.Query;
@@ -45,6 +46,7 @@ public class MediaResourceDao {
                      + " LEFT JOIN t_subject s "
                      + " ON s.C_ID = p.C_SUBJECT_ID "
                      + " WHERE p.C_TYPE = :type "
+                     + " AND p.C_IN_MEDIARES = " + YesOrNo.YES
                      + " AND p.C_STATE in (:states) ";
 
         if (condition.get("productName") != null) {
@@ -139,6 +141,7 @@ public class MediaResourceDao {
                      + " LEFT JOIN t_subject s "
                      + " ON s.C_ID = p.C_SUBJECT_ID "
                      + " WHERE p.C_TYPE = :type "
+                     + " AND p.C_IN_MEDIARES = " + YesOrNo.NO
                      + " AND p.C_STATE in (:states) ";
 
         if (condition.get("productName") != null) {
