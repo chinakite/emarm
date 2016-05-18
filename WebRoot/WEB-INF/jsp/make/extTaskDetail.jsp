@@ -153,6 +153,17 @@
                               </div>
                           </div>
                       </div>
+                      <div class="form-group required">
+                          <label for="inputIsSample" class="col-xs-2 control-label">是否样音</label>
+                          <div id="docUploadDiv" class="col-xs-10">
+                              <div class="col-xs-2 radio">
+                                  <label for="isSample"><input id="isSample" name="inputIsSample" type="radio" value="1"/>是</label>
+                              </div>
+                              <div class="col-xs-2 radio">
+                                  <label for="notSample"><input id="notSample" name="inputIsSample" type="radio" value="0" checked/>否</label>
+                              </div>
+                          </div>
+                      </div>
                   </div>
               </form>
           </div>
@@ -329,7 +340,7 @@
         {{each audioes as audio index}}
             <div class="box box-default box-solid collapsed-box" rel="{{audio.id}}">
               <div class="box-header with-border">
-                  <span>{{audio.title}}</span>
+                  <span>{{audio.title}}{{if audio.isSample == 1}}<span class="text-green">【样音】</span>{{/if}}</span>
                   <div class="box-tools pull-right">
                     <button class="btn btn-box-tool" onclick="popAudioModal('{{audio.id}}');"><i class="fa fa-up"></i>上传</button>
                     <button class="btn btn-box-tool mr30" onclick="popAuditModal('{{audio.id}}');"><i class="fa fa-up"></i>评论</button>
@@ -457,12 +468,14 @@
       
       function submitSection() {
           var name = $('#inputSectionName').val();
+          var isSample = $('input[name=inputIsSample]:checked').val();
           
           $.post(
               '<idp:url value="/make/createSection"/>',
               {
                   "name": name,
-                  "makeTaskId": '${task.id}'   
+                  "makeTaskId": '${task.id}',
+                  "isSample": isSample
               },
               function(json) {
                   var result = $.parseJSON(json);

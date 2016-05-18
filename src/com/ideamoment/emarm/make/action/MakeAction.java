@@ -313,8 +313,8 @@ public class MakeAction {
     }
     
     @RequestMapping(value="/make/createSection", method=RequestMethod.POST)
-    public JsonData createSection(String name, String makeTaskId) {
-        makeService.createSection(name, makeTaskId);
+    public JsonData createSection(String name, String makeTaskId, String isSample) {
+        makeService.createSection(name, makeTaskId, isSample);
         return JsonData.SUCCESS;
     }
     

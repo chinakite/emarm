@@ -396,7 +396,7 @@ public class MakeService {
     }
 
     @IdeaJdbcTx
-    public void createSection(String name, String makeTaskId) {
+    public void createSection(String name, String makeTaskId, String isSample) {
         MakeTask task = IdeaJdbc.find(MakeTask.class, makeTaskId);
         if(task == null) {
             throw new IdeaDataException(IdeaDataExceptionCode.DATA_NOU_FOUND, "MakeTask[" + makeTaskId + "] is not found.");
@@ -419,6 +419,7 @@ public class MakeService {
         mta.setModifier(userId);
         mta.setModifyTime(curTime);
         mta.setTitle(name);
+        mta.setIsSample(isSample);
         
         IdeaJdbc.save(mta);
     }
@@ -581,6 +582,7 @@ public class MakeService {
         pa.setModifier(userId);
         pa.setModifyTime(curTime);
         pa.setProductId(task.getProductId());
+        pa.setIsSample(mta.getIsSample());
         
         IdeaJdbc.save(pa);
     }

@@ -24,6 +24,9 @@ public class MakeTaskAudio extends HistoriableEntity {
     @Property(dataItem="C_STATE", type=DataItemType.VARCHAR, length=2)
     private String state = YesOrNo.NO;
     
+    @Property(dataItem="C_IS_SAMPLE", type=DataItemType.VARCHAR, length=2)
+    private String isSample = YesOrNo.NO;
+    
     /**
      * @return the makeTaskId
      */
@@ -64,6 +67,20 @@ public class MakeTaskAudio extends HistoriableEntity {
      */
     public void setState(String state) {
         this.state = state;
+    }
+    
+    /**
+     * @return the isSample
+     */
+    public String getIsSample() {
+        return isSample;
+    }
+    
+    /**
+     * @param isSample the isSample to set
+     */
+    public void setIsSample(String isSample) {
+        this.isSample = isSample;
     }
     
 }

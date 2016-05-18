@@ -3,6 +3,7 @@
  */
 package com.ideamoment.emarm.model;
 
+import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
@@ -21,6 +22,9 @@ public class ProductAudio extends HistoriableEntity{
     
     @Property(dataItem="C_FILE_URL", type=DataItemType.VARCHAR, length=1000)
     private String fileUrl;
+    
+    @Property(dataItem="C_IS_SAMPLE", type=DataItemType.VARCHAR, length=2)
+    private String isSample = YesOrNo.NO;
 
     
     /**
@@ -70,5 +74,17 @@ public class ProductAudio extends HistoriableEntity{
         this.fileUrl = fileUrl;
     }
     
+    /**
+     * @return the isSample
+     */
+    public String getIsSample() {
+        return isSample;
+    }
     
+    /**
+     * @param isSample the isSample to set
+     */
+    public void setIsSample(String isSample) {
+        this.isSample = isSample;
+    }
 }

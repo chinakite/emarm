@@ -794,7 +794,7 @@
     
     <script id="audioListTmpl" type="text/html">
         {{each audiolist as au}}
-            <li class="col-md-4 list-group-item"><strong>{{au.name}}</strong><a href="<idp:ctx/>{{au.fileUrl}}" class="label pull-right bg-green ml10">下载</a><a class="label pull-right bg-red" onclick="deleteProductAudio('{{au.id}}')">删除</a></li>
+            <li class="col-md-4 list-group-item"><strong>{{au.name}}</strong>{{if au.isSample == 1}}<span class="text-green">【样音】</span>{{/if}}<a href="<idp:ctx/>{{au.fileUrl}}" class="label pull-right bg-green ml10">下载</a><a class="label pull-right bg-red" onclick="deleteProductAudio('{{au.id}}')">删除</a></li>
         {{/each}}
     </script>
     
