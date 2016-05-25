@@ -57,12 +57,12 @@
         <section class="content-header">
             <h1 class="detailTitle col-xs-6">合同编号：${contract.code}</h1>
             <c:if test="${contract.state != '10'}">
-            <c:if test="${contract.state == '0' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '32') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '31') != '-1'}">
-                <button class="btn btn-default pull-right ml10" onclick="deleteProduct('${contract.id}');"><i class="fa fa-remove"></i> 删除</button>
-                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${contract.id}');"><i class="fa fa-edit"></i> 编辑</button>
-            </c:if>
-            <button class="btn btn-default pull-right ml10" onclick="finishContract();"><i class="fa fa-remove"></i> 确认完成</button>
-            <button class="btn btn-default pull-right ml10" onclick="popUploadContractDoc('${contract.id}');"><i class="fa fa-remove"></i> 上传合同</button>
+                <c:if test="${contract.state == '0' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '32') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '31') != '-1'}">
+                    <button class="btn btn-default pull-right ml10" onclick="deleteProduct('${contract.id}');"><i class="fa fa-remove"></i> 删除</button>
+                    <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${contract.id}');"><i class="fa fa-edit"></i> 编辑</button>
+                </c:if>
+                <button class="btn btn-default pull-right ml10" onclick="finishContract();"><i class="fa fa-remove"></i> 确认完成</button>
+                <button class="btn btn-default pull-right ml10" onclick="popUploadContractDoc('${contract.id}');"><i class="fa fa-remove"></i> 上传合同</button>
             </c:if>
         </section>
 

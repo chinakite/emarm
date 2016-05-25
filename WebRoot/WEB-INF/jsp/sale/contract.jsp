@@ -110,9 +110,11 @@
                       </div>
                     </form>
                 </div>
+                <!--
                 <div class="tblToolbar">
                     <button class="btn btn-default ml10" onclick="popSaleContractModal();"><i class="fa fa-plus"></i>&nbsp;新建合同</button>
                 </div>
+                -->
                 <div class="box-body">
                   <table id="productTbl" class="table table-bordered table-hover">
                     <thead>
@@ -148,7 +150,7 @@
             <h4 class="modal-title">新建销售合同</h4>
           </div>
           <div class="modal-body">
-              <form class="form-horizontal">
+              <form id="saleContractForm" class="form-horizontal">
                   <input type="hidden" id="inputContractId"/>
                   <input type="hidden" id="contractProductIds"/>
                   <div class="col-md-12">
@@ -599,6 +601,10 @@
                   }
               ]
           });
+      }
+      
+      function popSaleContractModal() {
+          $('#contractModal').modal('show');
       }
       
       function submitProduct(submit) {

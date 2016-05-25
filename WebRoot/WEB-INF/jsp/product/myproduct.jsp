@@ -545,7 +545,7 @@
               done: function (e, data) {
                      var fileUrl = data['result']['data'][0]['fileUrl'];
                      var fileName = data['result']['data'][0]['fileName'];
-                     $('#uploadedFile').append('<li>'+fileName+'</li>');
+                     $('#uploadedFile').append('<li>'+fileName+'&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-remove text-red" onclick="removeSample(this);"></i></li>');
                      $('#inputSamples').val(fileUrl);
               }
           });
@@ -556,7 +556,7 @@
               done: function (e, data) {
                      var fileUrl = data['result']['data'][0]['fileUrl'];
                      var fileName = data['result']['data'][0]['fileName'];
-                     $('#uploadedCopyrightFiles').append('<li>'+fileName+'</li>');
+                     $('#uploadedCopyrightFiles').append('<li>'+fileName+'&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-remove text-red" onclick="removeCopyright(this);"></i></li>');
                      var oldInputCoprygiths = $('#inputCopyrights').val();
                      var copyrights = '';
                      if(oldInputCoprygiths && oldInputCoprygiths != null && oldInputCoprygiths != '') {
@@ -804,7 +804,7 @@
               var audioDesc = $('#inputAudioDesc').val();
               var samples = $('#inputSamples').val();
               var isbn = $('#inputIsbn').val();
-              var copyrights = $('#inputCopyrights').val();;
+              var copyrights = $('#inputCopyrights').val();
               
               $.post(
                   '<idp:url value="/evaluation/product"/>',
@@ -863,6 +863,31 @@
       function clearProductModal() {
           $('#inputId').val('');
           $('#inputName').val('');
+          $('#inputAuthorName').val('');
+          $('#inputAuthorPseudonym').val('');
+          $('#inputWordCount').val('');
+          $('#inputSubject')[0].selectedIndex = 0;
+          $('#inputPublishState')[0].selectedIndex = 0;
+          $('#inputPublishYear')[0].selectedIndex = 0;
+          $('#inputPress').val('');
+          $('#inputFinishYear')[0].selectedIndex = 0;
+          $('#inputWebsite').val('');
+          $('#inputSummary').val('');
+          $('#hasAudio').prop('checked', true);
+          $('#inputIsbn').val('');
+          $('#inputAudioCopyright')[0].selectedIndex = 0;
+          $('#inputAudioDesc').val('');
+          
+          $('#inputSamples').val('');
+          $('#uploadedFile').empty();
+          $('#samplesShowDiv').hide();
+          
+          $('#inputCopyrights').val('');
+          $('#uploadedCopyrightFiles').empty();
+          $('#copyrightsShowDiv').hide();
+          
+          $('#productModal .has-error').removeClass('has-error');
+          $('#productModal .feedback-tip').hide();
       }
       
       function popAuditProduct(id, name) {
@@ -1072,6 +1097,28 @@
           );
       }
       
+      function removeSample(obj) {
+          $(obj).parent().remove();
+          $('#inputSamples').val('');
+      }
+      
+      function removeCopyright(obj) {
+          var idx = $(obj).parent().index();
+          
+          var oldCopyrights = $('#inputCopyrights').val();
+          var arr = oldCopyrights.split(',');
+          var newArr = [];
+          for(var i=0; i<arr.length; i++) {
+              if(i!=idx) {
+                newArr.push(arr[i]);
+              }
+          }
+          var copyrights = newArr.join(',');
+          $('#inputCopyrights').val(copyrights);
+          
+          $(obj).parent().remove();
+          
+      }
       
       //================= Product Validator ===========
       function validateName() {

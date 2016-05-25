@@ -61,12 +61,12 @@
       <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-          <h1>评价管理
-            <small>所有作品的评价信息。</small>
+          <h1>运营管理
+            <small>所有作品的运营信息。</small>
           </h1>
           <ol class="breadcrumb">
             <li><a href='<idp:url value="/home"/>'><i class="fa fa-home"></i> 首页</a></li>
-            <li class="active">评价管理</li>
+            <li class="active">运营管理</li>
           </ol>
         </section>
 
@@ -82,59 +82,71 @@
                     <form class="form-horizontal">
                       <div class="box-body">
                         <div class="col-sm-12">
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchProductName" class="col-sm-3 control-label">作品名称</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" id="inputSearchProductName" placeholder="作品名称关键字">
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchAuthorName" class="col-sm-3 control-label">作者姓名</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" id="inputSearchAuthorName" placeholder="作者姓名">
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchIsbn" class="col-sm-3 control-label">ISBN号</label>
-                          <div class="col-sm-9">
-                            <input type="text" class="form-control" id="inputSearchIsbn" placeholder="ISBN号">
-                          </div>
-                        </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label for="inputSearchProductName" class="col-xs-3 control-label">作品名称</label>
+                                  <div class="col-xs-9">
+                                    <input type="text" class="form-control" id="inputSearchProductName" placeholder="作品名称关键字">
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label for="inputSearchAuthorName" class="col-xs-3 control-label">作者姓名</label>
+                                  <div class="col-xs-9">
+                                    <input type="text" class="form-control" id="inputSearchAuthorName" placeholder="作者姓名">
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label for="inputSearchIsbn" class="col-xs-3 control-label">ISBN号</label>
+                                  <div class="col-xs-9">
+                                    <input type="text" class="form-control" id="inputSearchIsbn" placeholder="ISBN号">
+                                  </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-sm-12">
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchSubject" class="col-sm-3 control-label">作品题材</label>
-                          <div class="col-sm-9">
-                            <select id="inputSearchSubject" class="form-control">
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchPublishState" class="col-sm-3 control-label">出版状态</label>
-                          <div class="col-sm-9">
-                            <select id="inputSearchPublishState" class="form-control">
-                                <option value="-1">全部</option>
-                                <option value="0">已出版</option>
-                                <option value="1">网络签约</option>
-                                <option value="2">网络未签约</option>
-                                <option value="3">未公开</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group col-sm-4">
-                          <label for="inputSearchState" class="col-sm-3 control-label">作品状态</label>
-                          <div class="col-sm-9">
-                            <select id="inputSearchState" class="form-control">
-                                <option value="-1">全部</option>
-                                <option value="0">草稿</option>
-                                <option value="1">待审核</option>
-                                <option value="101">审核不过</option>
-                                <option value="2">待评价</option>
-                                <option value="3">已评价</option>
-                                <option value="4">评价完成</option>
-                            </select>
-                          </div>
-                          </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label for="inputSearchSubject" class="col-xs-3 control-label">作品题材</label>
+                                  <div class="col-xs-9">
+                                    <select id="inputSearchSubject" class="form-control">
+                                    </select>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="form-group">
+                                  <label for="inputSearchPublishState" class="col-xs-3 control-label">出版状态</label>
+                                  <div class="col-xs-9">
+                                    <select id="inputSearchPublishState" class="form-control">
+                                        <option value="-1">全部</option>
+                                        <option value="0">已出版</option>
+                                        <option value="1">网络签约</option>
+                                        <option value="2">网络未签约</option>
+                                        <option value="3">未公开</option>
+                                    </select>
+                                  </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">  
+                                <div class="form-group">
+                                  <label for="inputSearchState" class="col-xs-3 control-label">作品状态</label>
+                                  <div class="col-xs-9">
+                                    <select id="inputSearchState" class="form-control">
+                                        <option value="-1">全部</option>
+                                        <option value="0">草稿</option>
+                                        <option value="1">待审核</option>
+                                        <option value="101">审核不过</option>
+                                        <option value="2">待评价</option>
+                                        <option value="3">已评价</option>
+                                        <option value="4">评价完成</option>
+                                    </select>
+                                  </div>
+                                </div>
+                            </div>    
                         </div>
                       </div><!-- /.box-body -->
                       <div style="text-align: center;">
@@ -164,7 +176,9 @@
           </div><!-- /.row -->
         </section><!-- /.content -->
       </div><!-- /.content-wrapper -->
-      
+      <div class="prodPack hand" onclick="listPackItems();">
+          <label id="packItemCount" class="label label-warning">0</label>
+      </div>
       <%@ include file="../footer.jsp"%>
     </div><!-- ./wrapper -->
 
@@ -421,6 +435,37 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    
+    <div id="packModal" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">作品包</h4>
+          </div>
+          <div class="modal-body">
+              <table id="packProductTbl" class="table table-bordered table-hover dataTable no-footer w100p">
+                  <thead>
+                      <tr>
+                          <th>作品名称</th>
+                          <th>作者</th>
+                          <th>操作</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td colspan="3" width="100%">当前作品包内没有作品。</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="toCreateSaleContract();">创建合同</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- jQuery 2.1.4 -->
     <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
@@ -471,6 +516,16 @@
         {{/each}}
     </script>
     
+    <script id="packProdTblTmpl" type="text/html">
+        {{each prodlist as prod idx}}
+           <tr rel="{{prod.id}}">
+              <td width="40%">{{prod.name}}</td>
+              <td width="40%">{{prod.author.name}}</td>
+              <td><a href="javascript:void(0);" onclick="deletePackItem('{{prod.id}}');">删除</a></td>
+          </tr>
+        {{/each}}
+    </script>
+    
     <!-- page script -->
     <script>
       var table;
@@ -480,6 +535,7 @@
           $('#menu_sale_prod').addClass('active');
       
           initProductTbl();
+          countPackItem();
           //loadCategories();
       });
       
@@ -637,6 +693,9 @@
                           var html = '<a href=\'<idp:url value="/mediares/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               html += ' <span class="small">|</span> ';
                               html += '<a onclick="popContractModal(\'' + full.id + '\');">创建合同</a>';
+                              html += ' <span class="small">|</span> ';
+                              html += '<a onclick="addToPack(\'' + full.id + '\');">加入合同包</a>';
+                          
                           
                           if(full.contractCount && full.contractCount > 0) {
                               html += ' <span class="small">|</span> ';
@@ -694,7 +753,7 @@
               idarr.push(prodId);
               pricearr.push($(ele).val());
           }
-          var contractProductIds = idarr.join(',');
+          var contractProductIds = $('#contractProductIds').val();
           var prices = pricearr.join(',');
           
           var owner = $('#inputOwner').val();
@@ -1045,6 +1104,121 @@
                   }
               }
           );
+      }
+      
+      function countPackItem() {
+          $.get(
+              '<idp:url value="/sale/packItemCount"/>',
+              {},
+              function(json) {
+                  var data = IDEA.parseJSON(json);
+                  if(data.type == 'success') {
+                      var count = data.data;
+                      $('#packItemCount').text(count);
+                  }else{
+                      alert("获取作品包信息失败。");
+                  } 
+              }
+          );
+      }
+      
+      function addToPack(id) {
+          $.post(
+              '<idp:url value="/sale/addToPack"/>',
+              {productId: id},
+              function(json) {
+                  var data = IDEA.parseJSON(json);
+                  if(data.type == 'success') {
+                      var c = $('#packItemCount').text();
+                      c = parseInt(c);
+                      c++;
+                      $('#packItemCount').text(c);
+                  }else{
+                      alert("加入失败，作品包内已有该作品。");
+                  } 
+              }
+          );
+      }
+      
+      function listPackItems() {
+          $.get(
+              '<idp:url value="/sale/listPackItems"/>',
+              {},
+              function(json) {
+                  var data = IDEA.parseJSON(json);
+                  if(data.type == 'success') {
+                      var prodlist = data.data;
+                      if(prodlist && prodlist.length > 0) {
+                          var prodTblHtml = template('packProdTblTmpl', {'prodlist': prodlist});
+                          $('#packProductTbl tbody').html(prodTblHtml);
+                      }
+                      
+                      $('#packModal').modal('show');
+                  }else{
+                      alert("获取作品包信息失败。");
+                  } 
+              }
+          );
+      }
+      
+      function deletePackItem(id) {
+          $.post(
+              '<idp:url value="/sale/deletePackItem"/>',
+              {productId: id},
+              function(json) {
+                  var data = IDEA.parseJSON(json);
+                  if(data.type == 'success') {
+                      var c = $('#packItemCount').text();
+                      c = parseInt(c);
+                      c--;
+                      $('#packItemCount').text(c);
+                      $('#packProductTbl tr[rel=' + id + ']').remove();
+                      if($('#packProductTbl tr[rel]').length == 0){
+                          $('#packProductTbl tbody').html('<tr><td colspan="3">当前作品包内没有作品。</td></tr>');                       
+                      } 
+                  }else{
+                      alert("删除失败，作品包内未找到该作品。");
+                  } 
+              }
+          );
+      }
+      
+      function toCreateSaleContract() {
+          var prodList = $('#packProductTbl tr[rel]');
+          
+          if(prodList.length == 0) {
+              alert("作品包内没有作品，不能创建合同");
+              return;
+          }
+          
+          var prodIds = [];
+          var prodNames = [];
+          for(var i=0; i<prodList.length; i++) {
+              var id = $(prodList[i]).attr('rel');
+              var name = $(prodList[i]).children('td:first').text();
+              prodIds.push(id);
+              prodNames.push(name);
+          }
+          $('#packModal').modal('hide');
+          popBatchContractModal(prodIds.join(','), prodNames);
+      }
+      
+      //--------------- 批量新建合同 ---------------------
+      function popBatchContractModal(ids, names) {
+          clearContractModal();
+          $('#contractProductIds').val(ids);
+          var prodlist = [];
+          for(var i=0; i<names.length; i++) {
+              prodlist.push({name: names[i]});
+          }
+          
+          var prodTblHtml = template('contractProdTblTmpl', {'prodlist': prodlist});
+          $('#contractProductTbl').html(prodTblHtml);
+          $('#inputOwner').val('北京广播公司');
+          $('#inputBuyer').val('');
+          
+          $('#contractModal').modal('show');
+
       }
     </script>
   </body>

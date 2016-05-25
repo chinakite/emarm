@@ -4,8 +4,13 @@
 package com.ideamoment.emarm.sale.action;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.SaleContract;
 import com.ideamoment.emarm.model.SaleContractDoc;
+import com.ideamoment.emarm.product.service.ProductService;
+import com.ideamoment.emarm.sale.SaleExceptionCode;
 import com.ideamoment.emarm.sale.service.SaleService;
 import com.ideamoment.emarm.util.DataTableSource;
 import com.ideamoment.ideadp.restful.json.JsonData;
@@ -30,6 +37,9 @@ import com.ideamoment.wx.util.StringUtils;
 public class SaleAction {
     @Autowired
     private SaleService saleService;
+    
+    @Autowired
+    private ProductService productService;
 
     /**
      * @return the saleService
@@ -45,6 +55,21 @@ public class SaleAction {
         this.saleService = saleService;
     }
     
+    /**
+     * @return the productService
+     */
+    public ProductService getProductService() {
+        return productService;
+    }
+
+    
+    /**
+     * @param productService the productService to set
+     */
+    public void setProductService(ProductService productService) {
+        this.productService = productService;
+    }
+
     @RequestMapping(value="/sale/productPage", method=RequestMethod.GET)
     public ModelAndView toTaskProducts() {
         return new ModelAndView("/WEB-INF/jsp/sale/product.jsp");
@@ -223,6 +248,69 @@ public class SaleAction {
     public JsonData countMakeCurMonth() {
         Long count = saleService.countSaleCurMonth();
         return JsonData.success(count);
+    }
+    
+    @RequestMapping(value="/sale/packItemCount", method=RequestMethod.GET)
+    public JsonData countPackItem(HttpServletRequest request) {
+        Set<String> prodPack = (Set<String>)request.getSession().getAttribute("PRODPACK");
+        if(prodPack == null) {
+            prodPack = new TreeSet<String>();
+        }
+        return JsonData.success(prodPack.size());
+    }
+    
+    @RequestMapping(value="/sale/listPackItems", method=RequestMethod.GET)
+    public JsonData listPackItems(HttpServletRequest request) {
+        Set<String> prodPack = (Set<String>)request.getSession().getAttribute("PRODPACK");
+        if(prodPack == null) {
+            prodPack = new TreeSet<String>();
+        }
+        
+        if(prodPack.size() == 0) {
+            return JsonData.success(new ArrayList());
+        }else{
+            StringBuffer ids = new StringBuffer();
+            int i=0;
+            for(String id : prodPack) {
+                if(i > 0) {
+                    ids.append(",");
+                }
+                ids.append(id);
+                i++;
+            }
+            List<Product> products = productService.listProducts(ids.toString());
+            return JsonData.success(products);
+        }
+    }
+    
+    @RequestMapping(value="/sale/addToPack", method=RequestMethod.POST)
+    public JsonData addToPack(HttpServletRequest request, String productId) {
+        Set<String> prodPack = (Set<String>)request.getSession().getAttribute("PRODPACK");
+        if(prodPack == null) {
+            prodPack = new TreeSet<String>();
+        }
+        boolean r = prodPack.add(productId);
+        if(r) {
+            request.getSession().setAttribute("PRODPACK", prodPack);
+            return JsonData.SUCCESS;
+        }else{
+            return JsonData.exception(SaleExceptionCode.ADD_TO_PACK_ERROR, "Duplicate product.");
+        }
+    }
+    
+    @RequestMapping(value="/sale/deletePackItem", method=RequestMethod.POST)
+    public JsonData deletePackItem(HttpServletRequest request, String productId) {
+        Set<String> prodPack = (Set<String>)request.getSession().getAttribute("PRODPACK");
+        if(prodPack == null) {
+            return JsonData.exception(SaleExceptionCode.DELETE_FROM_PACK_ERROR, "Product is not exists.");
+        }
+        boolean r = prodPack.remove(productId);
+        if(r) {
+            request.getSession().setAttribute("PRODPACK", prodPack);
+            return JsonData.SUCCESS;
+        }else{
+            return JsonData.exception(SaleExceptionCode.DELETE_FROM_PACK_ERROR, "Product is not exists.");
+        }
     }
     
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {

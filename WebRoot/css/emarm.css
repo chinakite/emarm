@@ -79,3 +79,13 @@ a{cursor:pointer;}
     overflow-y: auto;
     padding: 0 10px 10px 10px;
 }
+
+.prodPack {
+    position: fixed;
+    right: 15px;
+    bottom: 53px;
+    width: 60px;
+    height: 60px;
+    background: url("../img/box.png") no-repeat;
+    background-size: cover;
+}
