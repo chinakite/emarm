@@ -20,6 +20,7 @@ import com.ideamoment.emarm.model.ProductCopyrightOprtor;
 import com.ideamoment.emarm.model.ProductImage;
 import com.ideamoment.emarm.model.ProductReservedInfo;
 import com.ideamoment.emarm.model.SaleContract;
+import com.ideamoment.emarm.model.SaleContractAudit;
 import com.ideamoment.emarm.model.SaleContractDoc;
 import com.ideamoment.emarm.model.SaleContractProduct;
 import com.ideamoment.emarm.model.Task;
@@ -68,7 +69,8 @@ public class GenerateDb {
 //                    ProductCopyrightFile.class,
 //                    EvaluationInvitation.class,
 //                  ProductCopyrightOprtor.class,
-                MakeTaskCopyrightFile.class
+//                MakeTaskCopyrightFile.class,
+                    SaleContractAudit.class
                 };
         
         for(Class clz : cls) {

@@ -16,6 +16,7 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ideamoment.emarm.model.CopyrightContract;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.SaleContract;
 import com.ideamoment.emarm.model.SaleContractDoc;
@@ -116,22 +117,23 @@ public class SaleService {
             IdeaJdbc.save(sc);
         }
         
-        String scId = sc.getId();
-        saleDao.deleteContractProduct(scId);
-        int i=0;
-        for(String productId : productIdArr) {
-            SaleContractProduct scp = new SaleContractProduct();
-            scp.setProductId(productId);
-            scp.setContactId(scId);
-            scp.setPrice(new BigDecimal(priceArr[i]));
-            i++;
-            IdeaJdbc.save(scp);
-            
-            IdeaJdbc.update(Product.class, productId)
-                    .setProperty("state", ProductState.SALED)
-                    .execute();
+        if(productIdArr != null) {
+            String scId = sc.getId();
+            saleDao.deleteContractProduct(scId);
+            int i=0;
+            for(String productId : productIdArr) {
+                SaleContractProduct scp = new SaleContractProduct();
+                scp.setProductId(productId);
+                scp.setContractId(scId);
+                scp.setPrice(new BigDecimal(priceArr[i]));
+                i++;
+                IdeaJdbc.save(scp);
+                
+                IdeaJdbc.update(Product.class, productId)
+                        .setProperty("state", ProductState.SALED)
+                        .execute();
+            }
         }
-        
     }
     
     private synchronized String createCode(SaleContract sc) {
@@ -230,5 +232,59 @@ public class SaleService {
         DateTime endDate = new DateTime(year, month+1, 1, 0, 0, 0, 0);
         
         return saleDao.countSaleByTime(startDate.toDate(), endDate.toDate());
+    }
+
+    @IdeaJdbcTx
+    public void deleteSaleContract(String contractId) {
+        saleDao.deleteContractAudit(contractId);
+        saleDao.deleteContractDoc(contractId);
+        saleDao.deleteContractProduct(contractId);
+        IdeaJdbc.delete(SaleContract.class, contractId);
+    }
+
+    @IdeaJdbcTx
+    public void deleteContractProduct(String contractId, String productId) {
+        SaleContractProduct scp = saleDao.findSaleContractProduct(contractId, productId);
+        BigDecimal price = scp.getPrice();
+        
+        SaleContract sc = IdeaJdbc.find(SaleContract.class, contractId);
+        BigDecimal totalPrice = sc.getTotalPrice();
+        totalPrice = totalPrice.subtract(price);
+        sc.setTotalPrice(totalPrice);
+        
+        saleDao.deleteContractProduct(contractId, productId);
+        IdeaJdbc.update(sc);
+    }
+
+    @IdeaJdbcTx
+    public void addProductToContract(String contractId,
+                                     String productIds,
+                                     String prices)
+    {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        
+        String[] productIdArr = productIds.split(",");
+        String[] priceArr = prices.split(",");
+        
+        BigDecimal totalPrice = IdeaJdbc.find(SaleContract.class, contractId).getTotalPrice();
+        
+        for(int i=0; i<productIdArr.length; i++) {
+            SaleContractProduct scp = new SaleContractProduct();
+            BigDecimal price = new BigDecimal(priceArr[i]);
+            scp.setContractId(contractId);
+            scp.setPrice(price);
+            scp.setProductId(productIdArr[i]);
+            totalPrice = totalPrice.add(price);
+            IdeaJdbc.save(scp);
+        }
+        
+        
+        IdeaJdbc.update(SaleContract.class, contractId)
+                .setProperty("modifyTime", new Date())
+                .setProperty("modifier", curUser.getId())
+                .setProperty("totalPrice", totalPrice)
+                .execute();
     }
 }

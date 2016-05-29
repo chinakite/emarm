@@ -57,7 +57,7 @@
         <section class="content-header">
             <h1 class="detailTitle col-xs-6">合同编号：${contract.code}</h1>
             <c:if test="${contract.auditState == '0' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '02') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1'}">
-                <button class="btn btn-default pull-right ml10" onclick="deleteProduct('${contract.id}');"><i class="fa fa-remove"></i> 删除</button>
+                <button class="btn btn-default pull-right ml10" onclick="deleteContract();"><i class="fa fa-remove"></i> 删除</button>
                 <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${contract.id}');"><i class="fa fa-edit"></i> 编辑</button>
             </c:if>
             <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || (fn:indexOf(sessionScope.__SESSION__USER__.role, '12') != '-1' && contract.auditState == '1') || (fn:indexOf(sessionScope.__SESSION__USER__.role, '13') != '-1' && contract.auditState == '2') || (fn:indexOf(sessionScope.__SESSION__USER__.role, '90') != '-1' && contract.auditState == '3') || (fn:indexOf(sessionScope.__SESSION__USER__.role, '80') != '-1' && (contract.auditState == '5' || contract.auditState == '7'))}">
@@ -785,17 +785,19 @@
           );
       }
       
-      function deleteProduct(name) {
-          var r = confirm("您真的要删除作品[" + name + "]吗？");
+      function deleteContract() {
+          var r = confirm("您真的要删除此合同吗？");
           if(r) {
               $.post(
-                  '<idp:url value="/evaluation/product/"/>${product.id}',
+                  '<idp:url value="/copyright/copyrightContract/"/>${contract.id}',
                   {'_method': "delete"},
                   function(json) {
                       var result = IDEA.parseJSON(json);
                       if(result.type == 'success') {
                           alert('删除成功');
                           window.close();
+                      }else{
+                          alert('删除失败,请联系管理员查找失败原因.');
                       }
                   }
               );

@@ -425,4 +425,14 @@ public class CopyrightDao {
                                .setParameter("endTime", endTime)
                                .uniqueValue();
     }
+
+    public void deleteContractAudit(String contractId) {
+        String sql = "delete from T_COPYRIGHT_CTRT_AUDIT where C_CONTRACT_ID = :contractId";
+        IdeaJdbc.sql(sql).setParameter("contractId", contractId).execute();
+    }
+
+    public void deleteContractDoc(String contractId) {
+        String sql = "delete from T_COPYRIGHT_CTRT_DOC where C_CONTRACT_ID = :contractId";
+        IdeaJdbc.sql(sql).setParameter("contractId", contractId).execute();
+    }
 }

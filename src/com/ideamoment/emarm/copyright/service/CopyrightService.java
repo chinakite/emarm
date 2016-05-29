@@ -570,5 +570,13 @@ public class CopyrightService {
         
         return copyrightDao.countCopyrightByTime(startDate.toDate(), endDate.toDate());
     }
+
+    @IdeaJdbcTx
+    public void deleteCopyrightContract(String contractId) {
+        copyrightDao.deleteContractAudit(contractId);
+        copyrightDao.deleteContractDoc(contractId);
+        copyrightDao.deleteContractProduct(contractId);
+        IdeaJdbc.delete(CopyrightContract.class, contractId);
+    }
     
 }

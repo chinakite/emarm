@@ -14,10 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ideamoment.emarm.copyright.CopyrightExceptionCode;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.SaleContract;
 import com.ideamoment.emarm.model.SaleContractDoc;
@@ -182,7 +184,9 @@ public class SaleAction {
             sc = new SaleContract();
         }
         
-        sc.setTotalPrice(new BigDecimal(totalPrice));
+        if(StringUtils.isEmpty(contractId)) {
+            sc.setTotalPrice(new BigDecimal(totalPrice));
+        }
         sc.setOwner(owner);
         sc.setOwnerContact(ownerContact);
         sc.setOwnerContactAddress(ownerContactAddress);
@@ -204,10 +208,14 @@ public class SaleAction {
         sc.setBankAccountName(bankAccountName);
         sc.setBankAccountNo(bankAccountNo);
         
-        String[] productIdArr = contractProductIds.split(",");
-        String[] priceArr = prices.split(",");
-        
-        saleService.saveSaleContract(sc, productIdArr, priceArr, submit);
+        if(StringUtils.isEmpty(contractId)) {
+            String[] productIdArr = contractProductIds.split(",");
+            String[] priceArr = prices.split(",");
+            
+            saleService.saveSaleContract(sc, productIdArr, priceArr, submit);
+        }else{
+            saleService.saveSaleContract(sc, null, null, submit);
+        }
         
         return JsonData.SUCCESS;
     }
@@ -313,6 +321,18 @@ public class SaleAction {
         }
     }
     
+    @RequestMapping(value="/sale/deleteContractProduct", method=RequestMethod.POST)
+    public JsonData deleteContractProduct(String contractId, String productId) {
+        saleService.deleteContractProduct(contractId, productId);
+        return JsonData.SUCCESS;
+    }
+    
+    @RequestMapping(value="/sale/addProductToContract", method=RequestMethod.POST)
+    public JsonData addProductToContract(String contractId, String productIds, String prices) {
+        saleService.addProductToContract(contractId, productIds, prices);
+        return JsonData.SUCCESS;
+    }
+    
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {
         DataTableSource<Product> dts = new DataTableSource<Product>();
         
@@ -322,6 +342,17 @@ public class SaleAction {
         dts.setData(productsPage.getData());
         
         return dts;
+    }
+    
+    @RequestMapping(value="/sale/saleContract/{id}", method=RequestMethod.DELETE)
+    public JsonData deleteSaleContract(@PathVariable String id){
+        try{
+            saleService.deleteSaleContract(id);
+        }catch(Exception e) {
+            e.printStackTrace();
+            JsonData.exception(SaleExceptionCode.DELETE_CONTRACT_ERR, "Delete contract error.");
+        }
+        return JsonData.SUCCESS;
     }
     
     private DataTableSource<SaleContract> convertContractsToDataTableSource(int draw, Page<SaleContract> contractsPage) {

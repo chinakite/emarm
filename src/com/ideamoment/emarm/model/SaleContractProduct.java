@@ -17,7 +17,7 @@ import com.ideamoment.ideadata.annotation.Property;
 @Entity(dataSet="T_SALE_CTRT_PROD")
 public class SaleContractProduct extends BaseEntity {
     @Property(dataItem="C_CONTRACT_ID", type=DataItemType.VARCHAR, length=32)
-    private String contactId;
+    private String contractId;
     
     @Property(dataItem="C_PRODUCT_ID", type=DataItemType.VARCHAR, length=32)
     private String productId;
@@ -27,18 +27,18 @@ public class SaleContractProduct extends BaseEntity {
 
     
     /**
-     * @return the contactId
+     * @return the contractId
      */
-    public String getContactId() {
-        return contactId;
+    public String getContractId() {
+        return contractId;
     }
 
     
     /**
-     * @param contactId the contactId to set
+     * @param contractId the contractId to set
      */
-    public void setContactId(String contactId) {
-        this.contactId = contactId;
+    public void setContractId(String contractId) {
+        this.contractId = contractId;
     }
 
     

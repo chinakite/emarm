@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ideamoment.emarm.copyright.CopyrightExceptionCode;
 import com.ideamoment.emarm.copyright.service.CopyrightService;
 import com.ideamoment.emarm.model.Author;
 import com.ideamoment.emarm.model.CopyrightContract;
@@ -329,6 +330,18 @@ public class CopyrightAction {
         
         return JsonData.SUCCESS;
     }
+    
+    @RequestMapping(value="/copyright/copyrightContract/{id}", method=RequestMethod.DELETE)
+    public JsonData deleteCopyrightContract(@PathVariable String id){
+        try{
+            copyrightService.deleteCopyrightContract(id);
+        }catch(Exception e) {
+            e.printStackTrace();
+            JsonData.exception(CopyrightExceptionCode.DELETE_CONTRACT_ERR, "Delete contract error.");
+        }
+        return JsonData.SUCCESS;
+    }
+                        
     
     @RequestMapping(value="/copyright/contractDetail", method=RequestMethod.GET)
     public ModelAndView viewContract(String id) {

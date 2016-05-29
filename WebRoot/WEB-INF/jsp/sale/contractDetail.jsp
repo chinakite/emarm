@@ -55,11 +55,12 @@
       <div class="content-wrapper detailContent">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-            <h1 class="detailTitle col-xs-6">合同编号：${contract.code}</h1>
+            <h1 class="detailTitle col-xs-4">合同编号：${contract.code}</h1>
             <c:if test="${contract.state != '10'}">
                 <c:if test="${contract.state == '0' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '32') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '31') != '-1'}">
-                    <button class="btn btn-default pull-right ml10" onclick="deleteProduct('${contract.id}');"><i class="fa fa-remove"></i> 删除</button>
-                    <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${contract.id}');"><i class="fa fa-edit"></i> 编辑</button>
+                    <button class="btn btn-default pull-right ml10" onclick="deleteContract();"><i class="fa fa-remove"></i> 删除</button>
+                    <button class="btn btn-default pull-right ml10" onclick="popEditContract();"><i class="fa fa-edit"></i> 编辑</button>
+                    <button class="btn btn-default pull-right ml10" onclick="selectContractProduct('${contract.id}');"><i class="fa fa-plus"></i> 增加作品</button>
                 </c:if>
                 <button class="btn btn-default pull-right ml10" onclick="finishContract();"><i class="fa fa-remove"></i> 确认完成</button>
                 <button class="btn btn-default pull-right ml10" onclick="popUploadContractDoc('${contract.id}');"><i class="fa fa-remove"></i> 上传合同</button>
@@ -218,6 +219,231 @@
         <strong style="margin-left: 230px;">Copyright &copy; 2014-2015 <a href="http://almsaeedstudio.com">北京广播公司</a>.</strong> All rights reserved.
     </footer>
 
+    <div id="contractModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">新建销售合同</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputOwner" class="col-md-2 control-label">甲方</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputOwner" placeholder="授权方" value="${contract.owner}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputOwner"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputOwnerContact" class="col-md-2 control-label">联系人</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputOwnerContact" placeholder="授权方联系人" value="${contract.ownerContact}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputOwnerContact"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputOwnerContactPhone" class="col-md-2 control-label">联系电话</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputOwnerContactPhone" placeholder="授权方联系电话" value="${contract.ownerContactPhone}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputOwnerContactPhone"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputOwnerContactAddress" class="col-md-2 control-label">联系地址</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputOwnerContactAddress" placeholder="授权方联系地址" value="${contract.ownerContactAddress}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputOwnerContactAddress"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputOwnerContactEmail" class="col-md-2 control-label">电子邮箱</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputOwnerContactEmail" placeholder="授权方电子邮箱" value="${contract.ownerContactEmail}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputOwnerContactEmail"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <hr/>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputBuyer" class="col-md-2 control-label">乙方</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputBuyer" placeholder="被授权方" value="${contract.buyer}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputBuyer"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputBuyerContact" class="col-md-2 control-label">联系人</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputBuyerContact" placeholder="被授权方联系人" value="${contract.buyerContact}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputBuyerContact"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputBuyerContactPhone" class="col-md-2 control-label">联系电话</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputBuyerContactPhone" placeholder="被授权方联系电话" value="${contract.buyerContactPhone}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputBuyerContactPhone"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputBuyerContactAddress" class="col-md-2 control-label">联系地址</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputBuyerContactAddress" placeholder="被授权方联系地址" value="${contract.buyerContactAddress}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputBuyerContactAddress"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputBuyerContactEmail" class="col-md-2 control-label">电子邮箱</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputBuyerContactEmail" placeholder="被授权方电子邮箱" value="${contract.buyerContactEmail}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputBuyerContactEmail"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <hr/>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label class="col-md-2 control-label">授权种类</label>
+                          <div class="col-md-10">
+                              <div class="col-md-4 checkbox">
+                                  <label for="audioEditPrg"><input id="audioEditPrg" name="inputPrivileges" type="checkbox" value="01" <c:if test="${fn:contains(contract.privileges, '01')}">checked</c:if>/>音频改编权</label>
+                              </div>
+                              <div class="col-md-4 checkbox">
+                                  <label for="broadcastPrg"><input id="broadcastPrg" name="inputPrivileges" type="checkbox" value="02" <c:if test="${fn:contains(contract.privileges, '02')}">checked</c:if>/>广播权</label>
+                              </div>
+                              <div class="col-md-4 checkbox">
+                                  <label for="netcastPrg"><input id="netcastPrg" name="inputPrivileges" type="checkbox" value="03" <c:if test="${fn:contains(contract.privileges, '03')}">checked</c:if>/>信息网络传播权</label>
+                              </div>
+                              <div class="col-md-4 checkbox">
+                                  <label for="grantPrg"><input id="grantPrg" name="inputPrivileges" type="checkbox" value="04" <c:if test="${fn:contains(contract.privileges, '04')}">checked</c:if>/>再许可授权</label>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputPrivilegeType" class="col-md-2 control-label">授权方式</label>
+                          <div class="col-md-10">
+                              <select id="inputPrivilegeType" class="form-control">
+                                  <option value="0" <c:if test="${contract.privilegeRange == '0'}">selected</c:if>>专有许可使用</option>
+                                  <option value="1" <c:if test="${contract.privilegeRange == '1'}">selected</c:if>>非专有许可使用</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputPrivilegeRange" class="col-md-2 control-label">授权范围</label>
+                          <div class="col-md-10">
+                              <select id="inputPrivilegeRange" class="form-control">
+                                  <option value="0" <c:if test="${privilegeRange == '0'}">selected</c:if>>中国大陆地区</option>
+                                  <option value="1" <c:if test="${privilegeRange == '1'}">selected</c:if>>中国大陆及港澳台地区</option>
+                                  <option value="2" <c:if test="${privilegeRange == '2'}">selected</c:if>>全球</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputPrivilegeDeadline" class="col-md-2 control-label">授权期限</label>
+                          <div class="col-md-4">
+                              <select id="inputPrivilegeDeadline" class="form-control">
+                                  <option value="1" <c:if test="${privilegeRange == '1'}">selected</c:if>>一年</option>
+                                  <option value="2" <c:if test="${privilegeRange == '2'}">selected</c:if>>二年</option>
+                                  <option value="3" <c:if test="${privilegeRange == '3'}">selected</c:if>>三年</option>
+                                  <option value="4" <c:if test="${privilegeRange == '4'}">selected</c:if>>四年</option>
+                                  <option value="5" <c:if test="${privilegeRange == '5'}">selected</c:if>>五年</option>
+                                  <option value="6" <c:if test="${privilegeRange == '6'}">selected</c:if>>六年</option>
+                                  <option value="7" <c:if test="${privilegeRange == '7'}">selected</c:if>>七年</option>
+                                  <option value="8" <c:if test="${privilegeRange == '8'}">selected</c:if>>八年</option>
+                                  <option value="9" <c:if test="${privilegeRange == '9'}">selected</c:if>>九年</option>
+                                  <option value="10" <c:if test="${privilegeRange == '10'}">selected</c:if>>十年</option>
+                              </select>
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputBankAccountName" class="col-md-2 control-label">账户名称</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputBankAccountName" placeholder="收款方账户名称" value="${contract.bankAccountName}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputBankAccountName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputBank" class="col-md-2 control-label">开户银行</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputBank" placeholder="收款方开户银行" value="${contract.bank}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputBank"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+                  <div class="col-md-12">
+                      <div class="form-group required">
+                          <label for="inputAccountNo" class="col-md-2 control-label">账号</label>
+                          <div class="col-md-10">
+                              <input type="text" class="form-control" id="inputAccountNo" placeholder="收款账号" value="${contract.bankAccountNo}">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputAccountNo"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                      </div><!-- /.form-group -->
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="submitSaleContract();">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <div id="auditModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -316,6 +542,71 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    
+    <div id="selectProductModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog" style="width:800px;">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">选择作品</h4>
+          </div>
+          <div class="modal-body">
+              <div class="col-xs-12">
+                  <div class="col-xs-6">
+                      <form>
+                          <div class="form-group col-sm-12">
+                              <div class="form-group">
+                                  <label for="inputFile" class="col-sm-3 control-label">名称</label>
+                                  <div id="searchNameDiv" class="col-sm-9">
+                                      <input id="inputSearchName" type="text" class="form-control"/>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="form-group col-sm-12">
+                              <div class="form-group">
+                                  <label for="inputFile" class="col-sm-3 control-label">ISBN</label>
+                                  <div id="searchNameDiv" class="col-sm-9">
+                                      <input id="inputSearchIsbn" type="text" class="form-control"/>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="form-group" style="text-align: center;">
+                              <button type="button" class="btn btn-emarm pull-center" onclick="searchProducts();"><i class="fa fa-search"></i>&nbsp;查询</button>
+                              <button type="button" class="btn btn-default pull-center" style="margin-left: 20px;" onclick="resetSearch();"><i class="fa fa-rotate-left"></i>&nbsp;重置</button>
+                          </div>
+                      </form>
+                      <table id="selectProductTbl" class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th>名称</th>
+                            <th>ISBN</th>
+                            <th style="width: 50px;">操作</th>
+                          </tr>
+                        </thead>
+                      </table>
+                  </div>
+                  <div class="col-xs-6">
+                      <table id="selectedProductTbl" class="table table-bordered table-hover">
+                        <thead>
+                          <tr>
+                            <th>名称</th>
+                            <th style="width:50%;">单价</th>
+                            <th style="width: 50px;">操作</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                      </table>
+                  </div>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeSelectModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="addProductToContract();">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- jQuery 2.1.4 -->
     <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
@@ -347,6 +638,7 @@
               <td>{{prod.name}}</td>
               <td>{{prod.isbn}}</td>
               <td>{{prod.scProduct.price}}元</td>
+              <td><a href="javascript:void(0);" onclick="deleteContractProduct('{{prod.id}}', '{{prod.name}}');">删除</a></td>
            </tr>
         {{/each}}
     </script>
@@ -392,6 +684,8 @@
                      $('#inputDoc').val(fileUrl);
               }
           });
+          
+          initProductTbl();
       });
       
       function loadContractProducts() {
@@ -688,21 +982,27 @@
           );
       }
       
-      function deleteProduct(name) {
-          var r = confirm("您真的要删除作品[" + name + "]吗？");
+      function deleteContract() {
+          var r = confirm("您真的要删除此合同吗？");
           if(r) {
               $.post(
-                  '<idp:url value="/evaluation/product/"/>${product.id}',
+                  '<idp:url value="/sale/saleContract/"/>${contract.id}',
                   {'_method': "delete"},
                   function(json) {
                       var result = IDEA.parseJSON(json);
                       if(result.type == 'success') {
                           alert('删除成功');
                           window.close();
+                      }else{
+                          alert('删除失败,请联系管理员查找失败原因.');
                       }
                   }
               );
           }
+      }
+      
+      function popEditContract() {
+          $('#contractModal').modal('show');
       }
       
       function finishEvaluation() {
@@ -764,6 +1064,239 @@
                       if(result.type == 'success') {
                           alert('操作成功');
                           window.location.reload();
+                      }
+                  }
+              );
+          }
+      }
+      
+      function submitSaleContract() {
+          var contractId = '${contract.id}';
+          
+          var owner = $('#inputOwner').val();
+          var ownerContact = $('#inputOwnerContact').val();
+          var ownerContactPhone = $('#inputOwnerContactPhone').val();
+          var ownerContactAddress = $('#inputOwnerContactAddress').val();
+          var ownerContactEmail = $('#inputOwnerContactEmail').val();
+          
+          var buyer = $('#inputBuyer').val();
+          var buyerContact = $('#inputBuyerContact').val();
+          var buyerContactPhone = $('#inputBuyerContactPhone').val();
+          var buyerContactAddress = $('#inputBuyerContactAddress').val();
+          var buyerContactEmail = $('#inputBuyerContactEmail').val();
+          
+          var checkPrivgs = $('input[name=inputPrivileges]:checked');
+          var privgArr = [];
+          for(var j=0; j<checkPrivgs.length; j++) {
+              privgArr.push($(checkPrivgs[j]).val());
+          }
+          var privileges = privgArr.join(',');
+          var privilegeType = $('#inputPrivilegeType').val();
+          var privilegeRange = $('#inputPrivilegeRange').val();
+          var privilegeDeadline = $('#inputPrivilegeDeadline').val();
+          
+          var bankAccountName = $('#inputBankAccountName').val();
+          var bankAccountNo = $('#inputBankAccountNo').val();
+          var bank = $('#inputBank').val();
+          
+          $.post(
+              '<idp:url value="/sale/saleContract"/>',
+              {
+                  'contractId': contractId,
+                  'owner': owner,
+                  'ownerContact': ownerContact,
+                  'ownerContactPhone': ownerContactPhone,
+                  'ownerContactAddress': ownerContactAddress,
+                  'ownerContactEmail': ownerContactEmail,
+                  'buyer': buyer,
+                  'buyerContact': buyerContact,
+                  'buyerContactPhone': buyerContactPhone,
+                  'buyerContactAddress': buyerContactAddress,
+                  'buyerContactEmail': buyerContactEmail,
+                  'privileges': privileges,
+                  'privilegeType': privilegeType,
+                  'privilegeRange': privilegeRange,
+                  'privilegeDeadline': privilegeDeadline,
+                  'bankAccountName': bankAccountName,
+                  'bankAccountNo': bankAccountName,
+                  'bank': bank,
+                  'submit': 1
+              },
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      alert('更新成功');
+                      window.location.reload();
+                  }else{
+                      alert('保存失败，请重试或联系管理员');
+                  }
+              }
+          );
+      }
+      
+      function deleteContractProduct(prodId, prodName) {
+          var r = confirm("您确定要从此合同中删除作品["+prodName+"]吗？");
+          if(!r) {
+              return;
+          }else{
+              $.post(
+                  '<idp:url value="/sale/deleteContractProduct"/>',
+                  {
+                      contractId: '${contract.id}',
+                      productId: prodId
+                  },
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('删除成功');
+                          window.location.reload();
+                      }else{
+                          alert('删除失败，请重试或联系管理员');
+                      }
+                  }
+              );
+          }
+      }
+      
+      function selectContractProduct() {
+          $('#selectProductModal').modal('show');
+      }
+      
+      var table;
+      
+      function initProductTbl() {
+          table = $('#selectProductTbl').DataTable({
+              "processing": true,
+              "paging": true,
+              "lengthChange": false,
+              "searching": false,
+              "ordering": false,
+              "info": false,
+              "autoWidth": false,
+              "serverSide": true,
+              "ajax": {url: '<idp:url value="/sale/dtProducts"/>',
+                  "data": function(d) {
+                      var productName = $('#inputSearchName').val();
+                      if(productName && $.trim(productName).length > 0) {
+                          d.productName = productName;
+                      }
+                      var isbn = $('#inputSearchIsbn').val();
+                      if(isbn && $.trim(isbn).length > 0) {
+                          d.isbn = isbn;
+                      }
+                  }
+              },
+              language: {
+                "paginate": {
+                  "first":      "首页",
+                  "previous":   "上一页",
+                  "next":       "下一页",
+                  "last":       "尾页"
+                },
+                "info": "显示第 _START_ 至 _END_ 项结果，共 _TOTAL_ 项"
+              },
+              "columns": [
+                {},
+                {},
+                {}
+              ],
+              "columnDefs": [
+                  {
+                      "targets": [0],
+                      "render": function(data, type, full) {
+                          return full.name;
+                      }
+                  },
+                  {
+                      "targets": [1],
+                      "render": function(data, type, full) {
+                          return full.isbn;
+                      }
+                  },
+                  {
+                      "targets": [2],
+                      "render": function(data, type, full) {
+                          var html = '<a href=\'javascript:void(0);\' onclick="selectProduct(\'' + full.id + '\', this)">选择</a> ';
+                          return html;
+                      }
+                  }
+              ]
+          });
+      }
+      
+      function searchProducts() {
+          table.ajax.reload();
+      }
+      
+      var selectedProductIds;
+      function selectProduct(prodId, obj) {
+          if(selectedProductIds) {
+              if(selectedProductIds.indexOf(prodId) >= 0) {
+                  alert("已经选择过了,不能再选择了.");
+                  return;
+              }
+              selectedProductIds += ("," + prodId);
+          }else{
+              selectedProductIds = prodId;
+          }
+          
+          var nameTd = $(obj).parent().prev().prev();
+          var prodName = nameTd.text();
+          
+          var html = '<tr><td>' + prodName + '</td><td><div class="input-group"><input type="text" class="form-control" name="inputPrice" placeholder="单价"><span class="input-group-addon">元</span></div></td><td><a href="javascript:void(0);" onclick="deleteFromSelectedProductTbl(\'' + prodId + '\', this);">取消</a></td>';
+          $('#selectedProductTbl tbody').append(html);
+      }
+      
+      function deleteFromSelectedProductTbl(prodId, obj) {
+          if(!selectedProductIds) {
+              return;
+          }else{
+              if(selectedProductIds.indexOf(prodId) == 0) {
+                  if(selectedProductIds.indexOf(",") > 0) {
+                      selectedProductIds = selectedProductIds.replace(prodId+",", "");
+                  }else{
+                      selectedProductIds = "";
+                  }
+              }else{
+                  selectedProductIds = selectedProductIds.replace("," + prodId, "");;
+              }
+          }
+          
+          $(obj).parent().parent().remove();
+      }
+      
+      function closeSelectModal() {
+          selectedProductIds = "";
+          $('#selectedProductTbl tbody').empty();
+          $('#selectProductModal').modal('hide');
+      }
+      
+      function addProductToContract() {
+          var prices = [];
+          $('input[name=inputPrice]').each(
+              function(){
+                  prices.push($(this).val());
+              }          
+          );
+          prices = prices.join(',');
+          
+          if(!selectedProductIds || !prices) {
+              return;
+          }else{
+              $.post(
+                  '<idp:url value="/sale/addProductToContract"/>',
+                  {
+                      productIds : selectedProductIds,
+                      prices: prices,
+                      contractId: '${contract.id}'
+                  },
+                  function(json){
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('添加作品成功');
+                          window.location.reload();
+                      }else{
+                          alert('添加作品失败，请重试或联系管理员');
                       }
                   }
               );

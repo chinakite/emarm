@@ -15,6 +15,7 @@ import com.ideamoment.emarm.model.CopyrightContractDoc;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.SaleContract;
 import com.ideamoment.emarm.model.SaleContractDoc;
+import com.ideamoment.emarm.model.SaleContractProduct;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
 import com.ideamoment.ideajdbc.IdeaJdbc;
@@ -37,6 +38,7 @@ public class SaleDao {
                      + " p.C_PUBLISH_YEAR AS p$publishYear,"
                      + " p.C_FINISH_YEAR AS p$finishYear,"
                      + " p.C_STATE AS p$state,"
+                     + " p.C_ISBN AS p$isbn,"
                      + " a.C_ID AS a$id,"
                      + " a.C_NAME AS a$name,"
                      + " s.C_ID AS s$id, "
@@ -110,7 +112,7 @@ public class SaleDao {
         Map<String, Long> result = new HashMap<String, Long>();
         String sql = "SELECT t.C_PRODUCT_ID prodId, COUNT(C_ID) cnt"
                      + " FROM T_SALE_CTRT_PROD t"
-                     + " WHERE t.C_PRODUCT_ID IN (:productIds)";
+                     + " WHERE t.C_PRODUCT_ID IN (:productIds) GROUP BY prodId";
 
         List<Map<String, Object>> queryResult = IdeaJdbc.query(sql)
                 .setParameter("productIds", productIds).list();
@@ -137,6 +139,16 @@ public class SaleDao {
     public void deleteContractProduct(String contractId) {
         String sql = "delete from T_SALE_CTRT_PROD where C_CONTRACT_ID = :contractId";
         IdeaJdbc.sql(sql).setParameter("contractId", contractId).execute();
+    }
+    
+    public void deleteContractProduct(String contractId, String productId) {
+        String sql = "delete from T_SALE_CTRT_PROD where C_CONTRACT_ID = :contractId and C_PRODUCT_ID = :productId";
+        IdeaJdbc.sql(sql).setParameter("contractId", contractId).setParameter("productId", productId).execute();
+    }
+    
+    public SaleContractProduct findSaleContractProduct(String contractId, String productId) {
+        String sql = "select * from T_SALE_CTRT_PROD WHERE C_CONTRACT_ID = :contractId and C_PRODUCT_ID = :productId";
+        return (SaleContractProduct)IdeaJdbc.query(sql).setParameter("contractId", contractId).setParameter("productId", productId).uniqueTo(SaleContractProduct.class);
     }
 
     public List<SaleContract> listProductContracts(String productId) {
@@ -214,5 +226,15 @@ public class SaleDao {
                                .setParameter("startTime", startTime)
                                .setParameter("endTime", endTime)
                                .uniqueValue();
+    }
+
+    public void deleteContractAudit(String contractId) {
+        String sql = "delete from T_SALE_CTRT_AUDIT where C_CONTRACT_ID = :contractId";
+        IdeaJdbc.sql(sql).setParameter("contractId", contractId).execute();
+    }
+
+    public void deleteContractDoc(String contractId) {
+        String sql = "delete from T_SALE_CTRT_DOC where C_CONTRACT_ID = :contractId";
+        IdeaJdbc.sql(sql).setParameter("contractId", contractId).execute();
     }
 }
