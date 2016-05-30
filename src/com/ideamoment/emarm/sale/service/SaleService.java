@@ -287,4 +287,9 @@ public class SaleService {
                 .setProperty("totalPrice", totalPrice)
                 .execute();
     }
+
+    @IdeaJdbcTx
+    public void deleteContractDoc(String contractId, String docId) {
+        IdeaJdbc.delete(SaleContractDoc.class, docId);
+    }
 }

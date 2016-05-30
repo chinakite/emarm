@@ -355,6 +355,12 @@ public class SaleAction {
         return JsonData.SUCCESS;
     }
     
+    @RequestMapping(value="/sale/deleteContractDoc", method=RequestMethod.POST)
+    public JsonData deleteContractDoc(String contractId, String docId) {
+        saleService.deleteContractDoc(contractId, docId);
+        return JsonData.SUCCESS;
+    }
+    
     private DataTableSource<SaleContract> convertContractsToDataTableSource(int draw, Page<SaleContract> contractsPage) {
         DataTableSource<SaleContract> dts = new DataTableSource<SaleContract>();
         

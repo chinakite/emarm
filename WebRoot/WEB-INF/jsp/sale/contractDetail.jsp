@@ -660,7 +660,7 @@
               <td>{{doc.typeText}}</td>
               <td>{{doc.version}}</td>
               <td>{{doc.createTime}}</td>
-              <td><a href="<idp:ctx/>{{doc.fileUrl}}">下载</a></td>
+              <td><a href="<idp:ctx/>{{doc.fileUrl}}">下载</a> | <a href="javascript:void(0);" onclick="deleteContractDoc('{{doc.id}}');">删除</a></td>
            </tr>
         {{/each}}
     </script>
@@ -1297,6 +1297,30 @@
                           window.location.reload();
                       }else{
                           alert('添加作品失败，请重试或联系管理员');
+                      }
+                  }
+              );
+          }
+      }
+      
+      function deleteContractDoc(docId) {
+          var r = confirm("您确定要从此合同中删除此文件吗？");
+          if(!r) {
+              return;
+          }else{
+              $.post(
+                  '<idp:url value="/sale/deleteContractDoc"/>',
+                  {
+                      "contractId": '${contract.id}',
+                      "docId": docId
+                  },
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('删除成功');
+                          window.location.reload();
+                      }else{
+                          alert('删除失败，请重试或联系管理员');
                       }
                   }
               );
