@@ -39,6 +39,10 @@
             display: none;
         }
     </style>
+    
+    <!-- jQuery 2.1.4 -->
+    <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
+  
   </head>
   <body class="hold-transition skin-emarm sidebar-mini">
     <div class="wrapper">
@@ -116,8 +120,6 @@
       
     </div><!-- ./wrapper -->
 
-    <!-- jQuery 2.1.4 -->
-    <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
     <!-- Bootstrap 3.3.5 -->
     <script src='<idp:url value="/js/bootstrap.min.js"/>'></script>
     <!-- DataTables -->

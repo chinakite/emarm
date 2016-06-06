@@ -40,38 +40,52 @@ public class TaskDao {
                                   String[] roles,
                                   HashMap<String, String> condition)
     {
-        String sql = "SELECT * " 
-                     + " FROM T_TASK "
+        String sql = "SELECT * " + " FROM T_TASK "
                      + " WHERE C_ROLE_ID in (:roles) "
                      + " AND C_STATE <> :state ";
-        
-        if(condition != null) {
-            if(condition.get("taskName") != null) {
+
+        if (condition != null) {
+            if (condition.get("taskName") != null) {
                 sql += " AND C_TITLE LIKE :title ";
             }
-            
-            if(condition.get("targetType") != null && !condition.get("targetType").equals("-1")) {
+
+            if (condition.get("targetType") != null
+                && !condition.get("targetType").equals("-1")) {
                 sql += " AND C_TARGET_TYPE = :targetType ";
             }
         }
-        
+
         sql += " ORDER BY C_CREATETIME DESC ";
-        
-        Query query =  IdeaJdbc.query(sql)
-                               .setParameter("roles", roles)
-                               .setParameter("state", TaskState.FINISHED);
-        
-        if(condition != null) {
-            if(condition.get("taskName") != null) {
-                query.setParameter("title", "%"+condition.get("taskName")+"%");
+
+        Query query = IdeaJdbc.query(sql).setParameter("roles", roles)
+                .setParameter("state", TaskState.FINISHED);
+
+        if (condition != null) {
+            if (condition.get("taskName") != null) {
+                query.setParameter("title",
+                                   "%" + condition.get("taskName") + "%");
             }
-            
-            if(condition.get("targetType") != null && !condition.get("targetType").equals("-1")) {
+
+            if (condition.get("targetType") != null
+                && !condition.get("targetType").equals("-1")) {
                 query.setParameter("targetType", condition.get("targetType"));
             }
         }
-        
+
         return query.pageTo(Task.class, curPage, pageSize);
+    }
+
+    public Long countTasks(String[] roles) {
+        String sql = "SELECT count(C_ID) " 
+                     + " FROM T_TASK "
+                     + " WHERE C_ROLE_ID in (:roles) "
+                     + " AND C_STATE <> :state ";
+
+        return (Long)IdeaJdbc.query(sql)
+                             .setParameter("roles", roles)
+                             .setParameter("state", TaskState.FINISHED)
+                             .uniqueValue();
+
     }
 
 }

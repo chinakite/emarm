@@ -138,4 +138,14 @@ public class TaskService {
     public Task findTask(String id) {
         return IdeaJdbc.find(Task.class, id);
     }
+
+    @IdeaJdbcTx
+    public Long countMyTasks() {
+        UserContext uc = UserContext.getCurrentContext();
+        User optUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String role = optUser.getRole();
+        String[] roles = role.split(",");
+        
+        return taskDao.countTasks(roles);
+    }
 }

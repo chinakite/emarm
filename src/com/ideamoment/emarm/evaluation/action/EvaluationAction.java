@@ -21,6 +21,7 @@ import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductCopyrightFile;
 import com.ideamoment.emarm.model.ProductSample;
+import com.ideamoment.emarm.model.enumeration.PublishState;
 import com.ideamoment.emarm.util.DataTableSource;
 import com.ideamoment.ideadp.exception.IdeaBaseException;
 import com.ideamoment.ideadp.restful.json.JsonData;
@@ -190,8 +191,18 @@ public class EvaluationAction {
         }
         product.setSubjectId(subject);
         product.setPublishState(publishState);
-        product.setPublishYear(publishYear);
+        if(publishState.equals(PublishState.PUBLISHED)) {
+            product.setPublishYear(publishYear);
+        }else{
+            product.setPublishYear(null);
+        }
+        
         product.setPress(press);
+        if(!publishState.equals(PublishState.PUBLISHED)) {
+            product.setFinishYear(finishYear);
+        }else{
+            product.setFinishYear(null);
+        }
         product.setFinishYear(finishYear);
         product.setWebsite(website);
         product.setSummary(summary);
@@ -210,13 +221,15 @@ public class EvaluationAction {
         product.setSamples(sampleList);
         
         List<ProductCopyrightFile> cpFileList = new ArrayList<ProductCopyrightFile>();
-        String[] cpFileArray = copyrights.split(",");
-        for(String copyrightFileUrl : cpFileArray) {
-            ProductCopyrightFile copyrightFile = new ProductCopyrightFile();
-            copyrightFile.setFileUrl(copyrightFileUrl);
-            cpFileList.add(copyrightFile);
+        if(copyrights != null) {
+            String[] cpFileArray = copyrights.split(",");
+            for(String copyrightFileUrl : cpFileArray) {
+                ProductCopyrightFile copyrightFile = new ProductCopyrightFile();
+                copyrightFile.setFileUrl(copyrightFileUrl);
+                cpFileList.add(copyrightFile);
+            }
+            product.setCopyrightFiles(cpFileList);
         }
-        product.setCopyrightFiles(cpFileList);
         try{
             product = evaluationService.saveProduct(product, submit);
         }catch(IdeaBaseException e) {
@@ -341,6 +354,12 @@ public class EvaluationAction {
     public JsonData listProductCopyrightFiles(String productId) {
         List<ProductCopyrightFile> copyrightFiles = evaluationService.listProductCopyrightFiles(productId);
         return JsonData.success(copyrightFiles);
+    }
+    
+    @RequestMapping(value="/evaluation/deleteCopyrightFile", method=RequestMethod.DELETE)
+    public JsonData deleteCopyrightFile(String id) {
+        evaluationService.deleteCopyrightFile(id);
+        return JsonData.SUCCESS;
     }
     
     @RequestMapping(value="/ext/evaluation/dtProducts", method=RequestMethod.GET)

@@ -16,7 +16,7 @@
             </li>
             <li id="menu_mytask">
               <a href='<idp:url value="/task/myTaskPage"/>'>
-                <i class="fa fa-calendar-check-o"></i> <span>我的待办</span> 
+                <i class="fa fa-calendar-check-o"></i> <span>我的待办</span><span id="menuTaskCount" class="label label-primary pull-right">0</span>
               </a>
             </li>
             <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '80') > -1}">
@@ -106,3 +106,23 @@
           </ul>
         </section>
         <!-- /.sidebar -->
+        
+        <script type="text/javascript">
+            function countMyTask() {
+                $.get(
+                    '<idp:url value="/task/countMyTasks"/>',
+                    {},
+                    function(json) {
+                        var result = IDEA.parseJSON(json);
+                        if(result.type == 'success') {
+                            $('#menuTaskCount').text(result.data);
+                        }
+                    }
+                );
+            }
+            
+            $(document).ready(function(){
+                countMyTask();
+            });
+            
+        </script>

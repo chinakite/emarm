@@ -80,6 +80,12 @@ public class TaskAction {
         return JsonData.success(tasks);
     }
     
+    @RequestMapping(value="/task/countMyTasks", method=RequestMethod.GET)
+    public JsonData countMyTasks() {
+        Long count = taskService.countMyTasks();
+        return JsonData.success(count);
+    }
+    
     @RequestMapping(value="/task/toTarget", method=RequestMethod.GET)
     public String toTarget(String id) {
         taskService.readTask(id);

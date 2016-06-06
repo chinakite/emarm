@@ -61,7 +61,7 @@
             <h1 class="detailTitle col-xs-6">${product.name}</h1>
             <c:if test="${product.state == '0' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '02') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1'}">
                 <button class="btn btn-default pull-right ml10" onclick="deleteProduct('${product.name}');"><i class="fa fa-remove"></i> 删除</button>
-                <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${product.id}', '${product.name}');"><i class="fa fa-edit"></i> 编辑</button>
+                <button class="btn btn-default pull-right ml10" onclick="popEditModal('${product.id}');"><i class="fa fa-edit"></i> 编辑</button>
             </c:if>
             <c:if test="${(product.state == '2' || product.state == '3') && fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1'}">
                 <button class="btn btn-default pull-right ml10" onclick="popEvaluationModal('${product.id}', '${product.name}');"><i class="fa fa-tag"></i> 邀请评价</button>
@@ -97,7 +97,12 @@
                               <p class="col-xs-5 detailInfo-light">题材：${product.subject.name}</p>
                               <p class="col-xs-7 detailInfo-light">字数：${product.wordCount}&nbsp;万字</p>
                               <p class="col-xs-5 detailInfo-light">出版状态：${product.publishStateText}</p>
+                              <c:if test="${product.publishState == '0'}">
                               <p class="col-xs-7 detailInfo-light">出版年份：${product.publishYear}</p>
+                              </c:if>
+                              <c:if test="${product.publishState != '0'}">
+                              <p class="col-xs-7 detailInfo-light">完结年份：${product.finishYear}</p>
+                              </c:if>
                               <p class="col-xs-5 detailInfo-light">ISBN：${product.isbn}</p>
                               <div class="col-xs-12 detailInfo-light">
                                   <span>样章：</span><a href='<idp:url value=""/>${product.samples[0].fileUrl}' class="label bg-gray">下载</a>
@@ -245,140 +250,271 @@
           <div class="modal-body">
             <form class="form-horizontal">
                 <input id="inputId" type="hidden"/>
-                <div class="form-group">
-                  <label for="inputName" class="col-sm-2 control-label"><span class="text-danger">* </span>名称</label>
-                  <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputName" placeholder="名称" onblur="validateName();">
-                      <div class="feedback-tip">
-                        <label class="control-label" for="inputName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                <div class="clearfix">
+                    <div class="col-xs-12">
+                      <div class="form-group required">
+                          <label for="inputName" class="col-xs-2 control-label">名称</label>
+                          <div class="col-xs-10">
+                              <input type="text" class="form-control" id="inputName" placeholder="名称" onblur="validateName();">
+                              <div class="feedback-tip">
+                                <label for="inputName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
                       </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="inputAuthorName" class="col-sm-2 control-label"><span class="text-danger">* </span>作者</label>
-                  <div class="col-sm-4">
-                      <input type="text" class="form-control" id="inputAuthorName" placeholder="作者" onblur="validateAuthorName();">
-                      <div class="feedback-tip">
-                        <label class="control-label" for="inputAuthorName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                      <div class="prodTip" style="display:none;">
+                          <h5>名称相似作品</h5>
+                          <ul id="prodList" class="list-group">
+                             
+                          </ul>
                       </div>
-                  </div>
-                  <label for="inputAuthorPseudonym" class="col-sm-2 control-label"><span class="text-danger">* </span>作者笔名</label>
-                  <div class="col-sm-4">
-                      <input type="text" class="form-control" id="inputAuthorPseudonym" placeholder="作者笔名">
-                      <div class="feedback-tip">
-                        <label class="control-label" for="inputAuthorPseudonym"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-xs-6">
+                      <div class="form-group required">
+                          <label for="inputAuthorName" class="col-xs-4 control-label">作者</label>
+                          <div class="col-xs-8">
+                              <input type="text" class="form-control" id="inputAuthorName" placeholder="作者" onblur="validateAuthorName();">
+                              <div class="feedback-tip">
+                                <label for="inputAuthorName"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
                       </div>
-                  </div>
-                </div>
-                <div class="form-group">
-                  <label for="inputWordCount" class="col-sm-2 control-label"><span class="text-danger">* </span>字数</label>
-                  <div class="col-sm-4">
-                      <input type="text" class="form-control" id="inputWordCount" placeholder="单位：万字" onblur="validateWordCount();">
-                      <div class="feedback-tip">
-                        <label class="control-label" for="inputWordCount"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                    </div>  
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                          <label for="inputAuthorPseudonym" class="col-xs-4 control-label">作者笔名</label>
+                          <div class="col-xs-8">
+                              <input type="text" class="form-control" id="inputAuthorPseudonym" placeholder="作者笔名">
+                          </div>
                       </div>
-                  </div>
-                  <label for="inputSubject" class="col-sm-2 control-label"><span class="text-danger">* </span>作品题材</label>
-                  <div class="col-sm-4">
-                      <select id="inputSubject" class="form-control">
-                          <option value="1">穿越</option>
-                      </select>
-                  </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                  <label for="inputPublishState" class="col-sm-2 control-label"><span class="text-danger">* </span>出版状态</label>
-                  <div class="col-sm-4">
-                      <select id="inputPublishState" class="form-control" onchange="changePublishState();">
-                          <option value="0">已出版</option>
-                          <option value="1">网络签约</option>
-                          <option value="2">网络未签约</option>
-                          <option value="3">未公开</option>
-                      </select>
-                  </div>
-                  <label id="publishYearLabel" for="inputPublishYear" class="col-sm-2 control-label"><span class="text-danger">* </span>出版年份</label>
-                  <div id="publishYearDiv" class="col-sm-4">
-                      <select id="inputPublishYear" class="form-control">
-                          <option value="2016">2016</option>
-                          <option value="2015">2015</option>
-                          <option value="2014">2014</option>
-                          <option value="2013">2013</option>
-                      </select>
-                  </div>
-                  <label id="finishYearLabel" for="inputFinishYear" class="col-sm-2 control-label" style="display:none;">完结年份</label>
-                  <div id="finishYearDiv" class="col-sm-4" style="display:none;">
-                      <select id="inputFinishYear" class="form-control">
-                          <option value="2016">2016</option>
-                          <option value="2015">2015</option>
-                          <option value="2014">2014</option>
-                          <option value="2013">2013</option>
-                      </select>
-                  </div>
+                <div class="clearfix">
+                    <div class="col-xs-6">
+                        <div class="form-group required">
+                          <label for="inputWordCount" class="col-xs-4 control-label">字数</label>
+                          <div class="col-xs-8">
+                              <input type="text" class="form-control" id="inputWordCount" placeholder="单位：万字" onblur="validateWordCount();">
+                              <div class="feedback-tip">
+                                <label for="inputWordCount"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="form-group required">
+                          <label for="inputSubject" class="col-xs-4 control-label">作品题材</label>
+                          <div class="col-xs-8">
+                              <select id="inputSubject" class="form-control">
+                                  <option value="1">穿越</option>
+                              </select>
+                          </div>
+                        </div>
+                    </div>    
                 </div>
-                <div id="pressDiv" class="form-group">
-                  <label for="inputPress" class="col-sm-2 control-label"><span class="text-danger">* </span>出版社</label>
-                  <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputPress" placeholder="出版社" onblur="validatePress();">
-                      <div class="feedback-tip">
-                        <label class="control-label" for="inputPress"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                      </div>
-                  </div>
+                <div class="clearfix">
+                    <div class="col-xs-6">
+                        <div class="form-group required">
+                          <label for="inputPublishState" class="col-xs-4 control-label">出版状态</label>
+                          <div class="col-xs-8">
+                              <select id="inputPublishState" class="form-control" onchange="changePublishState();">
+                                  <option value="0">已出版</option>
+                                  <option value="1">网络签约</option>
+                                  <option value="2">网络未签约</option>
+                                  <option value="3">未公开</option>
+                              </select>
+                          </div>
+                        </div>
+                    </div>
+                    <div id="publishYearDiv" class="col-xs-6">
+                        <div class="form-group required">
+                          <label id="publishYearLabel" for="inputPublishYear" class="col-xs-4 control-label">出版年份</label>
+                          <div class="col-xs-8">
+                              <select id="inputPublishYear" class="form-control">
+                                  <option value="2016">2016</option>
+                                  <option value="2015">2015</option>
+                                  <option value="2014">2014</option>
+                                  <option value="2013">2013</option>
+                                  <option value="2013">2012</option>
+                                  <option value="2013">2011</option>
+                                  <option value="2013">2010</option>
+                                  <option value="2013">2009</option>
+                                  <option value="2013">2008</option>
+                                  <option value="2013">2007</option>
+                                  <option value="2013">2006</option>
+                                  <option value="2013">2005</option>
+                                  <option value="2013">2004</option>
+                                  <option value="2013">2003</option>
+                                  <option value="2013">2002</option>
+                                  <option value="2013">2001</option>
+                                  <option value="2013">2000</option>
+                                  <option value="2013">1999</option>
+                                  <option value="2013">1998</option>
+                                  <option value="2013">1997</option>
+                                  <option value="2013">1996</option>
+                                  <option value="2013">1995</option>
+                                  <option value="2013">1994</option>
+                                  <option value="2013">1993</option>
+                                  <option value="2013">1992</option>
+                                  <option value="2013">1991</option>
+                                  <option value="2013">1990</option>
+                              </select>
+                          </div>
+                        </div>
+                    </div>
+                    <div id="finishYearDiv" class="col-xs-6" style="display:none;">
+                        <div class="form-group required">
+                          <label for="inputFinishYear" class="col-xs-4 control-label">完结年份</label>
+                          <div class="col-xs-8">
+                              <select id="inputFinishYear" class="form-control">
+                                  <option value="2016">2016</option>
+                                  <option value="2015">2015</option>
+                                  <option value="2014">2014</option>
+                                  <option value="2013">2013</option>
+                                  <option value="2013">2012</option>
+                                  <option value="2013">2011</option>
+                                  <option value="2013">2010</option>
+                                  <option value="2013">2009</option>
+                                  <option value="2013">2008</option>
+                                  <option value="2013">2007</option>
+                                  <option value="2013">2006</option>
+                                  <option value="2013">2005</option>
+                                  <option value="2013">2004</option>
+                                  <option value="2013">2003</option>
+                                  <option value="2013">2002</option>
+                                  <option value="2013">2001</option>
+                                  <option value="2013">2000</option>
+                                  <option value="2013">1999</option>
+                                  <option value="2013">1998</option>
+                                  <option value="2013">1997</option>
+                                  <option value="2013">1996</option>
+                                  <option value="2013">1995</option>
+                                  <option value="2013">1994</option>
+                                  <option value="2013">1993</option>
+                                  <option value="2013">1992</option>
+                                  <option value="2013">1991</option>
+                                  <option value="2013">1990</option>
+                              </select>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group hide">
-                  <label for="inputWebsite" class="col-sm-2 control-label"><span class="text-danger">* </span>签约网站</label>
-                  <div class="col-sm-10">
-                      <input type="text" class="form-control" id="inputWebsite" placeholder="出版社" onblur="validateWebsite();">
-                      <div class="feedback-tip">
-                        <label class="control-label" for="inputWebsite"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                      </div>
-                  </div>
+                <div id="pressDiv" class="clearfix">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="inputPress" class="col-xs-2 control-label">出版社</label>
+                          <div class="col-xs-10">
+                              <input type="text" class="form-control" id="inputPress" placeholder="出版社" onblur="validatePress();">
+                              <div class="feedback-tip">
+                                <label for="inputPress"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                  <label for="inputSummary" class="col-sm-2 control-label"><span class="text-danger">* </span>内容简介</label>
-                  <div class="col-sm-10">
-                      <textarea id="inputSummary" class="form-control" rows="4" placeholder="内容简介 ..."></textarea>
-                      <div class="feedback-tip">
-                        <label class="control-label" for="inputSummary"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
-                      </div>
-                  </div>
+                <div id="isbnDiv" class="clearfix">
+                    <div id="isbnDiv" class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="inputIsbn" class="col-xs-2 control-label">ISBN</label>
+                          <div class="col-xs-10">
+                              <input type="text" class="form-control" id="inputIsbn" placeholder="ISBN号" onblur="validateIsbn();">
+                              <div class="feedback-tip">
+                                <label for="inputIsbn"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                  <label for="inputSamples" class="col-sm-2 control-label"><span class="text-danger">* </span>样章</label>
-                  <div class="col-sm-10">
-                      <input id="inputAudioDesc" type="file" class="form-control"/>
-                  </div>
+                <div id="websiteDiv" class="clearfix" style="display: none;">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="inputWebsite" class="col-xs-2 control-label">签约网站</label>
+                          <div class="col-xs-10">
+                              <input type="text" class="form-control" id="inputWebsite" placeholder="签约网站" onblur="validateWebsite();">
+                              <div class="feedback-tip">
+                                <label class="control-label" for="inputWebsite"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                        </div>
+                    </div>    
                 </div>
-                <div class="form-group">
-                  <label for="inputHasAudio" class="col-sm-2 control-label" style="text-align: left;"><span class="text-danger">* </span>网络音频</label>
-                  <div class="col-sm-10">
-                      <div class="col-sm-2 radio">
-                          <label for="hasAudio"><input id="hasAudio" name="hasAudio" type="radio" value="1" onclick="hasAudioClick();"/>有</label>
-                      </div>
-                      <div class="col-sm-2 radio">
-                          <label for="noAudio"><input id="noAudio" name="hasAudio" type="radio" value="0" checked onclick="noAudioClick();"/>无</label>
-                      </div>
-                  </div>
+                <div class="clearfix">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="inputSummary" class="col-xs-2 control-label">内容简介</label>
+                          <div class="col-xs-10">
+                              <textarea id="inputSummary" class="form-control" rows="4" placeholder="内容简介 ..." onblur="validateSummary();"></textarea>
+                              <div class="feedback-tip">
+                                <label for="inputSummary"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="audioCopyrightDiv" class="form-group" style="display: none;">
-                  <label for="inputAudioCopyright" class="col-sm-2 control-label">音频情况</label>
-                  <div class="col-sm-10">
-                      <select id="inputAudioCopyright" class="form-control">
-                          <option value="1">有正规授权</option>
-                          <option value="1">无正规授权</option>
-                      </select>
-                  </div>
+                <div class="clearfix">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="inputFile" class="col-xs-2 control-label">样章</label>
+                          <div id="samplesUploadDiv" class="col-xs-10">
+                              <input  id="importFile" name="importFile" type="file" class="form-control"/>
+                              <input id="inputSamples" type="hidden"/>
+                              <ul id="uploadedFile"></ul>
+                          </div>
+                          <div id="samplesShowDiv" class="col-xs-10 checkbox" style="display:none;">
+                              <a href='#' class="label bg-gray">下载</a>
+                          </div>
+                        </div>
+                    </div>
                 </div>
-                <div id="audioDescDiv" class="form-group" style="display: none;">
-                  <label for="inputAudioDesc" class="col-sm-2 control-label"><span class="text-danger">* </span>音频备注</label>
-                  <div class="col-sm-10">
-                      <textarea id="inputAudioDesc" class="form-control" rows="2" placeholder="音频备注 ..."></textarea>
-                  </div>
+                <div class="clearfix">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="inputHasAudio" class="col-xs-2 control-label">网络音频</label>
+                          <div class="col-xs-10">
+                              <div class="col-xs-2 radio">
+                                  <label for="hasAudio"><input id="hasAudio" name="hasAudio" type="radio" value="1" onclick="hasAudioClick();"/>有</label>
+                              </div>
+                              <div class="col-xs-2 radio">
+                                  <label for="noAudio"><input id="noAudio" name="hasAudio" type="radio" value="0" checked onclick="noAudioClick();"/>无</label>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
                 </div>
+                <div id="audioCopyrightDiv" class="clearfix" style="display: none;">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="inputAudioCopyright" class="col-xs-2 control-label">音频情况</label>
+                          <div class="col-xs-10">
+                              <select id="inputAudioCopyright" class="form-control">
+                                  <option value="1">有正规授权</option>
+                                  <option value="1">无正规授权</option>
+                              </select>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="audioDescDiv" class="clearfix" style="display: none;">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="inputAudioDesc" class="col-sm-2 control-label">音频备注</label>
+                          <div class="col-sm-10">
+                              <textarea id="inputAudioDesc" class="form-control" rows="2" placeholder="音频备注 ..." onblur="validateAudioDesc();"></textarea>
+                              <div class="feedback-tip">
+                                <label for="inputAudioDesc"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" id="sampleUrls">
             </form>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearAuthorModal();">关闭</button>
-            <button type="button" class="btn btn-primary" onclick="submitAuthor();">保存</button>
-            <button type="button" class="btn btn-emarm" onclick="submitAuthor();">提交</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="clearProductModal();">关闭</button>
+            <button type="button" class="btn btn-success" onclick="submitProduct('0');">暂存</button>
+            <button type="button" class="btn btn-emarm" onclick="submitProduct('1');">提交审核</button>
           </div>
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
@@ -783,7 +919,7 @@
         <tr>
             <td>{{cf.name}}</td>
             <td>{{cf.createTime}}</td>
-            <td><a href="<idp:ctx/>{{cf.fileUrl}}">下载</a></td>
+            <td><a href="<idp:ctx/>{{cf.fileUrl}}">下载</a><c:if test="${product.state == '0' || product.state == '1'}"><span class="small"> | </span><a href="javascript:void(0);" onclick="deleteCopyrightFile('{{cf.id}}')">删除</a></c:if></td>
         </tr>
         {{/each}}
     </script>
@@ -828,6 +964,13 @@
         {{/each}}
     </script>
     
+    <!-- template -->
+    <script id="categoryTmpl" type="text/html">
+        {{each cglist as cg idx}}
+           <option value="{{cg.id}}" title="{{cg.desc}}">{{cg.name}}</option>
+        {{/each}}
+    </script>
+    
     <!-- page script -->
     <script>
       var table;
@@ -836,6 +979,7 @@
           loadEvaluations();
           loadCopyrightFiles();
           loadUsers();
+          loadCategories();
           //loadCopyrightContracts();
           //loadMakeTasks();
           //loadMakeContracts();
@@ -889,6 +1033,24 @@
                   }
               }
           );
+      }
+      
+      function loadCategories() {
+          $.get(
+              '<idp:url value="/system/textSubjects"/>',
+              {},
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var subjects = result.data;
+                      var html = template('categoryTmpl', {"cglist" : subjects});
+                      $('#inputSubject').empty().append(html);
+                      $('#inputSearchSubject').empty()
+                                              .append('<option value="-1">全部</option>')
+                                              .append(html);
+                  }
+              }
+          )
       }
       
       function populateNonFinalEvaPanel() {
@@ -1368,6 +1530,30 @@
           $('#inputName').val('');
       }
       
+      function deleteCopyrightFile(id) {
+          var r = window.confirm("您确定要删除这个权属文件吗？");
+          if(!r) {
+              return ;
+          }else{
+              $.post(
+                  '<idp:url value="/evaluation/deleteCopyrightFile"/>',
+                  {
+                      "id": id,
+                      "_method": "delete"
+                  },
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('删除成功');
+                          window.location.reload();
+                      }else{
+                          alert('删除失败，请联系管理员。');
+                      }
+                  }
+              );
+          }
+      }
+      
       //--------------- 评价 ---------------------
       function popEvaluationModal(id, name) {
           $('#evaluateProductName').text(name);
@@ -1403,6 +1589,423 @@
                   }
               }
           );
+      }
+      
+      function popEditModal(id) {
+          $.get(
+              '<idp:url value="/evaluation/product"/>/'+id,
+              {},
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      clearProductModal();
+                      var prod = result.data;
+                      
+                      $('#inputId').val(prod.id);
+                      $('#inputName').val(prod.name);
+                      if(prod.author) {
+                          $('#inputAuthorName').val(prod.author.name);
+                          $('#inputAuthorPseudonym').val(prod.author.pseudonym);
+                      }else{
+                          $('#inputAuthorName').val('');
+                          $('#inputAuthorPseudonym').val('');
+                      }
+                      $('#inputWordCount').val(prod.wordCount);
+                      var subj = $('#inputSubject').find('option[value=' + prod.subject.id + ']').index();
+                      $('#inputSubject')[0].selectedIndex = subj;
+                      var pubState = $('#inputPublishState').find('option[value=' + prod.publishState + ']').index();
+                      $('#inputPublishState')[0].selectedIndex = pubState;
+                      
+                      if(prod.publishState == 0) {
+                          var pubYear = $('#inputPublishYear').find('option[value=' + prod.publishYear + ']').index;
+                          $('#inputPublishYear')[0].selectedIndex = pubYear;
+                          $('#inputPress').val(prod.press);
+                          $('#inputIsbn').val(prod.isbn);
+                      }else{
+                          $('#publishYearDiv').hide();
+                          $('#pressDiv').hide();
+                          $('#isbnDiv').hide();
+                          var finishYear = $('#inputFinishYear').find('option[value=' + prod.finishYear + ']').index();
+                          $('#inputFinishYear')[0].selectedIndex = finishYear;
+                          $('#finishYearDiv').show();
+                          if(prod.publishState == 1) {
+                              $('#inputWebsite').val(prod.website);
+                              $('#websiteDiv').show();
+                          }
+                      }
+                      $('#inputSummary').val(prod.summary);
+                      if(prod.samples && prod.samples.length > 0) {
+                          $('#samplesShowDiv a').attr('href', '<idp:url value=""/>' + prod.samples[0].fileUrl);
+                          $('#samplesUploadDiv').hide();
+                          $('#samplesShowDiv').show();
+                          $('#inputSamples').val(prod.samples[0].fileUrl);
+                      }
+                      
+                      if(prod.hasAudio == '1') {
+                          $('#hasAudio').attr('checked', true);
+                          $('#inputAudioCopyright').find('option[value=' + prod.audioCopyright + ']').prop('selected', true);
+                          $('#inputAudioDesc').val(prod.audioDesc);
+                          $('#audioCopyrightDiv').show();
+                          $('#audioDescDiv').show();
+                      }else{
+                          $('#noAudio').prop('checked', true);
+                          $('#inputAudioDesc').val('');
+                          $('#audioCopyrightDiv').hide();
+                          $('#audioDescDiv').hide();
+                      }
+                      
+                      $('#productModal').modal('show');
+                  }
+              }
+          );
+      }
+      
+      function submitProduct(submit) {
+          var r = false;
+          if(submit == '0') {
+              r = validateName();
+          }else{
+              r = validateName()
+                    && validateAuthorName()
+                    && validateWordCount()
+                    && validatePress()
+                    && validateIsbn()
+                    && validateWebsite()
+                    && validateSummary()
+                    && validateSamples()
+                    && validateAudioDesc();
+          }
+      
+          if(!r) {
+              return ;
+          }else{
+              var id = $('#inputId').val();
+              var name = $('#inputName').val();
+              var authorName = $('#inputAuthorName').val();
+              var authorPseudonym = $('#inputAuthorPseudonym').val();
+              var wordCount = $('#inputWordCount').val();
+              var subject = $('#inputSubject').val();
+              var publishState = $('#inputPublishState').val();
+              var publishYear = $('#inputPublishYear').val();
+              var press = $('#inputPress').val();
+              var finishYear = $('#inputFinishYear').val();
+              var website = $('#inputWebsite').val();
+              var summary = $('#inputSummary').val();
+              var hasAudio = $('input[name=hasAudio]:checked').val();
+              var audioCopyright = $('#inputAudioCopyright').val();
+              var audioDesc = $('#inputAudioDesc').val();
+              var samples = $('#inputSamples').val();
+              var isbn = $('#inputIsbn').val();
+              
+              $.post(
+                  '<idp:url value="/evaluation/product"/>',
+                  {
+                      'id': id,
+                      'name': name,
+                      'authorName': authorName,
+                      'authorPseudonym': authorPseudonym,
+                      'wordCount': wordCount,
+                      'subject': subject,
+                      'publishState': publishState,
+                      'publishYear': publishYear,
+                      'press': press,
+                      'finishYear': finishYear,
+                      'website': website,
+                      'summary': summary,
+                      'hasAudio': hasAudio,
+                      'audioCopyright': audioCopyright,
+                      'audioDesc': audioDesc,
+                      'samples': samples,
+                      'submit': submit,
+                      'isbn': isbn
+                  },
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('保存成功');
+                          clearProductModal();
+                          $('#productModal').modal('hide');
+                          window.location.reload();
+                      }else if(result.type == 'exception') {
+                          if(result.code == 'EMARM-EVA-00002') {
+                              var inputNameEle = $('#inputName');
+                              var formGroup = inputNameEle.parents('.form-group');
+                              if(!formGroup.hasClass('has-error')) {
+                                  inputNameEle.parents('.form-group').addClass('has-error');
+                                  inputNameEle.next('.feedback-tip').find('span').text(result.msg);
+                                  inputNameEle.next('.feedback-tip').show();
+                              }
+                          }else if(result.code == 'EMARM-EVA-00003') {
+                              var inputIsbnEle = $('#inputIsbn');
+                              var formGroup = inputIsbnEle.parents('.form-group');
+                              if(!formGroup.hasClass('has-error')) {
+                                  inputIsbnEle.parents('.form-group').addClass('has-error');
+                                  inputIsbnEle.next('.feedback-tip').find('span').text(result.msg);
+                                  inputIsbnEle.next('.feedback-tip').show();
+                              }
+                          }
+                      }
+                  }
+              );       
+          }
+      }
+      
+      function clearProductModal() {
+          $('#inputId').val('');
+          $('#inputName').val('');
+          $('#inputAuthorName').val('');
+          $('#inputAuthorPseudonym').val('');
+          $('#inputWordCount').val('');
+          $('#inputSubject')[0].selectedIndex = 0;
+          $('#inputPublishState')[0].selectedIndex = 0;
+          $('#inputPublishYear')[0].selectedIndex = 0;
+          $('#inputPress').val('');
+          $('#inputFinishYear')[0].selectedIndex = 0;
+          $('#inputWebsite').val('');
+          $('#inputSummary').val('');
+          $('#hasAudio').prop('checked', true);
+          $('#inputIsbn').val('');
+          $('#inputAudioCopyright')[0].selectedIndex = 0;
+          $('#inputAudioDesc').val('');
+          
+          $('#inputSamples').val('');
+          $('#uploadedFile').empty();
+          $('#samplesShowDiv').hide();
+          
+          $('#inputCopyrights').val('');
+          $('#uploadedCopyrightFiles').empty();
+          $('#copyrightsShowDiv').hide();
+          
+          $('#productModal .has-error').removeClass('has-error');
+          $('#productModal .feedback-tip').hide();
+      }
+      
+      //================= Product Validator ===========
+      function validateName() {
+          var inputNameEle = $('#inputName');
+          var authorName = inputNameEle.val();
+          
+          if($('.prodTip').css('display') != 'none') {
+              $('.prodTip').hide();
+          }
+          
+          if(!authorName || $.trim(authorName).length == 0) {
+              var formGroup = inputNameEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputNameEle.parents('.form-group').addClass('has-error');
+                  inputNameEle.next('.feedback-tip').find('span').text('作品名称不能为空');
+                  inputNameEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputNameEle.parents('.form-group').removeClass('has-error');
+              inputNameEle.next('.feedback-tip').find('span').text('');
+              inputNameEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateAuthorName() {
+          var inputAuthorNameEle = $('#inputAuthorName');
+          var authorName = inputAuthorNameEle.val();
+          if(!authorName || $.trim(authorName).length == 0) {
+              var formGroup = inputAuthorNameEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputAuthorNameEle.parents('.form-group').addClass('has-error');
+                  inputAuthorNameEle.next('.feedback-tip').find('span').text('作者不能为空');
+                  inputAuthorNameEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputAuthorNameEle.parents('.form-group').removeClass('has-error');
+              inputAuthorNameEle.next('.feedback-tip').find('span').text('');
+              inputAuthorNameEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateWordCount() {
+          var inputWordCountEle = $('#inputWordCount');
+          var wordCount = inputWordCountEle.val();
+          if(!wordCount || $.trim(wordCount).length == 0) {
+              var formGroup = inputWordCountEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputWordCountEle.parents('.form-group').addClass('has-error');
+                  inputWordCountEle.next('.feedback-tip').find('span').text('字数不能为空');
+                  inputWordCountEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputWordCountEle.parents('.form-group').removeClass('has-error');
+              inputWordCountEle.next('.feedback-tip').find('span').text('');
+              inputWordCountEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validatePress() {
+          var publishState = $('#inputPublishState').val();
+          var inputPressEle = $('#inputPress');
+          if(publishState == '0') {
+              var press = inputPressEle.val();
+              if(!press || $.trim(press).length == 0) {
+                  var formGroup = inputPressEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputPressEle.parents('.form-group').addClass('has-error');
+                      inputPressEle.next('.feedback-tip').find('span').text('出版社不能为空');
+                      inputPressEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputPressEle.parents('.form-group').removeClass('has-error');
+                  inputPressEle.next('.feedback-tip').find('span').text('');
+                  inputPressEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputPressEle.parents('.form-group').removeClass('has-error');
+              inputPressEle.next('.feedback-tip').find('span').text('');
+              inputPressEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateIsbn() {
+          var publishState = $('#inputPublishState').val();
+          var inputIsbnEle = $('#inputIsbn');
+          if(publishState == '0') {
+              var isbn = inputIsbnEle.val();
+              if(!isbn || $.trim(isbn).length == 0) {
+                  var formGroup = inputIsbnEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputIsbnEle.parents('.form-group').addClass('has-error');
+                      inputIsbnEle.next('.feedback-tip').find('span').text('ISBN号不能为空');
+                      inputIsbnEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputIsbnEle.parents('.form-group').removeClass('has-error');
+                  inputIsbnEle.next('.feedback-tip').find('span').text('');
+                  inputIsbnEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputIsbnEle.parents('.form-group').removeClass('has-error');
+              inputIsbnEle.next('.feedback-tip').find('span').text('');
+              inputIsbnEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateWebsite() {
+          var publishState = $('#inputPublishState').val();
+          var inputWebsiteEle = $('#inputWebsite');
+          if(publishState == '1') {
+              var website = inputWebsiteEle.val();
+              if(!website || $.trim(website).length == 0) {
+                  var formGroup = inputWebsiteEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputWebsiteEle.parents('.form-group').addClass('has-error');
+                      inputWebsiteEle.next('.feedback-tip').find('span').text('签约网站不能为空');
+                      inputWebsiteEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputWebsiteEle.parents('.form-group').removeClass('has-error');
+                  inputWebsiteEle.next('.feedback-tip').find('span').text('');
+                  inputWebsiteEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputWebsiteEle.parents('.form-group').removeClass('has-error');
+              inputWebsiteEle.next('.feedback-tip').find('span').text('');
+              inputWebsiteEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateSummary() {
+          var inputSummaryEle = $('#inputSummary');
+          var summary = inputSummaryEle.val();
+          if(!summary || $.trim(summary).length == 0) {
+              var formGroup = inputSummaryEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputSummaryEle.parents('.form-group').addClass('has-error');
+                  inputSummaryEle.next('.feedback-tip').find('span').text('内容简介不能为空');
+                  inputSummaryEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputSummaryEle.parents('.form-group').removeClass('has-error');
+              inputSummaryEle.next('.feedback-tip').find('span').text('');
+              inputSummaryEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateSamples() {
+          var inputSamplesEle = $('#inputSamples');
+          var samples = inputSamplesEle.val();
+          if(!samples || $.trim(samples).length == 0) {
+              var formGroup = inputSamplesEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputSamplesEle.parents('.form-group').addClass('has-error');
+                  inputSamplesEle.next('.feedback-tip').find('span').text('样章不能为空');
+                  inputSamplesEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputSamplesEle.parents('.form-group').removeClass('has-error');
+              inputSamplesEle.next('.feedback-tip').find('span').text('');
+              inputSamplesEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateCopyrights() {
+          var inputCopyrightsEle = $('#inputCopyrights');
+          var copyrights = inputCopyrightsEle.val();
+          if(!copyrights || $.trim(copyrights).length == 0) {
+              var formGroup = inputCopyrightsEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputCopyrightsEle.parents('.form-group').addClass('has-error');
+                  inputCopyrightsEle.next('.feedback-tip').find('span').text('权属文件不能为空');
+                  inputCopyrightsEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputCopyrightsEle.parents('.form-group').removeClass('has-error');
+              inputCopyrightsEle.next('.feedback-tip').find('span').text('');
+              inputCopyrightsEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateAudioDesc() {
+          var checked = $('#hasAudio').prop('checked');
+          var inputAudioDescEle = $('#inputAudioDesc');
+          if(checked) {
+              var audioDesc = inputAudioDescEle.val();
+              if(!audioDesc || $.trim(audioDesc).length == 0) {
+                  var formGroup = inputAudioDescEle.parents('.form-group');
+                  if(!formGroup.hasClass('has-error')) {
+                      inputAudioDescEle.parents('.form-group').addClass('has-error');
+                      inputAudioDescEle.next('.feedback-tip').find('span').text('音频备注不能为空');
+                      inputAudioDescEle.next('.feedback-tip').show();
+                  }
+                  return false;
+              }else{
+                  inputAudioDescEle.parents('.form-group').removeClass('has-error');
+                  inputAudioDescEle.next('.feedback-tip').find('span').text('');
+                  inputAudioDescEle.next('.feedback-tip').hide();
+                  return true;
+              }
+          }else{
+              inputAudioDescEle.parents('.form-group').removeClass('has-error');
+              inputAudioDescEle.next('.feedback-tip').find('span').text('');
+              inputAudioDescEle.next('.feedback-tip').hide();
+              return true;
+          }
       }
     </script>
   </body>

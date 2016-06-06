@@ -39,6 +39,9 @@
         <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
         <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    
+    <!-- jQuery 2.1.4 -->
+    <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
   </head>
   <body class="hold-transition skin-emarm sidebar-mini">
     <div class="wrapper">
@@ -485,8 +488,6 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     
-    <!-- jQuery 2.1.4 -->
-    <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
     <!-- Bootstrap 3.3.5 -->
     <script src='<idp:url value="/js/bootstrap.min.js"/>'></script>
     <!-- DataTables -->
@@ -1054,17 +1055,22 @@
                           $('#inputAuthorPseudonym').val('');
                       }
                       $('#inputWordCount').val(prod.wordCount);
-                      $('#inputSubject').find('option[value=' + prod.subject.id + ']').attr('selected', true);
-                      $('#inputPublishState').find('option[value=' + prod.publishState + ']').attr('selected', true);
+                      var subj = $('#inputSubject').find('option[value=' + prod.subject.id + ']').index();
+                      $('#inputSubject')[0].selectedIndex = subj;
+                      var pubState = $('#inputPublishState').find('option[value=' + prod.publishState + ']').index();
+                      $('#inputPublishState')[0].selectedIndex = pubState;
+                      
                       if(prod.publishState == 0) {
-                          $('#inputPublishYear').find('option[value=' + prod.publishYear + ']').attr('selected', true);
+                          var pubYear = $('#inputPublishYear').find('option[value=' + prod.publishYear + ']').index;
+                          $('#inputPublishYear')[0].selectedIndex = pubYear;
                           $('#inputPress').val(prod.press);
                           $('#inputIsbn').val(prod.isbn);
                       }else{
                           $('#publishYearDiv').hide();
                           $('#pressDiv').hide();
                           $('#isbnDiv').hide();
-                          $('#inputFinishYear').find('option[value=' + prod.finishYear + ']').attr('selected', true);
+                          var finishYear = $('#inputFinishYear').find('option[value=' + prod.finishYear + ']').index();
+                          $('#inputFinishYear')[0].selectedIndex = finishYear;
                           $('#finishYearDiv').show();
                           if(prod.publishState == 1) {
                               $('#inputWebsite').val(prod.website);
@@ -1076,16 +1082,17 @@
                           $('#samplesShowDiv a').attr('href', '<idp:url value=""/>' + prod.samples[0].fileUrl);
                           $('#samplesUploadDiv').hide();
                           $('#samplesShowDiv').show();
+                          $('#inputSamples').val(prod.samples[0].fileUrl);
                       }
                       
                       if(prod.hasAudio == '1') {
                           $('#hasAudio').attr('checked', true);
-                          $('#inputAudioCopyright').find('option[value=' + prod.audioCopyright + ']').attr('selected', true);
+                          $('#inputAudioCopyright').find('option[value=' + prod.audioCopyright + ']').prop('selected', true);
                           $('#inputAudioDesc').val(prod.audioDesc);
                           $('#audioCopyrightDiv').show();
                           $('#audioDescDiv').show();
                       }else{
-                          $('#noAudio').attr('checked', true);
+                          $('#noAudio').prop('checked', true);
                           $('#inputAudioDesc').val('');
                           $('#audioCopyrightDiv').hide();
                           $('#audioDescDiv').hide();

@@ -224,13 +224,15 @@ public class EvaluationService {
             }
             
             List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
-            for(ProductCopyrightFile cpFile : copyrightFiles) {
-                cpFile.setProductId(product.getId());
-                cpFile.setCreatorId(curUser.getId());
-                cpFile.setCreateTime(curTime);
-                String fileUrl = cpFile.getFileUrl();
-                cpFile.setName(getFileNameFromUploadUrl(fileUrl));
-                IdeaJdbc.save(cpFile);
+            if(copyrightFiles != null) {
+                for(ProductCopyrightFile cpFile : copyrightFiles) {
+                    cpFile.setProductId(product.getId());
+                    cpFile.setCreatorId(curUser.getId());
+                    cpFile.setCreateTime(curTime);
+                    String fileUrl = cpFile.getFileUrl();
+                    cpFile.setName(getFileNameFromUploadUrl(fileUrl));
+                    IdeaJdbc.save(cpFile);
+                }
             }
         }else if("1".equals(submit)) {
             String name = product.getName();
@@ -280,11 +282,13 @@ public class EvaluationService {
             }
             
             List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
-            for(ProductCopyrightFile cpFile : copyrightFiles) {
-                cpFile.setProductId(product.getId());
-                cpFile.setCreatorId(curUser.getId());
-                cpFile.setCreateTime(curTime);
-                IdeaJdbc.save(cpFile);
+            if(copyrightFiles != null) {
+                for(ProductCopyrightFile cpFile : copyrightFiles) {
+                    cpFile.setProductId(product.getId());
+                    cpFile.setCreatorId(curUser.getId());
+                    cpFile.setCreateTime(curTime);
+                    IdeaJdbc.save(cpFile);
+                }
             }
         }else{
             String name = product.getName();
@@ -543,5 +547,10 @@ public class EvaluationService {
         String userId = curUser.getId();
         
         return evaluationDao.pageExtEvaluationProductsByUser(curPage, pageSize, userId, condition);
+    }
+
+    @IdeaJdbcTx
+    public void deleteCopyrightFile(String id) {
+        IdeaJdbc.delete(ProductCopyrightFile.class, id);
     }
 }
