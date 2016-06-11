@@ -243,6 +243,8 @@
                       "targets": [4],
                       "render": function(data, type, full) {
                           var html = '<a href=\'<idp:url value="/task/toTarget"/>?id=' + full.id + '\' target="_blank">办理</a> ';
+                              html += '<span class="small"> | </span>';
+                              html += '<a href="javascript:void(0);" onclick="deleteTask(\'' + full.id + '\')">删除</a> ';
                           return html;
                       }
                   }
@@ -257,6 +259,26 @@
       function resetSearch() {
           $('#inputSearchTaskName').val('');
           $('#inputSearchTargetType')[0].selectedIndex = 0;
+      }
+      
+      function deleteTask(id) {
+          var r = window.confirm("您确定要删除此条任务吗?");
+          if(!r) {
+              return;
+          }else{
+              $.post(
+                  '<idp:url value="/task/deleteTask"/>',
+                  {"id" : id},
+                  function(json) {
+                      var result = IDEA.parseJSON(json);
+                      if(result.type == 'success') {
+                          alert('删除成功。');
+                          table.ajax.reload();
+                          countMyTask();
+                      }
+                  }
+              );
+          }
       }
     </script>
   </body>

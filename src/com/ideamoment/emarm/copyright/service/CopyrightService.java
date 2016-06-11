@@ -33,10 +33,13 @@ import com.ideamoment.emarm.model.CopyrightContractDoc;
 import com.ideamoment.emarm.model.CopyrightContractProduct;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductCopyrightOprtor;
+import com.ideamoment.emarm.model.Task;
 import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.CopyrightContractState;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.RoleType;
+import com.ideamoment.emarm.model.enumeration.TaskState;
+import com.ideamoment.emarm.model.enumeration.TaskTargetType;
 import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.emarm.util.CnUpperCase;
 import com.ideamoment.ideadp.appcontext.IdeaApplicationContext;
@@ -133,16 +136,19 @@ public class CopyrightService {
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         String userId = curUser.getId();
         
-        Date curDate = new Date();
+        Date curTime = new Date();
+        
+        Task task = new Task();
         
         if(cc.getId() != null) {
             cc.setModifier(userId);
-            cc.setModifyTime(curDate);
+            cc.setModifyTime(curTime);
             
             if(cc.getTotalPrice().floatValue() < 5000) {
                 cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
             }else{
                 cc.setAuditState(CopyrightContractState.DIRECTOR_AUDIT);
+                task.setRoleId(RoleType.COPYRIGHT_DIRECTOR);
             }
             
             IdeaJdbc.update(cc);
@@ -151,14 +157,15 @@ public class CopyrightService {
             cc.setCode(code);
             
             cc.setCreator(userId);
-            cc.setCreateTime(curDate);
+            cc.setCreateTime(curTime);
             cc.setModifier(userId);
-            cc.setModifyTime(curDate);
+            cc.setModifyTime(curTime);
             
             if(cc.getTotalPrice().floatValue() < 5000) {
                 cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
             }else{
                 cc.setAuditState(CopyrightContractState.DIRECTOR_AUDIT);
+                task.setRoleId(RoleType.COPYRIGHT_DIRECTOR);
             }
             IdeaJdbc.save(cc);
         }
@@ -179,6 +186,18 @@ public class CopyrightService {
                     .execute();
         }
         
+        
+        task.setCreateTime(curTime);
+        task.setCreator(curUser.getId());
+        task.setModifier(curUser.getId());
+        task.setModifyTime(curTime);
+        task.setState(TaskState.UNREAD);
+        task.setTargetId(ccId);
+        task.setTargetType(TaskTargetType.COPYRIGHT_CONTRACT);
+        task.setTitle("版权合同《"+cc.getCode()+"》需要您进行审核，请办理。");
+        if(task.getRoleId() != null) {
+            IdeaJdbc.save(task);
+        }
     }
 
     private synchronized String createCode(CopyrightContract cc) {
@@ -268,14 +287,18 @@ public class CopyrightService {
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         
+        Date curTime = new Date();
+        
         CopyrightContractAudit cca = new CopyrightContractAudit();
         cca.setAuditorId(curUser.getId());
         cca.setAuditRemark(remark);
         cca.setAuditResult(YesOrNo.YES);
-        cca.setAuditTime(new Date());
+        cca.setAuditTime(curTime);
         cca.setContractId(id);
         
         IdeaJdbc.save(cca);
+        
+        Task task = new Task();
         
         CopyrightContract cc = IdeaJdbc.find(CopyrightContract.class, id);
         if(cc.getAuditState().equals(CopyrightContractState.DIRECTOR_AUDIT)) {
@@ -283,17 +306,20 @@ public class CopyrightService {
                 cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
             }else{
                 cc.setAuditState(CopyrightContractState.MANAGER_AUDIT);
+                task.setRoleId(RoleType.COPYRIGHT_MANAGER);
             }
         }else if(cc.getAuditState().equals(CopyrightContractState.MANAGER_AUDIT)) {
             if(cc.getTotalPrice().floatValue() < 20000) {
                 cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
             }else{
                 cc.setAuditState(CopyrightContractState.CEO_AUDIT);
+                task.setRoleId(RoleType.CEO);
             }
         }else if(cc.getAuditState().equals(CopyrightContractState.CEO_AUDIT)) {
             cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
         }else if(cc.getAuditState().equals(CopyrightContractState.LAWYER_AUDIT)) {
             cc.setAuditState(CopyrightContractState.LAWYER_CONFIRM);
+            task.setRoleId(RoleType.LAWYER);
         }else if(cc.getAuditState().equals(CopyrightContractState.FINISH_CONFIRM)) {
             cc.setAuditState(CopyrightContractState.FINISH);
         }
@@ -306,8 +332,23 @@ public class CopyrightService {
             for(Product product : products) {
                 IdeaJdbc.update(Product.class, product.getId())
                         .setProperty("state", ProductState.CP_CONTRACT_FINISH)
+                        .setProperty("modifier", curUser.getId())
+                        .setProperty("modifyTime", curTime)
                         .execute();
             }
+        }
+        
+        task.setCreateTime(curTime);
+        task.setCreator(curUser.getId());
+        task.setModifier(curUser.getId());
+        task.setModifyTime(curTime);
+        task.setRoleId(RoleType.COPYRIGHT_DIRECTOR);
+        task.setState(TaskState.UNREAD);
+        task.setTargetId(cc.getId());
+        task.setTargetType(TaskTargetType.COPYRIGHT_CONTRACT);
+        task.setTitle("版权合同《"+cc.getCode()+"》需要您进行审核，请办理。");
+        if(task.getRoleId() != null) {
+            IdeaJdbc.save(task);
         }
     }
 
@@ -557,6 +598,20 @@ public class CopyrightService {
         pco.setModifyTime(curTime);
         
         IdeaJdbc.save(pco);
+        
+        Product product = IdeaJdbc.find(Product.class, productId);
+        
+        Task task = new Task();
+        task.setCreateTime(curTime);
+        task.setCreator(curUser.getId());
+        task.setModifier(curUser.getId());
+        task.setModifyTime(curTime);
+        task.setRoleId(RoleType.COPYRIGHT_OPR);
+        task.setState(TaskState.UNREAD);
+        task.setTargetId(productId);
+        task.setTargetType(TaskTargetType.EVALUATION);
+        task.setTitle("作品《"+product.getName()+"》的版权合同已分配给您办理。");
+        IdeaJdbc.save(task);
     }
 
     @IdeaJdbcTx

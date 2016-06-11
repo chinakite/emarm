@@ -247,7 +247,6 @@ public class MakeService {
         cfg.setClassForTemplateLoading(this.getClass(), "/");
         try {
             Template tmpl = cfg.getTemplate("com/ideamoment/emarm/make/service/make_personal.ftl");
-//            Template tmpl = cfg.getTemplate("com/ideamoment/emarm/copyright/service/test.ftl");
         
             Map root = new HashMap();
             root.put("code", mc.getCode());

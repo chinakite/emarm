@@ -105,6 +105,12 @@ public class TaskAction {
         return "";
     }
     
+    @RequestMapping(value="/task/deleteTask", method=RequestMethod.POST)
+    public JsonData deleteTask(String id) {
+        taskService.deleteTask(id);
+        return JsonData.SUCCESS;
+    }
+    
     private DataTableSource<Task> convertToDataTableSource(int draw, Page<Task> tasksPage) {
         DataTableSource<Task> dts = new DataTableSource<Task>();
         

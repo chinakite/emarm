@@ -115,7 +115,6 @@
                 <div class="box box-emarm">
                     <div class="box-header with-border">
                         <h4 class="box-title"><span>最新作品</span></h4>
-                        <a class="pull-right">更多&gt;&gt;</a>
                     </div>
                     <div class="box-body">
                         <ul id="lastProductList" class="list-group list-group-unbordered">
@@ -128,7 +127,7 @@
                 <div class="box box-emarm">
                     <div class="box-header with-border">
                       <h4 class="box-title"><span>我的待办</span></h4>
-                      <a class="pull-right">更多&gt;&gt;</a>
+                      <a href='<idp:url value="/task/myTaskPage"/>' class="pull-right">更多&gt;&gt;</a>
                     </div>
                     <div class="box-body">
                         <ul id="taskList" class="list-group list-group-unbordered">
@@ -167,7 +166,7 @@
     <script id="lastProductTmpl" type="text/html">
         {{each prodlist as prod index}}
             <li class="list-group-item">
-                <a>{{prod.name}}</a>
+                <a href="<idp:url value="/product/productDetail"/>?id={{prod.id}}" target="_blank">{{prod.name}}</a>
             </li>
         {{/each}}
     </script>

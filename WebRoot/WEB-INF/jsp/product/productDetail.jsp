@@ -149,7 +149,7 @@
                                 </div>
                               </div><!-- /.tab-pane -->
                               <div class="tab-pane" id="copyrightInfo">
-                                  <h5>权属文件</h5>
+                                  <h5>权属文件<c:if test="${product.state == '0' || product.state == '1'}"><button class="btn btn-default pull-right ml10" onclick="popUploadCopyrightFile();"><i class="fa fa-upload"></i> 上传权属文件</button></c:if></h5>
                                   <table id="copyrightFileTbl" class="table table-bordered table-hover">
                                       <thead>
                                           <tr>
@@ -576,6 +576,36 @@
         </div><!-- /.modal-content -->
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    
+    <div id="copyrightFileModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">上传权属文件</h4>
+          </div>
+          <div class="modal-body">
+              <form class="form-horizontal">
+                  <input id="finishedDoc" type="hidden" value="0"/>
+                  <div class="col-xs-12">
+                      <div class="form-group required">
+                          <label for="inputFile" class="col-xs-2 control-label">合同文件</label>
+                          <div id="docUploadDiv" class="col-xs-10">
+                              <input id="importCopyrightFile" name="importFile" type="file" class="form-control"/>
+                              <ul id="uploadedCopyrightFile"></ul>
+                              <input type="hidden" id="inputCopyrightFile"/>
+                          </div>
+                      </div>
+                  </div>
+              </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeCopyrightFileModal();">关闭</button>
+            <button type="button" class="btn btn-emarm" onclick="uploadCopyrightFile();">确定</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 
     <!-- jQuery 2.1.4 -->
     <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
@@ -594,6 +624,10 @@
     <script src='<idp:url value="/js/demo.js"/>'></script>
     <!-- Select2 -->
     <script src='<idp:url value="/plugins/select2/select2.full.min.js"/>'></script>
+    
+    <script src='<idp:url value="/plugins/fileupload/jquery.ui.widget.js"/>'></script>
+    <script src='<idp:url value="/plugins/fileupload/jquery.fileupload.js"/>'></script>
+    <script src='<idp:url value="/plugins/fileupload/jquery.iframe-transport.js"/>'></script>
     
     <script src='<idp:url value="/js/ideajs.js"/>'></script>
     <script src='<idp:url value="/js/template.js"/>'></script>
@@ -998,6 +1032,17 @@
               </c:otherwise>
               </c:choose>
           }
+          
+          $('#importCopyrightFile').fileupload({
+              url: '<idp:url value="/uploadDoc"/>',
+              dataType: 'json',
+              done: function (e, data) {
+                     var fileUrl = data['result']['data'][0]['fileUrl'];
+                     var fileName = data['result']['data'][0]['fileName'];
+                     $('#uploadedCopyrightFile').html('<li>'+fileName+'</li>');
+                     $('#inputCopyrightFile').val(fileUrl);
+              }
+          });
           
       });
       
@@ -1552,6 +1597,38 @@
                   }
               );
           }
+      }
+      
+      function popUploadCopyrightFile() {
+          clearCopyrightFileModal();
+          $('#copyrightFileModal').modal('show');
+      }
+      
+      function clearCopyrightFileModal() {
+          $('#inputFile').val('');
+          $('#inputDoc').val('');
+          $('#uploadedFile').empty();
+      }
+      
+      function closeCopyrightFileModal() {
+          clearCopyrightFileModal();
+          $('#copyrightFileModal').modal('hide');
+      }
+      
+      function uploadCopyrightFile() {
+          var fileUrl = $('#inputCopyrightFile').val();
+          
+          $.post(
+              '<idp:url value="/product/uploadCopyrightFile"/>',
+              {
+                  "productId": '${product.id}',
+                  "fileUrl": fileUrl
+              },
+              function(json) {
+                  alert('保存成功');
+                  window.location.reload();
+              }
+          );
       }
       
       //--------------- 评价 ---------------------

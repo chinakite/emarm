@@ -121,6 +121,12 @@ public class ProductAction {
         return JsonData.success(products);
     }
     
+    @RequestMapping(value="/product/uploadCopyrightFile", method=RequestMethod.POST)
+    public JsonData uploadCopyrightFile(String productId, String fileUrl) {
+        productService.uploadCopyrightFile(productId, fileUrl);
+        return JsonData.SUCCESS;
+    }
+    
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {
         DataTableSource<Product> dts = new DataTableSource<Product>();
         

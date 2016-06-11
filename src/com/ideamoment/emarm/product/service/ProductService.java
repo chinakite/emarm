@@ -17,6 +17,7 @@ import com.ideamoment.emarm.evaluation.EvaluationException;
 import com.ideamoment.emarm.evaluation.EvaluationExceptionCode;
 import com.ideamoment.emarm.model.Author;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.ProductCopyrightFile;
 import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.model.User;
 import com.ideamoment.emarm.model.enumeration.ProductState;
@@ -293,5 +294,38 @@ public class ProductService {
     @IdeaJdbcTx
     public List<Product> quickQuery(String name) {
         return productDao.quickQuery(name);
+    }
+
+    @IdeaJdbcTx
+    public void uploadCopyrightFile(String productId, String fileUrl) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        
+        ProductCopyrightFile copyrightFile = new ProductCopyrightFile();
+        copyrightFile.setFileUrl(fileUrl);
+        copyrightFile.setCreateTime(new Date());
+        copyrightFile.setCreatorId(curUser.getId());
+        copyrightFile.setName(getFileNameFromUploadUrl(fileUrl));
+        copyrightFile.setProductId(productId);
+        
+        IdeaJdbc.save(copyrightFile);
+    }
+    
+    private String getFileNameFromUploadUrl(String url) {
+        int dirPos = url.lastIndexOf("\\");
+        if(dirPos == -1)
+            dirPos = url.lastIndexOf("/");
+        
+        if(dirPos > -1) {
+            String fileName = url.substring(dirPos+1);
+            int namePos = fileName.indexOf("_");
+            if(namePos > -1) {
+                return fileName.substring(namePos+1);
+            }else{
+                return fileName;
+            }
+        }
+        
+        return url;
     }
 }

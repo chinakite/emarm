@@ -148,4 +148,9 @@ public class TaskService {
         
         return taskDao.countTasks(roles);
     }
+
+    @IdeaJdbcTx
+    public void deleteTask(String id) {
+        IdeaJdbc.delete(Task.class, id);
+    }
 }
