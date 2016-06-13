@@ -24,8 +24,7 @@ public class ReservedDao {
 
     public List<Product> listReservedProducts(List<String> ids) {
 
-        String sql = "SELECT " 
-                     + " p.C_ID AS p$id,"
+        String sql = "SELECT " + " p.C_ID AS p$id,"
                      + " p.C_NAME AS p$name,"
                      + " p.C_PUBLISH_STATE AS p$publishState,"
                      + " p.C_PUBLISH_YEAR AS p$publishYear,"
@@ -45,70 +44,94 @@ public class ReservedDao {
                      + " AND s.C_ID = p.C_SUBJECT_ID";
 
         sql += " ORDER BY p.C_MODIFYTIME DESC ";
-        
-        String[] states = new String[]{
-                ProductState.CP_CONTRACT_FINISH
-        };
-        
-        Query query = IdeaJdbc.query(sql)
-                                .setParameter("ids", ids)
-                                .setParameter("type", ProductType.TEXT)
-                                .setParameter("states", states)
-                                .populate("author", "a")
-                                .populate("subject", "s");
-        
+
+        String[] states = new String[] { ProductState.CP_CONTRACT_FINISH };
+
+        Query query = IdeaJdbc.query(sql).setParameter("ids", ids)
+                .setParameter("type", ProductType.TEXT)
+                .setParameter("states", states).populate("author", "a")
+                .populate("subject", "s");
+
         return query.listTo(Product.class, "p");
     }
 
     public List<String> listCanBeReservedProductIds() {
-        
+
         String sql = "SELECT p.C_ID "
-                    + " FROM T_COPYRIGHT_CONTRACT cc, T_COPYRIGHT_CTRT_PROD ccp, T_PRODUCT p "
-                    + " WHERE cc.C_ID = ccp.C_CONTRACT_ID "
-                    + " AND ccp.C_PRODUCT_ID = p.C_ID "
-                    + " AND ((cc.C_FINISH_TIME > :aStartTime AND p.C_RESERVED = '1') OR (cc.C_FINISH_TIME > :bStartTime AND p.C_RESERVED = '0'))";
-        
+                     + " FROM T_COPYRIGHT_CONTRACT cc, T_COPYRIGHT_CTRT_PROD ccp, T_PRODUCT p "
+                     + " WHERE cc.C_ID = ccp.C_CONTRACT_ID "
+                     + " AND ccp.C_PRODUCT_ID = p.C_ID "
+                     + " AND ((cc.C_FINISH_TIME > :aStartTime AND p.C_RESERVED = '1') OR (cc.C_FINISH_TIME > :bStartTime AND p.C_RESERVED = '0'))";
+
         DateTime curTime = new DateTime();
         int year = curTime.getYear();
         int month = curTime.getMonthOfYear();
         int day = curTime.getDayOfMonth();
-        
+
         DateTime curDate = new DateTime(year, month, day, 23, 59, 59);
         Date aStartTime = curDate.minusMonths(1).toDate();
         Date bStartTime = curDate.minusDays(5).toDate();
-        
+
         List<String> ids = IdeaJdbc.query(sql)
-                                    .setParameter("aStartTime", aStartTime)
-                                    .setParameter("bStartTime", bStartTime)
-                                    .listValue();
-        
+                .setParameter("aStartTime", aStartTime)
+                .setParameter("bStartTime", bStartTime).listValue();
+
         return ids;
     }
-    
+
     public List<String> listCanBeTransToMakeProductIds() {
-        
+
         String sql = "SELECT p.C_ID "
-                    + " FROM T_COPYRIGHT_CONTRACT cc, T_COPYRIGHT_CTRT_PROD ccp, T_PRODUCT p "
-                    + " WHERE cc.C_ID = ccp.C_CONTRACT_ID "
-                    + " AND ccp.C_PRODUCT_ID = p.C_ID "
-                    + " AND ((cc.C_FINISH_TIME <= :aStartTime AND p.C_RESERVED = '1') OR (cc.C_FINISH_TIME <= :bStartTime AND p.C_RESERVED = '0')) "
-                    + " AND p.C_STATE ";
-        
+                     + " FROM T_COPYRIGHT_CONTRACT cc, T_COPYRIGHT_CTRT_PROD ccp, T_PRODUCT p "
+                     + " WHERE cc.C_ID = ccp.C_CONTRACT_ID "
+                     + " AND ccp.C_PRODUCT_ID = p.C_ID "
+                     + " AND ((cc.C_FINISH_TIME <= :aStartTime AND p.C_RESERVED = '1') OR (cc.C_FINISH_TIME <= :bStartTime AND p.C_RESERVED = '0')) "
+                     + " AND p.C_STATE ";
+
         DateTime curTime = new DateTime();
         int year = curTime.getYear();
         int month = curTime.getMonthOfYear();
         int day = curTime.getDayOfMonth();
-        
+
         DateTime curDate = new DateTime(year, month, day, 23, 59, 59);
         Date aStartTime = curDate.minusMonths(1).toDate();
         Date bStartTime = curDate.minusDays(5).toDate();
-        
+
         List<String> ids = IdeaJdbc.query(sql)
-                                    .setParameter("aStartTime", aStartTime)
-                                    .setParameter("bStartTime", bStartTime)
-                                    .listValue();
-        
+                .setParameter("aStartTime", aStartTime)
+                .setParameter("bStartTime", bStartTime).listValue();
+
         return ids;
+    }
+
+    public List<Product> listToMakeProductsWithoutReserved() {
+        String sql = "SELECT * from T_PRODUCT WHERE C_STATE = :state AND C_MODIFYTIME > :startTime AND C_TYPE = :type"; 
+
+        DateTime curDate = DateTime.now();
+        curDate = curDate.minusDays(5);
+        
+        Query query = IdeaJdbc.query(sql)
+                .setParameter("type", ProductType.TEXT)
+                .setParameter("state", ProductState.CP_CONTRACT_FINISH)
+                .setParameter("startTime", curDate.toDate())
+                ;
+
+        return query.listTo(Product.class);
+    }
+
+    public List<Product> listReservedToMakeProducts() {
+        String sql = "SELECT * from T_PRODUCT WHERE C_STATE = :state AND C_MODIFYTIME > :startTime AND C_TYPE = :type"; 
+
+        DateTime curDate = DateTime.now();
+        curDate = curDate.minusMonths(1);
+        
+        Query query = IdeaJdbc.query(sql)
+                .setParameter("type", ProductType.TEXT)
+                .setParameter("state", ProductState.RESERVED)
+                .setParameter("startTime", curDate.toDate())
+                ;
+
+        return query.listTo(Product.class);
     }
 
 }

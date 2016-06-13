@@ -504,7 +504,7 @@ public class CopyrightService {
             
             Product p1 = new Product();
             p1.setName("Product1");
-            p1.setWordCount(30);
+            p1.setWordCount(new BigDecimal(30));
             p1.setIsbn("11111111");
             p1.setAuthor(a);
             

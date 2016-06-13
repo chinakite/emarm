@@ -3,6 +3,7 @@
  */
 package com.ideamoment.emarm.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.ideamoment.emarm.model.enumeration.ProductState;
@@ -44,8 +45,8 @@ public class Product extends HistoriableEntity {
     @Property(dataItem="C_STATE", type=DataItemType.VARCHAR, length=4)
     private String state = ProductState.DRAFT;
 
-    @Property(dataItem="C_WORD_COUNT", type=DataItemType.INT)
-    private Integer wordCount;  //字数，文字使用
+    @Property(dataItem="C_WORD_COUNT", type=DataItemType.DECIMAL)
+    private BigDecimal wordCount;  //字数，文字使用
     
     @Property(dataItem="C_SECTION_COUNT", type=DataItemType.INT)
     private Integer sectionCount;  //集数，音频使用
@@ -304,14 +305,14 @@ public class Product extends HistoriableEntity {
     /**
      * @return the wordCount
      */
-    public Integer getWordCount() {
+    public BigDecimal getWordCount() {
         return wordCount;
     }
     
     /**
      * @param wordCount the wordCount to set
      */
-    public void setWordCount(Integer wordCount) {
+    public void setWordCount(BigDecimal wordCount) {
         this.wordCount = wordCount;
     }
     

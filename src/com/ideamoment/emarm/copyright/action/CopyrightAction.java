@@ -179,7 +179,7 @@ public class CopyrightAction {
 
         product.setAuthor(author);
         if(StringUtils.isNotEmpty(wordCount)) {
-            product.setWordCount(Integer.valueOf(wordCount));
+            product.setWordCount(new BigDecimal(wordCount));
         }
         product.setSubjectId(subject);
         product.setPublishState(publishState);

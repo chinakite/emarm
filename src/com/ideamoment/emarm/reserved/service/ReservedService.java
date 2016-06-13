@@ -78,6 +78,28 @@ public class ReservedService {
                 .setProperty("state", ProductState.RESERVED)
                 .execute();
     }
+
+
+    @IdeaJdbcTx
+    public List<Product> listToMakeProductsWithoutReserved() {
+        return reservedDao.listToMakeProductsWithoutReserved();
+    }
+
+    @IdeaJdbcTx
+    public void withoutReservedToMake() {
+        List<Product> products = reservedDao.listToMakeProductsWithoutReserved();
+        for(Product prod : products) {
+            prod.setState(ProductState.MK_WAITING);
+            IdeaJdbc.update(prod);
+        }
+    }
     
-    
+    @IdeaJdbcTx
+    public void reservedToMake() {
+        List<Product> products = reservedDao.listReservedToMakeProducts();
+        for(Product prod : products) {
+            prod.setState(ProductState.MK_WAITING);
+            IdeaJdbc.update(prod);
+        }
+    }
 }

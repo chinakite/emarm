@@ -3,6 +3,7 @@
  */
 package com.ideamoment.emarm.evaluation.action;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -187,7 +188,7 @@ public class EvaluationAction {
 
         product.setAuthor(author);
         if(StringUtils.isNotEmpty(wordCount)) {
-            product.setWordCount(Integer.valueOf(wordCount));
+            product.setWordCount(new BigDecimal(wordCount));
         }
         product.setSubjectId(subject);
         product.setPublishState(publishState);
