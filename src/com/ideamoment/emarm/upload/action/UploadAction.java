@@ -68,9 +68,9 @@ public class UploadAction {
                         outputDir.mkdirs();
                     }
                     
-                    String outputPath = outputDirStr + File.separator + filemeta.getFileId() + "_" + file.getOriginalFilename();
+                    String outputPath = outputDirStr + File.separator + file.getOriginalFilename() + "_" + filemeta.getFileId();
                     
-                    String fileUrl = "/uploadTmp/doc" + File.separator + dateStr + File.separator + filemeta.getFileId() + "_" + file.getOriginalFilename();
+                    String fileUrl = "/uploadTmp/doc" + File.separator + dateStr + File.separator + file.getOriginalFilename() + "_" + filemeta.getFileId();
                     fileUrl = fileUrl.replaceAll("\\\\", "/");
                     filemeta.setFileUrl(fileUrl);
                     
@@ -122,9 +122,9 @@ public class UploadAction {
                         outputDir.mkdirs();
                     }
                     
-                    String outputPath = outputDirStr + File.separator + filemeta.getFileId() + "_" + file.getOriginalFilename();
+                    String outputPath = outputDirStr + File.separator + file.getOriginalFilename() + "_" + filemeta.getFileId();
                     
-                    String fileUrl = "/uploadTmp/audio" + File.separator + dateStr + File.separator + filemeta.getFileId() + "_" + file.getOriginalFilename();
+                    String fileUrl = "/uploadTmp/audio" + File.separator + dateStr + File.separator + file.getOriginalFilename() + "_" + filemeta.getFileId();
                     fileUrl = fileUrl.replaceAll("\\\\", "/");
                     filemeta.setFileUrl(fileUrl);
                     
