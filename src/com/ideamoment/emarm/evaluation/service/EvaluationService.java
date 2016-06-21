@@ -24,9 +24,11 @@ import com.ideamoment.emarm.model.EvaluationInvitation;
 import com.ideamoment.emarm.model.FinalEvaluation;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductCopyrightFile;
+import com.ideamoment.emarm.model.ProductImage;
 import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.model.Task;
 import com.ideamoment.emarm.model.User;
+import com.ideamoment.emarm.model.enumeration.ProductImageType;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
 import com.ideamoment.emarm.model.enumeration.RoleType;
@@ -224,6 +226,19 @@ public class EvaluationService {
             for(ProductSample sample : samples) {
                 sample.setProductId(product.getId());
                 IdeaJdbc.save(sample);
+            }
+            
+            if(product.getLogoUrl() != null) {
+                ProductImage prodImg = new ProductImage();
+                prodImg.setCreateTime(curTime);
+                prodImg.setCreator(curUser.getId());
+                prodImg.setFileUrl(product.getLogoUrl());
+                prodImg.setModifier(curUser.getId());
+                prodImg.setModifyTime(curTime);
+                prodImg.setName("封面");
+                prodImg.setProductId(product.getId());
+                prodImg.setType(ProductImageType.COVER);
+                IdeaJdbc.save(prodImg);
             }
             
             List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();

@@ -787,6 +787,13 @@
                 </a>
                 <div class="gallery-img-title"><strong>{{img.name}}</strong></div>
                 <div class="text-muted">{{img.desc}}</div>
+                {{if img.type == '0'}}
+                <div id="setcover_{{img.id}}" rel="coversetting"><a class="pull-right small" onclick="toCover('{{img.id}}');">设为封面</a></div>
+                <div style="display:none;" id="cover_{{img.id}}" rel="cover"><span class="pull-right small">封面<span></div>
+                {{else}}
+                <div style="display:none;" id="setcover_{{img.id}}" rel="coversetting"><a class="pull-right small" onclick="toCover('{{img.id}}');">设为封面</a></div>
+                <div id="cover_{{img.id}}" rel="cover"><span class="pull-right small">封面</span></div>
+                {{/if}}
             </div>
             {{/each}}
         </div>
@@ -1382,6 +1389,24 @@
       
       function packageDownload(id) {
           window.location.href = '<idp:url value="/mediares/packageDownload"/>?productId=' + id;
+      }
+      
+      function toCover(imgId) {
+          $.post(
+              '<idp:url value="/mediares/toCover"/>',
+              {"imgId" : imgId},
+              function(json) {
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      $('div[rel=cover]').hide();
+                      $('div[rel=coversetting]').show();
+                      $('#setcover_' + imgId).hide();
+                      $('#cover_' + imgId).show();
+                  }else{
+                      alert("保存失败，请联系管理员。");
+                  }
+              }
+          );
       }
     </script>
   </body>

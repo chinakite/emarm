@@ -19,8 +19,11 @@ import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductAudio;
 import com.ideamoment.emarm.model.ProductImage;
 import com.ideamoment.emarm.model.User;
+import com.ideamoment.emarm.model.enumeration.ProductImageType;
 import com.ideamoment.emarm.model.enumeration.YesOrNo;
 import com.ideamoment.ideadp.appcontext.IdeaApplicationContext;
+import com.ideamoment.ideadp.exception.IdeaDataException;
+import com.ideamoment.ideadp.exception.IdeaDataExceptionCode;
 import com.ideamoment.ideadp.usercontext.UserContext;
 import com.ideamoment.ideajdbc.IdeaJdbc;
 import com.ideamoment.ideajdbc.action.Page;
@@ -247,5 +250,31 @@ public class MediaResourceService {
         
         IdeaJdbc.update(product);
     }
-    
+
+    @IdeaJdbcTx
+    public void settingCover(String imgId) {
+        UserContext uc = UserContext.getCurrentContext();
+        User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
+        String userId = curUser.getId();
+        
+        ProductImage prodImg = IdeaJdbc.find(ProductImage.class, imgId);
+        if(prodImg != null) {
+            String productId = prodImg.getProductId();
+            ProductImage oldProdImg = mediaResourceDao.findOldProductImage(productId);
+            
+            if(oldProdImg != null) {
+                oldProdImg.setType(ProductImageType.NORMAL);
+                IdeaJdbc.update(oldProdImg);
+            }
+            
+            prodImg.setType(ProductImageType.COVER);
+            IdeaJdbc.update(prodImg);
+            
+            IdeaJdbc.update(Product.class, productId)
+                    .setProperty("logoUrl", prodImg.getFileUrl())
+                    .execute();
+        }else{
+            throw new IdeaDataException(IdeaDataExceptionCode.DATA_NOU_FOUND, "Product Image is not found.");
+        }
+    }
 }

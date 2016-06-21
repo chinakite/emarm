@@ -3,6 +3,7 @@
  */
 package com.ideamoment.emarm.model;
 
+import com.ideamoment.emarm.model.enumeration.ProductImageType;
 import com.ideamoment.ideadata.annotation.DataItemType;
 import com.ideamoment.ideadata.annotation.Entity;
 import com.ideamoment.ideadata.annotation.Property;
@@ -24,6 +25,9 @@ public class ProductImage extends HistoriableEntity{
     
     @Property(dataItem="C_FILE_URL", type=DataItemType.VARCHAR, length=1000)
     private String fileUrl;
+    
+    @Property(dataItem="C_TYPE", type=DataItemType.VARCHAR, length=2)
+    private String type = ProductImageType.NORMAL;
 
     
     /**
@@ -83,6 +87,20 @@ public class ProductImage extends HistoriableEntity{
      */
     public void setFileUrl(String fileUrl) {
         this.fileUrl = fileUrl;
+    }
+    
+    /**
+     * @return the type
+     */
+    public String getType() {
+        return type;
+    }
+    
+    /**
+     * @param type the type to set
+     */
+    public void setType(String type) {
+        this.type = type;
     }
     
 }

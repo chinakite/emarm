@@ -423,6 +423,21 @@
                 <div class="clearfix">
                     <div class="col-xs-12">
                         <div class="form-group required">
+                          <label for="inputCoverFile" class="col-xs-2 control-label">封面</label>
+                          <div id="coverUploadDiv" class="col-xs-10">
+                              <input id="importCoverFile" name="importFile" type="file" class="form-control"/>
+                              <input id="inputCover" type="hidden"/>
+                              <ul id="uploadedCoverFile"></ul>
+                          </div>
+                          <div id="coverShowDiv" class="col-xs-10 checkbox" style="display:none;">
+                              <a href='#' class="label bg-gray">查看</a>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
                           <label for="importCopyrightFile" class="col-xs-2 control-label">权属文件</label>
                           <div id="copyrightsUploadDiv" class="col-xs-10">
                               <input  id="importCopyrightFile" name="importFile" type="file" class="form-control"/>
@@ -548,6 +563,17 @@
                      var fileName = data['result']['data'][0]['fileName'];
                      $('#uploadedFile').append('<li>'+fileName+'&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-remove text-red" onclick="removeSample(this);"></i></li>');
                      $('#inputSamples').val(fileUrl);
+              }
+          });
+          
+          $('#importCoverFile').fileupload({
+              url: '<idp:url value="/uploadDoc"/>',
+              dataType: 'json',
+              done: function (e, data) {
+                     var fileUrl = data['result']['data'][0]['fileUrl'];
+                     var fileName = data['result']['data'][0]['fileName'];
+                     $('#uploadedCoverFile').append('<li>'+fileName+'&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-remove text-red" onclick="removeCover(this);"></i></li>');
+                     $('#inputCover').val(fileUrl);
               }
           });
           
@@ -806,6 +832,7 @@
               var samples = $('#inputSamples').val();
               var isbn = $('#inputIsbn').val();
               var copyrights = $('#inputCopyrights').val();
+              var cover = $('#inputCover').val();
               
               $.post(
                   '<idp:url value="/evaluation/product"/>',
@@ -828,7 +855,8 @@
                       'samples': samples,
                       'submit': submit,
                       'isbn': isbn,
-                      'copyrights': copyrights
+                      'copyrights': copyrights,
+                      'logoUrl' : cover
                   },
                   function(json) {
                       var result = IDEA.parseJSON(json);
@@ -882,6 +910,10 @@
           $('#inputSamples').val('');
           $('#uploadedFile').empty();
           $('#samplesShowDiv').hide();
+          
+          $('#inputCover').val('');
+          $('#uploadedCoverFile').empty();
+          $('#coverShowDiv').hide();
           
           $('#inputCopyrights').val('');
           $('#uploadedCopyrightFiles').empty();
@@ -1107,6 +1139,11 @@
       function removeSample(obj) {
           $(obj).parent().remove();
           $('#inputSamples').val('');
+      }
+      
+      function removeCover(obj) {
+          $(obj).parent().remove();
+          $('#inputCover').val('');
       }
       
       function removeCopyright(obj) {

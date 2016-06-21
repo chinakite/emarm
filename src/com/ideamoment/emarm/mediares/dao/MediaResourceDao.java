@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.ideamoment.emarm.model.Product;
 import com.ideamoment.emarm.model.ProductAudio;
 import com.ideamoment.emarm.model.ProductImage;
+import com.ideamoment.emarm.model.enumeration.ProductImageType;
 import com.ideamoment.emarm.model.enumeration.ProductState;
 import com.ideamoment.emarm.model.enumeration.ProductType;
 import com.ideamoment.emarm.model.enumeration.YesOrNo;
@@ -199,6 +200,14 @@ public class MediaResourceDao {
                                               pageSize);
 
         return products;
+    }
+
+    public ProductImage findOldProductImage(String productId) {
+        String sql = "SELECT * FROM T_PRODUCT_IMAGE WHERE C_PRODUCT_ID = :productId and C_TYPE = :type";
+        return (ProductImage)IdeaJdbc.query(sql)
+                                        .setParameter("productId", productId)
+                                        .setParameter("type", ProductImageType.COVER)
+                                        .uniqueTo(ProductImage.class);
     }
 
 }

@@ -68,9 +68,13 @@ public class UploadAction {
                         outputDir.mkdirs();
                     }
                     
-                    String outputPath = outputDirStr + File.separator + file.getOriginalFilename() + "_" + filemeta.getFileId();
+                    String originalFileName = file.getOriginalFilename();
+                    String fileRealName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+                    String fileExtName = originalFileName.substring(originalFileName.lastIndexOf("."));
                     
-                    String fileUrl = "/uploadTmp/doc" + File.separator + dateStr + File.separator + file.getOriginalFilename() + "_" + filemeta.getFileId();
+                    String outputPath = outputDirStr + File.separator + fileRealName + "_" + filemeta.getFileId() + fileExtName;
+                    
+                    String fileUrl = "/uploadTmp/doc" + File.separator + dateStr + File.separator + fileRealName + "_" + filemeta.getFileId() + fileExtName;
                     fileUrl = fileUrl.replaceAll("\\\\", "/");
                     filemeta.setFileUrl(fileUrl);
                     
@@ -122,9 +126,14 @@ public class UploadAction {
                         outputDir.mkdirs();
                     }
                     
-                    String outputPath = outputDirStr + File.separator + file.getOriginalFilename() + "_" + filemeta.getFileId();
+                    String originalFileName = file.getOriginalFilename();
+                    String fileRealName = originalFileName.substring(0, originalFileName.lastIndexOf("."));
+                    String fileExtName = originalFileName.substring(originalFileName.lastIndexOf("."));
                     
-                    String fileUrl = "/uploadTmp/audio" + File.separator + dateStr + File.separator + file.getOriginalFilename() + "_" + filemeta.getFileId();
+                    
+                    String outputPath = outputDirStr + File.separator + fileRealName + "_" + filemeta.getFileId() + fileExtName;
+                    
+                    String fileUrl = "/uploadTmp/audio" + File.separator + dateStr + File.separator + fileRealName + "_" + filemeta.getFileId() + fileExtName;
                     fileUrl = fileUrl.replaceAll("\\\\", "/");
                     filemeta.setFileUrl(fileUrl);
                     

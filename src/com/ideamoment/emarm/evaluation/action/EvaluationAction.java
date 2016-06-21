@@ -170,6 +170,7 @@ public class EvaluationAction {
                         String samples,
                         String isbn,
                         String copyrights,
+                        String logoUrl,
                         String submit) {
         
         Product product;
@@ -220,6 +221,10 @@ public class EvaluationAction {
             sampleList.add(sample);
         }
         product.setSamples(sampleList);
+        
+        if(logoUrl != null) {
+            product.setLogoUrl(logoUrl);
+        }
         
         List<ProductCopyrightFile> cpFileList = new ArrayList<ProductCopyrightFile>();
         if(copyrights != null) {

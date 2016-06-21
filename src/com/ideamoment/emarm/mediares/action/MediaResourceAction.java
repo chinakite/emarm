@@ -220,6 +220,12 @@ public class MediaResourceAction {
         return JsonData.SUCCESS;
     }
     
+    @RequestMapping(value="/mediares/toCover", method=RequestMethod.POST)
+    public JsonData toCover(String imgId) {
+        mediaResourceService.settingCover(imgId);
+        return JsonData.SUCCESS;
+    }
+    
     private DataTableSource<Product> convertToDataTableSource(int draw, Page<Product> productsPage) {
         DataTableSource<Product> dts = new DataTableSource<Product>();
         
