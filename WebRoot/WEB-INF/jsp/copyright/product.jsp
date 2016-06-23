@@ -160,6 +160,7 @@
                         <th>出版/完结时间</th>
                         <th>题材</th>
                         <th>签约状态</th>
+                        <th>推荐人</th>
                         <th>操作</th>
                       </tr>
                     </thead>
@@ -389,6 +390,36 @@
                               <ul id="uploadedFile"></ul>
                           </div>
                           <div id="samplesShowDiv" class="col-xs-10 checkbox" style="display:none;">
+                              <a href='#' class="label bg-gray">下载</a>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="inputCoverFile" class="col-xs-2 control-label">封面</label>
+                          <div id="coverUploadDiv" class="col-xs-10">
+                              <input id="importCoverFile" name="importFile" type="file" class="form-control"/>
+                              <input id="inputCover" type="hidden"/>
+                              <ul id="uploadedCoverFile"></ul>
+                          </div>
+                          <div id="coverShowDiv" class="col-xs-10 checkbox" style="display:none;">
+                              <a href='#' class="label bg-gray">查看</a>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <div class="col-xs-12">
+                        <div class="form-group required">
+                          <label for="importCopyrightFile" class="col-xs-2 control-label">权属文件</label>
+                          <div id="copyrightsUploadDiv" class="col-xs-10">
+                              <input  id="importCopyrightFile" name="importFile" type="file" class="form-control"/>
+                              <input id="inputCopyrights" type="hidden"/>
+                              <ul id="uploadedCopyrightFiles"></ul>
+                          </div>
+                          <div id="copyrightsShowDiv" class="col-xs-10 checkbox" style="display:none;">
                               <a href='#' class="label bg-gray">下载</a>
                           </div>
                         </div>
@@ -818,6 +849,35 @@
                      $('#inputSamples').val(fileUrl);
               }
           });
+          
+          $('#importCoverFile').fileupload({
+              url: '<idp:url value="/uploadDoc"/>',
+              dataType: 'json',
+              done: function (e, data) {
+                     var fileUrl = data['result']['data'][0]['fileUrl'];
+                     var fileName = data['result']['data'][0]['fileName'];
+                     $('#uploadedCoverFile').append('<li>'+fileName+'&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-remove text-red" onclick="removeCover(this);"></i></li>');
+                     $('#inputCover').val(fileUrl);
+              }
+          });
+          
+          $('#importCopyrightFile').fileupload({
+              url: '<idp:url value="/uploadDoc"/>',
+              dataType: 'json',
+              done: function (e, data) {
+                     var fileUrl = data['result']['data'][0]['fileUrl'];
+                     var fileName = data['result']['data'][0]['fileName'];
+                     $('#uploadedCopyrightFiles').append('<li>'+fileName+'&nbsp;&nbsp;&nbsp;&nbsp;<i class="fa fa-remove text-red" onclick="removeCopyright(this);"></i></li>');
+                     var oldInputCoprygiths = $('#inputCopyrights').val();
+                     var copyrights = '';
+                     if(oldInputCoprygiths && oldInputCoprygiths != null && oldInputCoprygiths != '') {
+                         copyrights = oldInputCoprygiths + "," + fileUrl;
+                     }else{
+                         copyrights = fileUrl;
+                     }
+                     $('#inputCopyrights').val(copyrights);
+              }
+          });
       
           initProductTbl();
           loadCategories();
@@ -914,6 +974,7 @@
                 {},
                 {},
                 {},
+                {},
                 {}
               ],
               "columnDefs": [
@@ -985,6 +1046,12 @@
                   {
                       "targets": [7],
                       "render": function(data, type, full) {
+                          return full.createUser.name;
+                      }
+                  },
+                  {
+                      "targets": [8],
+                      "render": function(data, type, full) {
                           var role = '${sessionScope.__SESSION__USER__.role}';
                       
                           var html = '<a href=\'<idp:url value="/copyright/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
@@ -1035,7 +1102,8 @@
                     && validateWebsite()
                     && validateSummary()
                     && validateSamples()
-                    && validateAudioDesc();
+                    && validateAudioDesc()
+                    && validateCopyrights();
           }
       
           if(!r) {
@@ -1057,6 +1125,9 @@
               var audioCopyright = $('#inputAudioCopyright').val();
               var audioDesc = $('#inputAudioDesc').val();
               var samples = $('#inputSamples').val();
+              var isbn = $('#inputIsbn').val();
+              var copyrights = $('#inputCopyrights').val();
+              var cover = $('#inputCover').val();
               
               $.post(
                   '<idp:url value="/product/createProduct"/>',
@@ -1077,7 +1148,10 @@
                       'audioCopyright': audioCopyright,
                       'audioDesc': audioDesc,
                       'samples': samples,
-                      'submit': submit
+                      'submit': submit,
+                      'isbn': isbn,
+                      'copyrights': copyrights,
+                      'logoUrl' : cover
                   },
                   function(json) {
                       var result = IDEA.parseJSON(json);
@@ -1636,6 +1710,25 @@
               inputAudioDescEle.parents('.form-group').removeClass('has-error');
               inputAudioDescEle.next('.feedback-tip').find('span').text('');
               inputAudioDescEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
+      function validateCopyrights() {
+          var inputCopyrightsEle = $('#inputCopyrights');
+          var copyrights = inputCopyrightsEle.val();
+          if(!copyrights || $.trim(copyrights).length == 0) {
+              var formGroup = inputCopyrightsEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputCopyrightsEle.parents('.form-group').addClass('has-error');
+                  inputCopyrightsEle.next('.feedback-tip').find('span').text('权属文件不能为空');
+                  inputCopyrightsEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputCopyrightsEle.parents('.form-group').removeClass('has-error');
+              inputCopyrightsEle.next('.feedback-tip').find('span').text('');
+              inputCopyrightsEle.next('.feedback-tip').hide();
               return true;
           }
       }

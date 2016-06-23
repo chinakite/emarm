@@ -370,6 +370,10 @@
                               clearUserModal();
                               $('#userModal').modal('hide');
                               loadUsers();
+                          }else{
+                              if(result.code == 'IDEADATA-00002') {
+                                  alert(result.msg + "已存在");
+                              }
                           }
                       }
                   );       
@@ -391,6 +395,10 @@
                               clearUserModal();
                               $('#userModal').modal('hide');
                               loadUsers();
+                          }else{
+                              if(result.code == 'IDEADATA-00002') {
+                                  alert(result.msg + "已存在");
+                              }
                           }
                       }
                   );       
@@ -537,7 +545,7 @@
               var formGroup = inputNameEle.parents('.form-group');
               if(!formGroup.hasClass('has-error')) {
                   inputNameEle.parents('.form-group').addClass('has-error');
-                  inputNameEle.next('.feedback-tip').find('span').text('作品题材名称不能为空');
+                  inputNameEle.next('.feedback-tip').find('span').text('用户姓名不能为空');
                   inputNameEle.next('.feedback-tip').show();
               }
               return false;

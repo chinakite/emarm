@@ -22,6 +22,7 @@ import com.ideamoment.emarm.model.CopyrightContract;
 import com.ideamoment.emarm.model.CopyrightContractAudit;
 import com.ideamoment.emarm.model.CopyrightContractDoc;
 import com.ideamoment.emarm.model.Product;
+import com.ideamoment.emarm.model.ProductCopyrightFile;
 import com.ideamoment.emarm.model.ProductSample;
 import com.ideamoment.emarm.product.service.ProductService;
 import com.ideamoment.emarm.util.DataTableSource;
@@ -161,6 +162,8 @@ public class CopyrightAction {
                         String audioDesc,
                         String samples,
                         String isbn,
+                        String copyrights,
+                        String logoUrl,
                         String submit) {
         
         Product product;
@@ -200,6 +203,22 @@ public class CopyrightAction {
             sample.setFileUrl(sampleUrl);
             sampleList.add(sample);
         }
+        
+        if(logoUrl != null) {
+            product.setLogoUrl(logoUrl);
+        }
+        
+        List<ProductCopyrightFile> cpFileList = new ArrayList<ProductCopyrightFile>();
+        if(copyrights != null) {
+            String[] cpFileArray = copyrights.split(",");
+            for(String copyrightFileUrl : cpFileArray) {
+                ProductCopyrightFile copyrightFile = new ProductCopyrightFile();
+                copyrightFile.setFileUrl(copyrightFileUrl);
+                cpFileList.add(copyrightFile);
+            }
+            product.setCopyrightFiles(cpFileList);
+        }
+        
         product.setSamples(sampleList);
         try{
             product = productService.saveProduct(product, submit, true);

@@ -105,6 +105,9 @@ public class Product extends HistoriableEntity {
     @Ref
     private EvaluationInvitation evaInvitation;
     
+    @Ref
+    private User createUser;
+
     @Transient
     private Integer taskCount;
     
@@ -611,6 +614,22 @@ public class Product extends HistoriableEntity {
      */
     public void setInMediaRes(String inMediaRes) {
         this.inMediaRes = inMediaRes;
+    }
+    
+    /**
+     * @return the createUser
+     */
+    public User getCreateUser() {
+        return createUser;
+    }
+
+
+    
+    /**
+     * @param createUser the createUser to set
+     */
+    public void setCreateUser(User createUser) {
+        this.createUser = createUser;
     }
     
 }

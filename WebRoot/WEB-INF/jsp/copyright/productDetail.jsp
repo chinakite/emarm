@@ -87,11 +87,12 @@
                               <p class="col-xs-12 productSummary">${product.summary}</p>
                               <p class="col-xs-5 detailInfo-light">作者：${product.author.name}</p>
                               <p class="col-xs-7 detailInfo-light">作者笔名：${product.author.pseudonym}</p>
-                              <p class="col-xs-5 detailInfo-light">题材：${product.subject.id}</p>
+                              <p class="col-xs-5 detailInfo-light">题材：${product.subject.name}</p>
                               <p class="col-xs-7 detailInfo-light">字数：${product.wordCount}&nbsp;万字</p>
                               <p class="col-xs-5 detailInfo-light">出版状态：${product.publishStateText}</p>
                               <p class="col-xs-7 detailInfo-light">出版年份：${product.publishYear}</p>
                               <p class="col-xs-5 detailInfo-light">ISBN：${product.isbn}</p>
+                              <p class="col-xs-7 detailInfo-light">推荐人：${product.createUser.name}</p>
                               <div class="col-xs-12 detailInfo-light">
                                   <span>样章：</span><a href='<idp:url value=""/>${product.samples[0].fileUrl}' class="label bg-gray">下载</a>
                               </div>

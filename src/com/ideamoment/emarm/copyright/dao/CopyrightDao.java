@@ -306,7 +306,10 @@ public class CopyrightDao {
                      + " s.C_ID AS s$id, "
                      + " s.C_NAME AS s$name, "
                      + " sp.C_ID as sp$id, "
-                     + " sp.C_FILE_URL as sp$fileUrl "
+                     + " sp.C_FILE_URL as sp$fileUrl, "
+                     + " u.C_ID as u$id, "
+                     + " u.C_NAME as u$name, "
+                     + " u.C_ACCOUNT as u$account "
                      + " FROM "
                      + " t_product p "
                      + " LEFT JOIN t_author a "
@@ -315,12 +318,14 @@ public class CopyrightDao {
                      + " ON s.C_ID = p.C_SUBJECT_ID "
                      + " LEFT JOIN t_product_sample sp "
                      + " ON sp.C_PRODUCT_ID = p.C_ID "
+                     + " LEFT JOIN t_user u "
+                     + " ON p.C_CREATOR = u.C_ID "
                      + " WHERE p.C_ID = :id "
                      + " ORDER BY p.C_MODIFYTIME DESC ";
 
         List<Product> products = IdeaJdbc.query(sql).setParameter("id", id)
                 .populate("author", "a").populate("subject", "s")
-                .populate("samples", "sp").listTo(Product.class, "p");
+                .populate("samples", "sp").populate("createUser", "u").listTo(Product.class, "p");
 
         if (products != null && products.size() > 0) {
             return products.get(0);
@@ -345,7 +350,10 @@ public class CopyrightDao {
                      + " a.C_ID AS a$id,"
                      + " a.C_NAME AS a$name,"
                      + " s.C_ID AS s$id, "
-                     + " s.C_NAME AS s$name "
+                     + " s.C_NAME AS s$name, "
+                     + " u.C_ID AS u$id, "
+                     + " u.C_NAME AS u$name, "
+                     + " u.C_ACCOUNT AS u$account "
                      + " FROM "
                      + " t_product p "
                      + " LEFT JOIN t_author a "
@@ -356,6 +364,8 @@ public class CopyrightDao {
                      + " ON p.C_ID = ccp.C_PRODUCT_ID "
                      + " LEFT JOIN t_copyright_contract cc "
                      + " ON cc.C_ID = ccp.C_CONTRACT_ID "
+                     + " LEFT JOIN t_user u "
+                     + " ON p.C_CREATOR = u.C_ID "
                      + " WHERE p.C_TYPE = :type "
                      + " AND p.C_STATE in (:states) or (p.C_STATE = '50' and p.C_CREATOR = '"
                      + userId
@@ -389,7 +399,7 @@ public class CopyrightDao {
 
         Query query = IdeaJdbc.query(sql).setParameter("type", ProductType.TEXT)
                 .setParameter("states", states).populate("author", "a")
-                .populate("subject", "s");
+                .populate("subject", "s").populate("createUser", "u");
 
         if (condition.get("productName") != null) {
             query.setParameter("productName",
