@@ -781,7 +781,7 @@
                       
                           var html = '<a href=\'<idp:url value="/product/productDetail"/>?id=' + full.id + '\' target="_blank">查看</a> ';
                               
-                          if(full.state == '0') {
+                          if(full.state == '0' || full.state == '101') {
                               html += '<span class="small">|</span> ';
                               html += '<a onclick="popEditModal(\'' + full.id + '\');">编辑</a>';
                               html += ' <span class="small">|</span> <a onclick="deleteProduct(\'' + full.id + '\', \'' + full.name + '\');">删除</a>';

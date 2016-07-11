@@ -432,25 +432,25 @@ public class EvaluationService {
             if(product == null) {
                 throw dataNotFoundException(id);
             }else{
-                if(product.getState().equals(ProductState.APPROVE_WAITING)) {
-                    Task task = new Task();
-                    task.setCreateTime(curTime);
-                    task.setCreator(curUser.getId());
-                    task.setModifier(curUser.getId());
-                    task.setModifyTime(curTime);
-                    task.setRoleId(RoleType.LAWYER);
-                    task.setState(TaskState.UNREAD);
-                    task.setTargetId(product.getId());
-                    task.setTargetType(TaskTargetType.EVALUATION);
-                    task.setTitle("作品《"+product.getName()+"》已申请权属审核，请进行审核。");
-                    IdeaJdbc.save(task);
-                    
-                    return IdeaJdbc.update(Product.class, id)
-                            .setProperty("state", ProductState.CPFILE_APPROVE_WAITING)
-                            .setProperty("modifier", curUser.getId())
-                            .setProperty("modifyTime", curTime)
-                            .execute();
-                }else if(product.getState().equals(ProductState.CPFILE_APPROVE_WAITING)) {
+//                if(product.getState().equals(ProductState.APPROVE_WAITING)) {
+//                    Task task = new Task();
+//                    task.setCreateTime(curTime);
+//                    task.setCreator(curUser.getId());
+//                    task.setModifier(curUser.getId());
+//                    task.setModifyTime(curTime);
+//                    task.setRoleId(RoleType.LAWYER);
+//                    task.setState(TaskState.UNREAD);
+//                    task.setTargetId(product.getId());
+//                    task.setTargetType(TaskTargetType.EVALUATION);
+//                    task.setTitle("作品《"+product.getName()+"》已申请权属审核，请进行审核。");
+//                    IdeaJdbc.save(task);
+//                    
+//                    return IdeaJdbc.update(Product.class, id)
+//                            .setProperty("state", ProductState.CPFILE_APPROVE_WAITING)
+//                            .setProperty("modifier", curUser.getId())
+//                            .setProperty("modifyTime", curTime)
+//                            .execute();
+//                }else if(product.getState().equals(ProductState.CPFILE_APPROVE_WAITING)) {
                     Task task = new Task();
                     task.setCreateTime(curTime);
                     task.setCreator(curUser.getId());
@@ -460,7 +460,7 @@ public class EvaluationService {
                     task.setState(TaskState.UNREAD);
                     task.setTargetId(product.getId());
                     task.setTargetType(TaskTargetType.EVALUATION);
-                    task.setTitle("作品《"+product.getName()+"》已权属审核通过，请邀请专家评价。");
+                    task.setTitle("作品《"+product.getName()+"》已审核通过，请邀请专家评价。");
                     IdeaJdbc.save(task);
                     
                     return IdeaJdbc.update(Product.class, id)
@@ -468,9 +468,9 @@ public class EvaluationService {
                                 .setProperty("modifier", curUser.getId())
                                 .setProperty("modifyTime", curTime)
                                 .execute();
-                }else{
-                    return 0;
-                }
+//                }else{
+//                    return 0;
+//                }
             }
         }catch(Exception e) {
             e.printStackTrace();
@@ -488,6 +488,20 @@ public class EvaluationService {
         if(product == null) {
             throw dataNotFoundException(id);
         }else{
+            Date curTime = new Date();
+            
+            Task task = new Task();
+            task.setCreateTime(curTime);
+            task.setCreator(curUser.getId());
+            task.setModifier(curUser.getId());
+            task.setModifyTime(curTime);
+            task.setRoleId(RoleType.EVALUATOR_MGR);
+            task.setState(TaskState.UNREAD);
+            task.setTargetId(product.getId());
+            task.setTargetType(TaskTargetType.EVALUATION);
+            task.setTitle("作品《"+product.getName()+"》已被拒绝，请联系评价主管或重新填写相关信息。");
+            IdeaJdbc.save(task);
+            
             return IdeaJdbc.update(Product.class, id)
                             .setProperty("state", ProductState.APPROVE_REJECT)
                             .setProperty("modifier", curUser.getId())

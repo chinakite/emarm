@@ -19,7 +19,7 @@
                 <i class="fa fa-calendar-check-o"></i> <span>我的待办</span><span id="menuTaskCount" class="label label-primary pull-right">0</span>
               </a>
             </li>
-            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '80') > -1}">
+            <c:if test="${fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') > -1 || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') > -1}">
             <li id="menu_evaluation">
               <a href='<idp:url value="/evaluation/productPage"/>'>
                 <i class="fa fa-tag"></i>
