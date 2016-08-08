@@ -59,7 +59,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1 class="detailTitle col-xs-6">${product.name}</h1>
-            <c:if test="${product.state == '0' || ${product.state == '101' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '02') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1'}">
+            <c:if test="${product.state == '0' || product.state == '101' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '02') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1'}">
                 <button class="btn btn-default pull-right ml10" onclick="deleteProduct('${product.name}');"><i class="fa fa-remove"></i> 删除</button>
                 <button class="btn btn-default pull-right ml10" onclick="popEditModal('${product.id}');"><i class="fa fa-edit"></i> 编辑</button>
             </c:if>
