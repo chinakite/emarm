@@ -147,6 +147,7 @@ public class EvaluationService {
                     evaInvitation.setContent(emailContent);
                     evaInvitation.setCreateTime(curDate);
                     evaInvitation.setCreator(curUser.getId());
+                    evaInvitation.setEvaluationState(YesOrNo.NO);
                     IdeaJdbc.save(evaInvitation);
                 }catch(Exception e) {
                     e.printStackTrace();

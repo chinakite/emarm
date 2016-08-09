@@ -344,7 +344,7 @@
                   'storyFrame': storyFrame ,
                   'storyText': storyText ,
                   'storyRole': storyRole ,
-                  'target': target ,
+                  'storyTarget': target ,
                   'storySuggest': storySuggest,
                   'audioEdit': audioEdit ,
                   'playType': playtype ,
@@ -355,6 +355,9 @@
                   var result = IDEA.parseJSON(json);
                   if(result.type == 'success') {
                       alert('提交成功，请关闭页面');
+                      window.opener = null;
+					  window.open(' ', '_self');
+					  window.close();
                   }else{
                       alert('您已经评价过此作品，不能再评价了。');
                   }

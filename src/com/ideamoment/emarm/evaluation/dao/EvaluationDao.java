@@ -179,17 +179,18 @@ public class EvaluationDao {
                    + "t.C_STORY_ROLE AS t$storyRole, "
                    + "t.C_STORY_TARGET AS t$storyTarget, "
                    + "t.C_STORY_SUGGEST AS t$storySuggest, "
-                   + "t.C_MAKE_AUDIO_EDIT AS t$storyFrame, "
-                   + "t.C_MAKE_PLAY_TYPE AS t$storyText, "
-                   + "t.C_MAKE_PLAY_STYLE AS t$storyRole, "
-                   + "t.C_MAKE_SUGGEST AS t$storySuggest, "
+                   + "t.C_MAKE_AUDIO_EDIT AS t$audioEdit, "
+                   + "t.C_MAKE_PLAY_TYPE AS t$playType, "
+                   + "t.C_MAKE_PLAY_STYLE AS t$playStyle, "
+                   + "t.C_MAKE_SUGGEST AS t$makeSuggest, "
                    + "u.C_ID AS u$id, "
                    + "u.C_NAME AS u$name "
                    + "FROM " 
                    + "T_EVALUATION t "
                    + "LEFT JOIN T_USER u "
                    + "ON t.C_USER_ID = u.C_ID "
-                   + "WHERE t.C_PRODUCT_ID = :productId";
+                   + "WHERE t.C_PRODUCT_ID = :productId "
+                   + "ORDER BY t.C_CREATETIME ";
         
         List<Evaluation> evaluations = IdeaJdbc.query(sql)
                                                 .setParameter("productId", productId)

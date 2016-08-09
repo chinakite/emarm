@@ -276,9 +276,9 @@
        <td>
            <div class="evaItem">
               <span class="evaItemTitle">音频改编难度</span>
-              {{if evaluation.makeAudioEdit > 2}}
+              {{if evaluation.audioEdit > 2}}
               <span class="evaItemText">难</span>
-              {{else if evaluation.makeAudioEdit > 1}}
+              {{else if evaluation.audioEdit > 1}}
               <span class="evaItemText">一般</span>
               {{else}}
               <span class="evaItemText">容易</span>
@@ -286,14 +286,51 @@
            </div>
            <div class="evaItem">
               <span class="evaItemTitle">播讲形式建议</span>
+              {{if evaluation.playType.indexOf('1') > -1}}
               <span class="evaItemText">男声</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('2') > -1}}
+              <span class="evaItemText">女声</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('3') > -1}}
               <span class="evaItemText">单播</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('4') > -1}}
+              <span class="evaItemText">对播</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('5') > -1}}
+              <span class="evaItemText">广播剧</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('6') > -1}}
               <span class="evaItemText">小说剧</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('7') > -1}}
+              <span class="evaItemText">适合电台播出</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('8') > -1}}
               <span class="evaItemText">适合网络播出</span>
+              {{/if}}
            </div>
            <div class="evaItem">
               <span class="evaItemTitle">演员风格建议</span>
+              {{if evaluation.playStyle.indexOf('1') > -1}}
+              <span class="evaItemText">甜美</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('2') > -1}}
+              <span class="evaItemText">阳光</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('3') > -1}}
+              <span class="evaItemText">温暖</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('4') > -1}}
+              <span class="evaItemText">文艺</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('5') > -1}}
               <span class="evaItemText">厚重</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('6') > -1}}
+              <span class="evaItemText">其他</span>
+              {{/if}}
            </div>
            <div class="evaItem">
               <p class="evaItemTitle pull-left txt-indent">其他意见</p>
