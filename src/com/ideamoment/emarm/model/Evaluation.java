@@ -45,6 +45,9 @@ public class Evaluation extends HistoriableEntity {
     @Property(dataItem="C_MAKE_PLAY_STYLE", type=DataItemType.VARCHAR, length=40)
     private String playStyle;
     
+    @Property(dataItem="C_MAKE_OTHER_STYLE", type=DataItemType.VARCHAR, length=300)
+    private String otherStyle;
+    
     @Property(dataItem="C_MAKE_SUGGEST", type=DataItemType.VARCHAR, length=1000)
     private String makeSuggest;
 
@@ -222,8 +225,20 @@ public class Evaluation extends HistoriableEntity {
     public void setMakeSuggest(String makeSuggest) {
         this.makeSuggest = makeSuggest;
     }
+    
+    
 
-    /**
+    public String getOtherStyle() {
+		return otherStyle;
+	}
+
+
+	public void setOtherStyle(String otherStyle) {
+		this.otherStyle = otherStyle;
+	}
+
+
+	/**
      * @return the user
      */
     public User getUser() {

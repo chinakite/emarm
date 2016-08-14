@@ -276,6 +276,7 @@ public class EvaluationAction {
                             int audioEdit,
                             String playType,
                             String playStyle,
+                            String otherStyle,
                             String makeSuggest ) {
         
         Evaluation eva = new Evaluation();
@@ -288,6 +289,7 @@ public class EvaluationAction {
         eva.setAudioEdit(audioEdit);
         eva.setPlayType(playType);
         eva.setPlayStyle(playStyle);
+        eva.setOtherStyle(otherStyle);
         eva.setMakeSuggest(makeSuggest);
         
         evaluationService.saveEvaluation(eva);
@@ -327,7 +329,14 @@ public class EvaluationAction {
                                      String makeValue,
                                      String onlyWebCast,
                                      String hotSubject,
-                                     String refPrice) {
+                                     String refPrice,
+                                     String doubanScore,
+                                     String doubanScorerNum,
+                                     String kaijuanMonthSale,
+                                     String kaijuanYearSale,
+                                     String kaijuanTotalSale,
+                                     String buySuggest
+                                     ) {
         
         FinalEvaluation finalEva = new FinalEvaluation();
         finalEva.setProductId(productId);
@@ -338,6 +347,12 @@ public class EvaluationAction {
         finalEva.setOnlyWebCast(onlyWebCast);
         finalEva.setHotSubject(hotSubject);
         finalEva.setRefPrice(refPrice);
+        finalEva.setDoubanScore(doubanScore);
+        finalEva.setDoubanScorerNum(doubanScorerNum);
+        finalEva.setKaijuanMonthSale(kaijuanMonthSale);
+        finalEva.setKaijuanYearSale(kaijuanYearSale);
+        finalEva.setKaijuanTotalSale(kaijuanTotalSale);
+        finalEva.setBuySuggest(buySuggest);
         
         evaluationService.finishEvaluation(finalEva);
         return JsonData.SUCCESS;

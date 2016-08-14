@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ideamoment.emarm.author.dao.AuthorDao;
+import com.ideamoment.emarm.copyright.dao.CopyrightDao;
 import com.ideamoment.emarm.evaluation.EvaluationException;
 import com.ideamoment.emarm.evaluation.EvaluationExceptionCode;
 import com.ideamoment.emarm.evaluation.dao.EvaluationDao;
@@ -53,6 +54,9 @@ public class EvaluationService {
     
     @Autowired
     private AuthorDao authorDao;
+    
+    @Autowired
+    private CopyrightDao copyrightDao;
 
     /**
      * @return the evaluationDao
@@ -81,8 +85,16 @@ public class EvaluationService {
     public void setAuthorDao(AuthorDao authorDao) {
         this.authorDao = authorDao;
     }
+    
+    public CopyrightDao getCopyrightDao() {
+		return copyrightDao;
+	}
 
-    @IdeaJdbcTx
+	public void setCopyrightDao(CopyrightDao copyrightDao) {
+		this.copyrightDao = copyrightDao;
+	}
+
+	@IdeaJdbcTx
     public Page<Product> pageProducts(int curPage, int pageSize, HashMap condition) {
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
@@ -223,6 +235,7 @@ public class EvaluationService {
                 IdeaJdbc.save(product);
             }
             
+            evaluationDao.deleteProductSamples(product.getId());
             List<ProductSample> samples = product.getSamples();
             for(ProductSample sample : samples) {
                 sample.setProductId(product.getId());
@@ -242,6 +255,7 @@ public class EvaluationService {
                 IdeaJdbc.save(prodImg);
             }
             
+            copyrightDao.deleteProductCopyrightFiles(product.getId());
             List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
             if(copyrightFiles != null) {
                 for(ProductCopyrightFile cpFile : copyrightFiles) {
@@ -294,12 +308,14 @@ public class EvaluationService {
                 IdeaJdbc.save(product);
             }
             
+            evaluationDao.deleteProductSamples(product.getId());
             List<ProductSample> samples = product.getSamples();
             for(ProductSample sample : samples) {
                 sample.setProductId(product.getId());
                 IdeaJdbc.save(sample);
             }
             
+            copyrightDao.deleteProductCopyrightFiles(product.getId());
             List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
             if(copyrightFiles != null) {
                 for(ProductCopyrightFile cpFile : copyrightFiles) {
@@ -363,12 +379,14 @@ public class EvaluationService {
                 IdeaJdbc.save(product);
             }
             
+            evaluationDao.deleteProductSamples(product.getId());
             List<ProductSample> samples = product.getSamples();
             for(ProductSample sample : samples) {
                 sample.setProductId(product.getId());
                 IdeaJdbc.save(sample);
             }
             
+            copyrightDao.deleteProductCopyrightFiles(product.getId());
             List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
             for(ProductCopyrightFile cpFile : copyrightFiles) {
                 cpFile.setProductId(product.getId());

@@ -430,7 +430,7 @@
                               <ul id="uploadedCoverFile"></ul>
                           </div>
                           <div id="coverShowDiv" class="col-xs-10 checkbox" style="display:none;">
-                              <a href='#' class="label bg-gray">查看</a>
+                              <a href='#' target="_blank" class="label bg-gray">查看</a>
                           </div>
                         </div>
                     </div>
@@ -444,9 +444,9 @@
                               <input id="inputCopyrights" type="hidden"/>
                               <ul id="uploadedCopyrightFiles"></ul>
                           </div>
-                          <div id="copyrightsShowDiv" class="col-xs-10 checkbox" style="display:none;">
-                              <a href='#' class="label bg-gray">下载</a>
-                          </div>
+                          <ul id="copyrightsShowDiv" class="col-xs-10 checkbox" style="display:none;">
+                              
+                          </ul>
                         </div>
                     </div>
                 </div>
@@ -1115,6 +1115,28 @@
                           $('#samplesUploadDiv').hide();
                           $('#samplesShowDiv').show();
                           $('#inputSamples').val(prod.samples[0].fileUrl);
+                      }
+                      if(prod.logoUrl) {
+                          $('#coverShowDiv a').attr('href', '<idp:url value=""/>' + prod.logoUrl);
+                          $('#coverUploadDiv').hide();
+                          $('#coverShowDiv').show();
+                          $('#inputCover').val(prod.logoUrl);
+                      }
+                      if(prod.copyrightFiles) {
+                          $('#copyrightsShowDiv').empty();
+                          var copyrightFiles = '';
+                          for(var i=0; i<prod.copyrightFiles.length; i++) {
+                              var html = "<li style='margin-bottom: 2px;'><a href='<idp:ctx/>" + prod.copyrightFiles[i].fileUrl + "' class='label bg-gray'>" + prod.copyrightFiles[i].name + "</a></li>";
+                              $('#copyrightsShowDiv').append(html);
+                              if(i > 0) {
+                                  copyrightFiles += ",";
+                              }
+                              copyrightFiles += prod.copyrightFiles[i].fileUrl;
+                          }
+                          $('#copyrightsUploadDiv').hide();
+                          $('#copyrightsShowDiv').show();
+                          
+                          $('#inputCopyrights').val(copyrightFiles);
                       }
                       
                       if(prod.hasAudio == '1') {

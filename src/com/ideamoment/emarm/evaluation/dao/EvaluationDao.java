@@ -135,7 +135,10 @@ public class EvaluationDao {
                    +     " s.C_ID AS s$id, "
                    +     " s.C_NAME AS s$name, "
                    +     " sp.C_ID as sp$id, "
-                   +     " sp.C_FILE_URL as sp$fileUrl "
+                   +     " sp.C_FILE_URL as sp$fileUrl, "
+                   +     " pcf.C_ID as pcf$id, "
+                   +     " pcf.C_NAME as pcf$name, "
+                   +     " pcf.C_FILE_URL as pcf$fileUrl "
                    + " FROM "
                    +     " t_product p "
                    +   " LEFT JOIN t_author a "
@@ -144,6 +147,8 @@ public class EvaluationDao {
                    +     " ON s.C_ID = p.C_SUBJECT_ID "
                    +   " LEFT JOIN t_product_sample sp "
                    +     " ON sp.C_PRODUCT_ID = p.C_ID "
+                   +   " LEFT JOIN t_product_copyright_file pcf "
+                   +     " ON pcf.C_PRODUCT_ID = p.C_ID "
                    + " WHERE p.C_ID = :id "
                    + " ORDER BY p.C_MODIFYTIME DESC ";
         
@@ -152,6 +157,7 @@ public class EvaluationDao {
                                             .populate("author", "a")
                                             .populate("subject", "s")
                                             .populate("samples", "sp")
+                                            .populate("copyrightFiles", "pcf")
                                             .listTo(Product.class, "p");
         
         if(products != null && products.size() > 0) {
@@ -182,6 +188,7 @@ public class EvaluationDao {
                    + "t.C_MAKE_AUDIO_EDIT AS t$audioEdit, "
                    + "t.C_MAKE_PLAY_TYPE AS t$playType, "
                    + "t.C_MAKE_PLAY_STYLE AS t$playStyle, "
+                   + "t.C_MAKE_OTHER_STYLE AS t$otherStyle, "
                    + "t.C_MAKE_SUGGEST AS t$makeSuggest, "
                    + "u.C_ID AS u$id, "
                    + "u.C_NAME AS u$name "
@@ -211,6 +218,12 @@ public class EvaluationDao {
                    + "fe.C_MAKE_VALUE as fe$makeValue, "
                    + "fe.C_ONLY_WEB_CAST as fe$onlyWebCast, "
                    + "fe.C_HOT_SUBJECT as fe$hotSubject, "
+                   + "fe.C_DOUBAN_SCORE as fe$doubanScore, "
+                   + "fe.C_DOUBAN_SCORER_NUM as fe$doubanScorerNum, "
+                   + "fe.C_KAIJUAN_MONTH_SALE as fe$kaijuanMonthSale, "
+                   + "fe.C_KAIJUAN_YEAR_SALE as fe$kaijuanYearSale, "
+                   + "fe.C_KAIJUAN_TOTAL_SALE as fe$kaijuanTotalSale, "
+                   + "fe.C_BUY_SUGGEST as fe$buySuggest, "
                    + "u.C_ID as u$id, "
                    + "u.C_NAME as u$name "
                    + "FROM T_FINAL_EVALUATION fe, T_USER u WHERE fe.C_PRODUCT_ID = :productId and fe.C_CREATOR = u.C_ID";
@@ -419,5 +432,10 @@ public class EvaluationDao {
                          .setParameter("userId", userId)
                          .execute();
     }
+
+	public void deleteProductSamples(String productId) {
+		String sql = "delete from T_PRODUCT_SAMPLE where C_PRODUCT_ID = :productId";
+        IdeaJdbc.sql(sql).setParameter("productId", productId).execute();
+	}
     
 }

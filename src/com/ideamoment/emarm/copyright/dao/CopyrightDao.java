@@ -445,4 +445,9 @@ public class CopyrightDao {
         String sql = "delete from T_COPYRIGHT_CTRT_DOC where C_CONTRACT_ID = :contractId";
         IdeaJdbc.sql(sql).setParameter("contractId", contractId).execute();
     }
+
+	public void deleteProductCopyrightFiles(String productId) {
+		String sql = "delete from T_PRODUCT_COPYRIGHT_FILE where C_PRODUCT_ID = :productId";
+        IdeaJdbc.sql(sql).setParameter("productId", productId).execute();
+	}
 }

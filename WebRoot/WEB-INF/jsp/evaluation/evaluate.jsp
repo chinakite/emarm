@@ -123,9 +123,6 @@
                                           <div class="col-sm-2 radio">
                                               <label for="story_bad"><input id="story_bad" name="storyframe" type="radio" value="2"/>比较差</label>
                                           </div>
-                                          <div class="col-sm-2 radio">
-                                              <label for="story_low"><input id="story_low" name="storyframe" type="radio" value="1"/>非常差</label>
-                                          </div>
                                       </div>
                                   </div>
                                   <div class="form-group">
@@ -143,9 +140,6 @@
                                           <div class="col-sm-2 radio">
                                               <label for="storytext_bad"><input id="storytext_bad" name="storytext" type="radio" value="2"/>比较差</label>
                                           </div>
-                                          <div class="col-sm-2 radio">
-                                              <label for="storytext_low"><input id="storytext_low" name="storytext" type="radio" value="1"/>非常差</label>
-                                          </div>
                                       </div>
                                   </div>
                                   <div class="form-group">
@@ -162,9 +156,6 @@
                                           </div>
                                           <div class="col-sm-2 radio">
                                               <label for="storyrole_bad"><input id="storyrole_bad" name="storyrole" type="radio" value="2"/>比较差</label>
-                                          </div>
-                                          <div class="col-sm-2 radio">
-                                              <label for="storyrole_low"><input id="storyrole_low" name="storyrole" type="radio" value="1"/>非常差</label>
                                           </div>
                                       </div>
                                   </div>
@@ -320,6 +311,7 @@
           var storySuggest = $('#storySuggest').val();
           var audioEdit = $('input[name=audioEdit]:checked').val();
           var playTypeEle = $('input[name=playType]:checked');
+          var otherStyle = $('#otherstyleText').val();
           var playtype = '';
           for(var i=0; i<playTypeEle.length; i++) {
               if(i>0) {
@@ -349,6 +341,7 @@
                   'audioEdit': audioEdit ,
                   'playType': playtype ,
                   'playStyle': playstyle ,
+                  'otherStyle': otherStyle,
                   'makeSuggest': makeSuggest
               },
               function(json) {

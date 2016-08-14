@@ -667,6 +667,38 @@
               <label for="hotSubject" ><input type="checkbox" id="hotSubject" name="hotSubject" onclick="calPrice();"/> 热门题材</label>
             </div>
           </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">豆瓣评分</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="doubanScore" name="doubanScore"/>
+            </div>
+            <label class="col-sm-2 control-label">豆瓣打分人数</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="doubanScorerNum" name="doubanScorerNum"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">开卷月销量</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="kaijuanMonthSale" name="kaijuanMonthSale"/>
+            </div>
+            <label class="col-sm-2 control-label">开卷年销量</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="kaijuanYearSale" name="kaijuanYearSale"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">开卷总销量</label>
+            <div class="col-sm-4">
+                <input type="text" class="form-control" id="kaijuanTotalSale" name="kaijuanTotalSale"/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">购买建议</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="buySuggest" name="buySuggest"/>
+            </div>
+          </div>
           <div class="form-group text-center">
             <button type="button" class="btn btn-emarm" onclick="finishEvaluation();">评价完成</button>
           </div>
@@ -749,6 +781,42 @@
           <div class="form-group">
             <div class="col-sm-10 checkbox">
               <label for="hotSubject" ><input type="checkbox" id="hotSubject" name="hotSubject" disabled {{if fe.hotSubject == '1'}}checked{{/if}}/> 热门题材</label>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">豆瓣评分</label>
+            <div class="col-sm-10 checkbox">
+              <span>{{fe.doubanScore}}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">豆瓣评价人数</label>
+            <div class="col-sm-10 checkbox">
+              <span>{{fe.doubanScorerNum}}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">开卷月销量</label>
+            <div class="col-sm-10 checkbox">
+              <span>{{fe.kaijuanMonthSale}}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">开卷年销量</label>
+            <div class="col-sm-10 checkbox">
+              <span>{{fe.kaijuanYearSale}}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">年卷总销量</label>
+            <div class="col-sm-10 checkbox">
+              <span>{{fe.kaijuanTotalSale}}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label">购买建议</label>
+            <div class="col-sm-10 checkbox">
+              <span>{{fe.buySuggest}}</span>
             </div>
           </div>
         </form>
@@ -1338,6 +1406,12 @@
               hotSubject = '0';
           }
           var refPrice = $('#pricePanel').text();
+          var doubanScore = $('#doubanScore').val();
+          var doubanScorerNum = $('#doubanScorerNum').val();
+          var kaijuanMonthSale = $('#kaijuanMonthSale').val();
+          var kaijuanYearSale = $('#kaijuanYearSale').val();
+          var kaijuanTotalSale = $('#kaijuanTotalSale').val();
+          var buySuggest = $('#buySuggest').val();
           
           if(r) {
               $.post(
@@ -1350,7 +1424,13 @@
                       'makeValue': makeAudioEdit,
                       'onlyWebCast': onlyWebCast,
                       'hotSubject': hotSubject,
-                      'refPrice': refPrice
+                      'refPrice': refPrice,
+                      'doubanScore': doubanScore,
+                      'doubanScorerNum': doubanScorerNum,
+                      'kaijuanMonthSale': kaijuanMonthSale,
+                      'kaijuanYearSale': kaijuanYearSale,
+                      'kaijuanTotalSale': kaijuanTotalSale,
+                      'buySuggest': buySuggest
                   },
                   function(json) {
                       var result = IDEA.parseJSON(json);

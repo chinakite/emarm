@@ -38,6 +38,24 @@ public class FinalEvaluation extends HistoriableEntity {
     
     @Property(dataItem="C_HOT_SUBJECT", type=DataItemType.VARCHAR, length=1)
     private String hotSubject = YesOrNo.NO;
+    
+    @Property(dataItem="C_DOUBAN_SCORE", type=DataItemType.VARCHAR, length=10)
+    private String doubanScore;
+    
+    @Property(dataItem="C_DOUBAN_SCORER_NUM", type=DataItemType.VARCHAR, length=10)
+    private String doubanScorerNum;
+    
+    @Property(dataItem="C_KAIJUAN_MONTH_SALE", type=DataItemType.VARCHAR, length=10)
+    private String kaijuanMonthSale;
+    
+    @Property(dataItem="C_KAIJUAN_YEAR_SALE", type=DataItemType.VARCHAR, length=10)
+    private String kaijuanYearSale;
+    
+    @Property(dataItem="C_KAIJUAN_TOTAL_SALE", type=DataItemType.VARCHAR, length=10)
+    private String kaijuanTotalSale;
+    
+    @Property(dataItem="C_BUY_SUGGEST", type=DataItemType.VARCHAR, length=60)
+    private String buySuggest;
 
     @Ref
     private User createUser;
@@ -168,5 +186,53 @@ public class FinalEvaluation extends HistoriableEntity {
     public void setCreateUser(User createUser) {
         this.createUser = createUser;
     }
+
+	public String getDoubanScore() {
+		return doubanScore;
+	}
+
+	public void setDoubanScore(String doubanScore) {
+		this.doubanScore = doubanScore;
+	}
+
+	public String getDoubanScorerNum() {
+		return doubanScorerNum;
+	}
+
+	public void setDoubanScorerNum(String doubanScorerNum) {
+		this.doubanScorerNum = doubanScorerNum;
+	}
+
+	public String getKaijuanMonthSale() {
+		return kaijuanMonthSale;
+	}
+
+	public void setKaijuanMonthSale(String kaijuanMonthSale) {
+		this.kaijuanMonthSale = kaijuanMonthSale;
+	}
+
+	public String getKaijuanYearSale() {
+		return kaijuanYearSale;
+	}
+
+	public void setKaijuanYearSale(String kaijuanYearSale) {
+		this.kaijuanYearSale = kaijuanYearSale;
+	}
+
+	public String getKaijuanTotalSale() {
+		return kaijuanTotalSale;
+	}
+
+	public void setKaijuanTotalSale(String kaijuanTotalSale) {
+		this.kaijuanTotalSale = kaijuanTotalSale;
+	}
+
+	public String getBuySuggest() {
+		return buySuggest;
+	}
+
+	public void setBuySuggest(String buySuggest) {
+		this.buySuggest = buySuggest;
+	}
     
 }
