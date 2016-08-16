@@ -1046,7 +1046,11 @@
                   {
                       "targets": [7],
                       "render": function(data, type, full) {
-                          return full.createUser.name;
+                          if(full.createUser) {
+                              return full.createUser.name;
+                          }else{
+                              return '';
+                          }
                       }
                   },
                   {

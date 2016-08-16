@@ -644,16 +644,6 @@
         <td>
            <div class="evaItem">
               <p class="evaItemTitle pull-left txt-indent">情节架构</p>
-              {{if evaluation.storyFrame > 0}}
-              <i class="fa fa-star text-yellow"></i>
-              {{else}}
-              <i class="fa fa-star text-gray"></i>
-              {{/if}}
-              {{if evaluation.storyFrame > 1}}
-              <i class="fa fa-star text-yellow"></i>
-              {{else}}
-              <i class="fa fa-star text-gray"></i>
-              {{/if}}
               {{if evaluation.storyFrame > 2}}
               <i class="fa fa-star text-yellow"></i>
               {{else}}
@@ -664,11 +654,16 @@
               {{else}}
               <i class="fa fa-star text-gray"></i>
               {{/if}}
-              {{if evaluation.storyFrame > 3}}
+              {{if evaluation.storyFrame > 4}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyFrame > 4}}
               <span class="evaItemText">优秀</span>
-              {{else if evaluation.storyFrame > 2}}
-              <span class="evaItemText">良好</span>
               {{else if evaluation.storyFrame > 3}}
+              <span class="evaItemText">良好</span>
+              {{else if evaluation.storyFrame > 2}}
               <span class="evaItemText">一般</span>
               {{else}}
               <span class="evaItemText">比较差</span>
@@ -676,16 +671,6 @@
            </div>
            <div class="evaItem">
               <p class="evaItemTitle pull-left txt-indent">文字水平</p>
-              {{if evaluation.storyText > 0}}
-              <i class="fa fa-star text-yellow"></i>
-              {{else}}
-              <i class="fa fa-star text-gray"></i>
-              {{/if}}
-              {{if evaluation.storyText > 1}}
-              <i class="fa fa-star text-yellow"></i>
-              {{else}}
-              <i class="fa fa-star text-gray"></i>
-              {{/if}}
               {{if evaluation.storyText > 2}}
               <i class="fa fa-star text-yellow"></i>
               {{else}}
@@ -696,11 +681,16 @@
               {{else}}
               <i class="fa fa-star text-gray"></i>
               {{/if}}
-              {{if evaluation.storyText > 3}}
+              {{if evaluation.storyText > 4}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyText > 4}}
               <span class="evaItemText">优秀</span>
-              {{else if evaluation.storyText > 2}}
+              {{else if evaluation.storyText > 3}}
               <span class="evaItemText">良好</span>
-              {{else if evaluation.storyText > 1}}
+              {{else if evaluation.storyText > 2}}
               <span class="evaItemText">一般</span>
               {{else}}
               <span class="evaItemText">比较差</span>
@@ -708,16 +698,6 @@
            </div>
            <div class="evaItem">
               <p class="evaItemTitle pull-left txt-indent">人物塑造</p>
-              {{if evaluation.storyRole > 0}}
-              <i class="fa fa-star text-yellow"></i>
-              {{else}}
-              <i class="fa fa-star text-gray"></i>
-              {{/if}}
-              {{if evaluation.storyRole > 1}}
-              <i class="fa fa-star text-yellow"></i>
-              {{else}}
-              <i class="fa fa-star text-gray"></i>
-              {{/if}}
               {{if evaluation.storyRole > 2}}
               <i class="fa fa-star text-yellow"></i>
               {{else}}
@@ -728,11 +708,16 @@
               {{else}}
               <i class="fa fa-star text-gray"></i>
               {{/if}}
-              {{if evaluation.storyRole > 3}}
+              {{if evaluation.storyRole > 4}}
+              <i class="fa fa-star text-yellow"></i>
+              {{else}}
+              <i class="fa fa-star text-gray"></i>
+              {{/if}}
+              {{if evaluation.storyRole > 4}}
               <span class="evaItemText">优秀</span>
-              {{else if evaluation.storyRole > 2}}
+              {{else if evaluation.storyRole > 3}}
               <span class="evaItemText">良好</span>
-              {{else if evaluation.storyRole > 1}}
+              {{else if evaluation.storyRole > 2}}
               <span class="evaItemText">一般</span>
               {{else}}
               <span class="evaItemText">比较差</span>
@@ -774,14 +759,51 @@
            </div>
            <div class="evaItem">
               <span class="evaItemTitle">播讲形式建议</span>
+              {{if evaluation.playType.indexOf('1') > -1}}
               <span class="evaItemText">男声</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('2') > -1}}
+              <span class="evaItemText">女声</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('3') > -1}}
               <span class="evaItemText">单播</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('4') > -1}}
+              <span class="evaItemText">对播</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('5') > -1}}
+              <span class="evaItemText">广播剧</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('6') > -1}}
               <span class="evaItemText">小说剧</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('7') > -1}}
+              <span class="evaItemText">适合电台播出</span>
+              {{/if}}
+              {{if evaluation.playType.indexOf('8') > -1}}
               <span class="evaItemText">适合网络播出</span>
+              {{/if}}
            </div>
            <div class="evaItem">
               <span class="evaItemTitle">演员风格建议</span>
+              {{if evaluation.playStyle.indexOf('1') > -1}}
+              <span class="evaItemText">甜美</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('2') > -1}}
+              <span class="evaItemText">阳光</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('3') > -1}}
+              <span class="evaItemText">温暖</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('4') > -1}}
+              <span class="evaItemText">文艺</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('5') > -1}}
               <span class="evaItemText">厚重</span>
+              {{/if}}
+              {{if evaluation.playStyle.indexOf('6') > -1}}
+              <span class="evaItemText">{{evaluation.otherStyle}}</span>
+              {{/if}}
            </div>
            <div class="evaItem">
               <p class="evaItemTitle pull-left txt-indent">其他意见</p>

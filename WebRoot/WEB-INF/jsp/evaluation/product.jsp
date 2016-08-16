@@ -1033,6 +1033,8 @@
                   var result = IDEA.parseJSON(json);
                   if(result.type = 'success') {
                       alert('发送成功.');
+                      clearEvaluationModal();
+                      $('#evaluationModal').modal('hide');
                   }else{
                       alert('发送失败，请联系管理员.');
                   }
