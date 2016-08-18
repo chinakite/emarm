@@ -56,7 +56,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <h1 class="detailTitle col-xs-6">合同编号：${contract.code}</h1>
-            <c:if test="${contract.auditState == '0' || ${contract.auditState == '51' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '02') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1'}">
+            <c:if test="${contract.auditState == '0' || contract.auditState == '51' || fn:indexOf(sessionScope.__SESSION__USER__.role, '99') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '02') != '-1' || fn:indexOf(sessionScope.__SESSION__USER__.role, '03') != '-1'}">
                 <button class="btn btn-default pull-right ml10" onclick="deleteContract();"><i class="fa fa-remove"></i> 删除</button>
                 <button class="btn btn-default pull-right ml10" onclick="popAuditProduct('${contract.id}');"><i class="fa fa-edit"></i> 编辑</button>
             </c:if>
