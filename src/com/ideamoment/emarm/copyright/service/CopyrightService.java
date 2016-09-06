@@ -144,12 +144,15 @@ public class CopyrightService {
             cc.setModifier(userId);
             cc.setModifyTime(curTime);
             
-            if(cc.getTotalPrice().floatValue() < 5000) {
-                cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
-            }else{
-                cc.setAuditState(CopyrightContractState.DIRECTOR_AUDIT);
-                task.setRoleId(RoleType.COPYRIGHT_DIRECTOR);
-            }
+            cc.setAuditState(CopyrightContractState.MANAGER_AUDIT);
+            task.setRoleId(RoleType.COPYRIGHT_MANAGER);
+            
+//            if(cc.getTotalPrice().floatValue() < 5000) {
+//                cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
+//            }else{
+//                cc.setAuditState(CopyrightContractState.DIRECTOR_AUDIT);
+//                task.setRoleId(RoleType.COPYRIGHT_DIRECTOR);
+//            }
             
             IdeaJdbc.update(cc);
         }else{
@@ -161,12 +164,15 @@ public class CopyrightService {
             cc.setModifier(userId);
             cc.setModifyTime(curTime);
             
-            if(cc.getTotalPrice().floatValue() < 5000) {
-                cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
-            }else{
-                cc.setAuditState(CopyrightContractState.DIRECTOR_AUDIT);
-                task.setRoleId(RoleType.COPYRIGHT_DIRECTOR);
-            }
+            cc.setAuditState(CopyrightContractState.MANAGER_AUDIT);
+            task.setRoleId(RoleType.COPYRIGHT_MANAGER);
+            
+//            if(cc.getTotalPrice().floatValue() < 5000) {
+//                cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
+//            }else{
+//                cc.setAuditState(CopyrightContractState.DIRECTOR_AUDIT);
+//                task.setRoleId(RoleType.COPYRIGHT_DIRECTOR);
+//            }
             IdeaJdbc.save(cc);
         }
         
@@ -309,17 +315,25 @@ public class CopyrightService {
                 task.setRoleId(RoleType.COPYRIGHT_MANAGER);
             }
         }else if(cc.getAuditState().equals(CopyrightContractState.MANAGER_AUDIT)) {
-            if(cc.getTotalPrice().floatValue() < 20000) {
-                cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
-            }else{
-                cc.setAuditState(CopyrightContractState.CEO_AUDIT);
-                task.setRoleId(RoleType.CEO);
-            }
-        }else if(cc.getAuditState().equals(CopyrightContractState.CEO_AUDIT)) {
-            cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
-        }else if(cc.getAuditState().equals(CopyrightContractState.LAWYER_AUDIT)) {
-            cc.setAuditState(CopyrightContractState.LAWYER_CONFIRM);
+        	cc.setAuditState(CopyrightContractState.LAWYER_AUDIT);
             task.setRoleId(RoleType.LAWYER);
+        	
+//            if(cc.getTotalPrice().floatValue() < 20000) {
+//                cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
+//            }else{
+//                cc.setAuditState(CopyrightContractState.CEO_AUDIT);
+//                task.setRoleId(RoleType.CEO);
+//            }
+        }else if(cc.getAuditState().equals(CopyrightContractState.CEO_AUDIT)) {
+//            cc.setAuditState(CopyrightContractState.AUDIT_FINISH);
+        	cc.setAuditState(CopyrightContractState.FINISH_CONFIRM);
+            task.setRoleId(RoleType.LAWYER);
+        }else if(cc.getAuditState().equals(CopyrightContractState.LAWYER_AUDIT)) {
+//            cc.setAuditState(CopyrightContractState.LAWYER_CONFIRM);
+//            task.setRoleId(RoleType.LAWYER);
+        	
+        	cc.setAuditState(CopyrightContractState.CEO_AUDIT);
+            task.setRoleId(RoleType.CEO);
         }else if(cc.getAuditState().equals(CopyrightContractState.FINISH_CONFIRM)) {
             cc.setAuditState(CopyrightContractState.FINISH);
         }
@@ -342,7 +356,8 @@ public class CopyrightService {
         task.setCreator(curUser.getId());
         task.setModifier(curUser.getId());
         task.setModifyTime(curTime);
-        task.setRoleId(RoleType.COPYRIGHT_DIRECTOR);
+        if(task.getRoleId() == null)
+        	task.setRoleId(RoleType.COPYRIGHT_DIRECTOR);
         task.setState(TaskState.UNREAD);
         task.setTargetId(cc.getId());
         task.setTargetType(TaskTargetType.COPYRIGHT_CONTRACT);

@@ -328,6 +328,34 @@
       </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 
+	<div id="copyrightFilesModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="关闭"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">版权文件</h4>
+          </div>
+          <div class="modal-body">
+              <table id="copyrightFileTbl" class="table table-bordered table-hover">
+                  <thead>
+                      <tr>
+                          <th>文件名</th>
+                          <th>创建时间</th>
+                          <th></th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      
+                  </tbody>
+              </table>  
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal" onclick="closeAuditModal();">关闭</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
     <!-- jQuery 2.1.4 -->
     <script src='<idp:url value="/plugins/jQuery/jQuery-2.1.4.min.js"/>'></script>
     <!-- Bootstrap 3.3.5 -->
@@ -355,9 +383,10 @@
     <script id="productTblTmpl" type="text/html">
         {{each prodlist as prod idx}}
            <tr>
-              <td>{{prod.name}}</td>
+              <td><a href="<idp:ctx/>copyright/productDetail?id={{prod.id}}" target="_blank">{{prod.name}}</a></td>
               <td>{{prod.isbn}}</td>
               <td>{{prod.crcProduct.price}}元</td>
+              <td><a href="javascript:void(0);" onclick="popProductCopyrightFiles('{{prod.id}}');">查看权属文件</a></td>
            </tr>
         {{/each}}
     </script>
@@ -381,6 +410,22 @@
               <td>{{doc.createTime}}</td>
               <td><a href="<idp:ctx/>{{doc.fileUrl}}">下载</a></td>
            </tr>
+        {{/each}}
+    </script>
+    
+    <script id="nonCopyrightFileTmpl" type="text/html">
+        <tr>
+            <td colspan="3">目前没有权属文件。</td>
+        </tr>
+    </script>
+    
+    <script id="copyrightFileTmpl" type="text/html">
+        {{each cflist as cf idx}}
+        <tr>
+            <td>{{cf.name}}</td>
+            <td>{{cf.createTime}}</td>
+            <td><a href="<idp:ctx/>{{cf.fileUrl}}">下载</a></td>
+        </tr>
         {{/each}}
     </script>
     
@@ -848,6 +893,27 @@
                   }
               );
           }
+      }
+      
+      function popProductCopyrightFiles(prodId) {
+          $('#copyrightFilesModal').modal('show');
+          $.get(
+              '<idp:url value="/evaluation/productCopyrightFiles"/>?productId=' + prodId,
+              {},
+              function(json){
+                  var result = IDEA.parseJSON(json);
+                  if(result.type == 'success') {
+                      var cfs = result.data;
+                      if(cfs.length == 0) {
+                          var copyrightFileHtml = template('nonCopyrightFileTmpl', {});
+                          $('#copyrightFileTbl tbody').html(copyrightFileHtml);
+                      }else{
+                          var copyrightFileHtml = template('copyrightFileTmpl', {cflist: cfs});
+                          $('#copyrightFileTbl tbody').html(copyrightFileHtml);
+                      }
+                  }
+              }
+          );
       }
     </script>
   </body>
