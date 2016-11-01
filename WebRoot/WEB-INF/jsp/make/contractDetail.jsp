@@ -648,6 +648,7 @@
       }
       
       function rejectContract(contractId) {
+          var remark = $('#auditText').val();
           $.post(
               '<idp:url value="/copyright/rejectContract"/>',
               {

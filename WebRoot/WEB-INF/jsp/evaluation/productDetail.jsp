@@ -996,43 +996,51 @@
           
           var basePrice = 0;
           var wordCount = ${product.wordCount};
+          
           var publishYear = '${product.publishYear}';
           if(publishYear == '') {
               publishYear = '${product.finishYear}';
           }
+          
+          var subjectRatio = '${product.subject.ratio}';
+          if(!subjectRatio || subjectRatio == '') {
+              subjectRatio = 1.0;
+          }else{
+              subjectRatio = parseFloat(subjectRatio);
+          }
 
           if(productEva == 0 && authorEva == 0) {
               if(storyLevel == 1) {
-                  basePrice = 1000;
+                  basePrice = 0;
               }else if(storyLevel == 2) {
-                  basePrice = 1500;
+                  basePrice = 3000;
               }else if(storyLevel == 3) {
-                  basePrice = 2000;
+                  basePrice = 5000;
               }
               
               basePrice = basePrice * (wordCount / 10);
               
-              if(basePrice > 5000) {
-                  basePrice = 5000;
+              if(basePrice > 20000) {
+                  basePrice = 20000;
               }
           }else if(authorEva > 0){
               if(ishot) {
-                  basePrice = 20000;
+                  basePrice = 50000;
               }else{
                   if(authorEva == 2) {
-                      basePrice = 10000;
+                      basePrice = 50000;
                   }else{
                       if(productEva == 1) {
-                          basePrice = 8000;
+                          basePrice = 30000;
                       }else{
-                          basePrice = 6000;
+                          basePrice = 20000;
                       }
                   } 
               }
               
               if(wordCount > 10) {
                   basePrice = basePrice * 1.2;
-              }else if(wordCount < 1) {
+              }else if(wordCount < 8) {
                   basePrice = basePrice * 0.8;
               }else{
                   basePrice = basePrice * 1;
@@ -1060,7 +1068,7 @@
               priceRabio = priceRabio - 0.2;
           }
           
-          var price = basePrice * priceRabio;
+          var price = basePrice * priceRabio * subjectRatio;
           $('#pricePanel').text(price);
       }
       

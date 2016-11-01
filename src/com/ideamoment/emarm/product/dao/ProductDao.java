@@ -230,6 +230,7 @@ public class ProductDao {
                      + " a.C_PSEUDONYM AS a$pseudonym,"
                      + " s.C_ID AS s$id, "
                      + " s.C_NAME AS s$name, "
+                     + " s.C_RATIO AS s$ratio, "
                      + " sp.C_ID as sp$id, "
                      + " sp.C_FILE_URL as sp$fileUrl "
                      + " FROM "

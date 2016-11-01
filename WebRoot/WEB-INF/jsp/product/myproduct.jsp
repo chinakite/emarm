@@ -435,6 +435,7 @@
                         </div>
                     </div>
                 </div>
+                <!--
                 <div class="clearfix">
                     <div class="col-xs-12">
                         <div class="form-group required">
@@ -450,6 +451,7 @@
                         </div>
                     </div>
                 </div>
+                -->
                 <div class="clearfix">
                     <div class="col-xs-12">
                         <div class="form-group required">
@@ -577,6 +579,7 @@
               }
           });
           
+          /*
           $('#importCopyrightFile').fileupload({
               url: '<idp:url value="/uploadDoc"/>',
               dataType: 'json',
@@ -594,6 +597,7 @@
                      $('#inputCopyrights').val(copyrights);
               }
           });
+          */
       
           initProductTbl();
           loadUsers();
@@ -807,8 +811,8 @@
                     && validateWebsite()
                     && validateSummary()
                     && validateSamples()
-                    && validateAudioDesc()
-                    && validateCopyrights();
+                    && validateAudioDesc();
+                    //&& validateCopyrights();
           }
       
           if(!r) {
@@ -831,7 +835,7 @@
               var audioDesc = $('#inputAudioDesc').val();
               var samples = $('#inputSamples').val();
               var isbn = $('#inputIsbn').val();
-              var copyrights = $('#inputCopyrights').val();
+              //var copyrights = $('#inputCopyrights').val();
               var cover = $('#inputCover').val();
               
               $.post(
@@ -855,7 +859,6 @@
                       'samples': samples,
                       'submit': submit,
                       'isbn': isbn,
-                      'copyrights': copyrights,
                       'logoUrl' : cover
                   },
                   function(json) {

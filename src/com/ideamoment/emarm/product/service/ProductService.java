@@ -318,11 +318,18 @@ public class ProductService {
         
         if(dirPos > -1) {
             String fileName = url.substring(dirPos+1);
-            int namePos = fileName.indexOf("_");
+            int namePos = fileName.lastIndexOf("_");
+            int extNamePos = fileName.indexOf(".");
+            
+            String extName = "";
+            if(extNamePos > -1) {
+            	extName = fileName.substring(extNamePos);
+            }
+            
             if(namePos > -1) {
-                return fileName.substring(namePos+1);
+                return fileName.substring(0, namePos) + extName;
             }else{
-                return fileName;
+                return fileName + extName;
             }
         }
         

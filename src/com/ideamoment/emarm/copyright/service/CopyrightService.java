@@ -369,6 +369,8 @@ public class CopyrightService {
 
     @IdeaJdbcTx
     public void rejectContract(String id, String remark) {
+    	Date curTime = new Date();
+    	
         UserContext uc = UserContext.getCurrentContext();
         User curUser = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         
@@ -387,8 +389,24 @@ public class CopyrightService {
         }else{
             cc.setAuditState(CopyrightContractState.REJECTED);
         }
+        cc.setModifier(curUser.getId());
+        cc.setModifyTime(curTime);
         
         IdeaJdbc.update(cc);
+        
+        Task task = new Task();
+        task.setCreateTime(curTime);
+        task.setCreator(curUser.getId());
+        task.setModifier(curUser.getId());
+        task.setModifyTime(curTime);
+        task.setState(TaskState.UNREAD);
+        task.setTargetId(cc.getId());
+        task.setTargetType(TaskTargetType.COPYRIGHT_CONTRACT);
+        task.setTitle("版权合同《"+cc.getCode()+"》信息审核未通过，请处理后重新提交审核。");
+        task.setUserId(cc.getCreator());
+        
+        IdeaJdbc.save(task);
+        
     }
 
     @IdeaJdbcTx
@@ -647,6 +665,11 @@ public class CopyrightService {
         copyrightDao.deleteContractDoc(contractId);
         copyrightDao.deleteContractProduct(contractId);
         IdeaJdbc.delete(CopyrightContract.class, contractId);
+    }
+    
+    @IdeaJdbcTx
+    public String findProductOptorId(String productId) {
+        return copyrightDao.findProductOptorId(productId);
     }
     
 }

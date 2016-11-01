@@ -383,7 +383,7 @@
     <script id="productTblTmpl" type="text/html">
         {{each prodlist as prod idx}}
            <tr>
-              <td><a href="<idp:ctx/>copyright/productDetail?id={{prod.id}}" target="_blank">{{prod.name}}</a></td>
+              <td><a href="<idp:ctx/>/copyright/productDetail?id={{prod.id}}" target="_blank">{{prod.name}}</a></td>
               <td>{{prod.isbn}}</td>
               <td>{{prod.crcProduct.price}}元</td>
               <td><a href="javascript:void(0);" onclick="popProductCopyrightFiles('{{prod.id}}');">查看权属文件</a></td>
@@ -737,6 +737,7 @@
       }
       
       function rejectContract(contractId) {
+      	  var remark = $('#auditText').val();
           $.post(
               '<idp:url value="/copyright/rejectContract"/>',
               {

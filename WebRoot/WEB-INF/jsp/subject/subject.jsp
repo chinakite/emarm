@@ -102,6 +102,7 @@
                         <th width="1" style="padding-right:8px;"><input type="checkbox" onclick="checkAll(this);"/></th>
                         <th>名称</th>
                         <th>描述</th>
+                        <th>评价系数</th>
                         <th>操作</th>
                       </tr>
                     </thead>
@@ -135,6 +136,15 @@
                       <input type="text" class="form-control" id="inputName" placeholder="名称" onblur="validateName();">
                       <div class="feedback-tip">
                         <label class="control-label" for="inputEmail3"><i class="fa fa-times-circle-o"></i> <span>Input with error</span></label>
+                      </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputRatio" class="col-sm-2 control-label"><span class="text-danger">* </span>评价系数</label>
+                  <div class="col-sm-10">
+                      <input type="text" class="form-control" id="inputRatio" placeholder="名称" onblur="validateRatio();">
+                      <div class="feedback-tip">
+                        <label class="control-label" for="inputEmail3"><i class="fa fa-times-circle-o"></i> <span>数据格式不正确</span></label>
                       </div>
                   </div>
                 </div>
@@ -179,6 +189,7 @@
                 <td><input type="checkbox" value="{{sbj.id}}" class="tblRowCheckbox"/></td>
                 <td>{{sbj.name}}</td>
                 <td>{{sbj.desc}}</td>
+                <td>{{sbj.ratio}}</td>
                 <td><a onclick="popEditSubject('{{sbj.id}}');">编辑</a> {{if idx != 0}}<span class="small">|</span> <a onclick="upSubject('{{sbj.id}}');">上移</a>{{/if}} {{if idx != sbjlist.length - 1}}<span class="small">|</span> <a onclick="downSubject('{{sbj.id}}');">下移</a>{{/if}} <span class="small">|</span> <a onclick="deleteSubject('{{sbj.id}}', '{{sbj.name}}');">删除</a></td>
            </tr>
         {{/each}}
@@ -220,11 +231,12 @@
       }
       
       function submitSubject() {
-          if(!validateName()) {
+          if(!validateName() || !validateRatio()) {
               return ;
           }else{
               var sbjName = $('#inputName').val();
               var sbjDesc = $('#inputDesc').val();
+              var sbjRatio = $('#inputRatio').val();
               
               var sbjId = $('#inputId').val();
               
@@ -233,7 +245,8 @@
                       '<idp:url value="/system/subject/"/>'+sbjId,
                       {
                           'name': sbjName,
-                          'desc': sbjDesc
+                          'desc': sbjDesc,
+                          'ratio': sbjRatio
                       },
                       function(json) {
                           var result = IDEA.parseJSON(json);
@@ -250,7 +263,8 @@
                       '<idp:url value="/system/textSubject"/>',
                       {
                           'name': sbjName,
-                          'desc': sbjDesc
+                          'desc': sbjDesc,
+                          'ratio': sbjRatio
                       },
                       function(json) {
                           var result = IDEA.parseJSON(json);
@@ -285,9 +299,29 @@
           }
       }
       
+      function validateRatio() {
+          var inputRatioEle = $('#inputRatio');
+          var sbjRatio = inputRatioEle.val();
+          if(!sbjRatio || $.trim(sbjRatio).length == 0) {
+              var formGroup = inputRatioEle.parents('.form-group');
+              if(!formGroup.hasClass('has-error')) {
+                  inputRatioEle.parents('.form-group').addClass('has-error');
+                  inputRatioEle.next('.feedback-tip').find('span').text('作品题材评价系数不能为空');
+                  inputRatioEle.next('.feedback-tip').show();
+              }
+              return false;
+          }else{
+              inputRatioEle.parents('.form-group').removeClass('has-error');
+              inputRatioEle.next('.feedback-tip').find('span').text('');
+              inputRatioEle.next('.feedback-tip').hide();
+              return true;
+          }
+      }
+      
       function clearSubjectModal() {
           $('#inputId').val('');
           $('#inputName').val('');
+          $('#inputRatio').val('1.0');
           $('#inputDesc').val('');
       }
       
@@ -302,6 +336,7 @@
                       $('#inputId').val(id);
                       $('#inputName').val(sbj.name);
                       $('#inputDesc').val(sbj.desc);
+                      $('#inputRatio').val(sbj.ratio);
                       $('#subjectModal').modal('show');
                   }
               }

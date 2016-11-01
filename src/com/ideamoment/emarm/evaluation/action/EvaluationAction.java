@@ -226,16 +226,16 @@ public class EvaluationAction {
             product.setLogoUrl(logoUrl);
         }
         
-        List<ProductCopyrightFile> cpFileList = new ArrayList<ProductCopyrightFile>();
-        if(copyrights != null) {
-            String[] cpFileArray = copyrights.split(",");
-            for(String copyrightFileUrl : cpFileArray) {
-                ProductCopyrightFile copyrightFile = new ProductCopyrightFile();
-                copyrightFile.setFileUrl(copyrightFileUrl);
-                cpFileList.add(copyrightFile);
-            }
-            product.setCopyrightFiles(cpFileList);
-        }
+//        List<ProductCopyrightFile> cpFileList = new ArrayList<ProductCopyrightFile>();
+//        if(copyrights != null) {
+//            String[] cpFileArray = copyrights.split(",");
+//            for(String copyrightFileUrl : cpFileArray) {
+//                ProductCopyrightFile copyrightFile = new ProductCopyrightFile();
+//                copyrightFile.setFileUrl(copyrightFileUrl);
+//                cpFileList.add(copyrightFile);
+//            }
+//            product.setCopyrightFiles(cpFileList);
+//        }
         try{
             product = evaluationService.saveProduct(product, submit);
         }catch(IdeaBaseException e) {

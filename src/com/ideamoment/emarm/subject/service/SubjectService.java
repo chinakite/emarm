@@ -52,7 +52,7 @@ public class SubjectService {
     }
 
     @IdeaJdbcTx
-    public Subject createTextSubject(String name, String desc) {
+    public Subject createTextSubject(String name, String desc, String ratio) {
         UserContext uc = UserContext.getCurrentContext();
         User user = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         
@@ -65,6 +65,7 @@ public class SubjectService {
             Subject subject = new Subject();
             subject.setName(name);
             subject.setDesc(desc);
+            subject.setRatio(ratio);
             subject.setOrder(maxOrder + 1);
             subject.setCreateTime(new Date());
             subject.setCreator(user.getId());
@@ -81,7 +82,7 @@ public class SubjectService {
     }
 
     @IdeaJdbcTx
-    public int updateSubject(String id, String name, String desc) {
+    public int updateSubject(String id, String name, String desc, String ratio) {
         UserContext uc = UserContext.getCurrentContext();
         User user = (User)uc.getContextAttribute(UserContext.SESSION_USER);
         Subject subject = IdeaJdbc.find(Subject.class, id);
@@ -96,6 +97,7 @@ public class SubjectService {
             }else{
                 subject.setName(name);
                 subject.setDesc(desc);
+                subject.setRatio(ratio);
                 subject.setModifier(user.getId());
                 subject.setModifyTime(new Date());
                 return IdeaJdbc.update(subject);

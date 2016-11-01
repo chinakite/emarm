@@ -108,7 +108,7 @@ public class CopyrightContractAudit extends BaseEntity {
     public String getAuditResultText() {
         if(this.auditResult.equals(YesOrNo.YES)) {
             return "通过";
-        }else if(this.auditResult.equals(YesOrNo.YES)) {
+        }else if(this.auditResult.equals(YesOrNo.NO)) {
             return "拒绝";
         }else{
             return "";

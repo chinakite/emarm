@@ -429,6 +429,10 @@ public class CopyrightAction {
         Product product = copyrightService.findProduct(id);
         HashMap<String, Object> model = new HashMap<String, Object>();
         model.put("product", product);
+        
+        String optorId = copyrightService.findProductOptorId(id);
+        model.put("optorId", optorId);
+        
         return new ModelAndView("/WEB-INF/jsp/copyright/productDetail.jsp", model);
     }
     

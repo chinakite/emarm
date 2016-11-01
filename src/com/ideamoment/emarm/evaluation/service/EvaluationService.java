@@ -255,18 +255,18 @@ public class EvaluationService {
                 IdeaJdbc.save(prodImg);
             }
             
-            copyrightDao.deleteProductCopyrightFiles(product.getId());
-            List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
-            if(copyrightFiles != null) {
-                for(ProductCopyrightFile cpFile : copyrightFiles) {
-                    cpFile.setProductId(product.getId());
-                    cpFile.setCreatorId(curUser.getId());
-                    cpFile.setCreateTime(curTime);
-                    String fileUrl = cpFile.getFileUrl();
-                    cpFile.setName(getFileNameFromUploadUrl(fileUrl));
-                    IdeaJdbc.save(cpFile);
-                }
-            }
+//            copyrightDao.deleteProductCopyrightFiles(product.getId());
+//            List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
+//            if(copyrightFiles != null) {
+//                for(ProductCopyrightFile cpFile : copyrightFiles) {
+//                    cpFile.setProductId(product.getId());
+//                    cpFile.setCreatorId(curUser.getId());
+//                    cpFile.setCreateTime(curTime);
+//                    String fileUrl = cpFile.getFileUrl();
+//                    cpFile.setName(getFileNameFromUploadUrl(fileUrl));
+//                    IdeaJdbc.save(cpFile);
+//                }
+//            }
         }else if("1".equals(submit)) {
             String name = product.getName();
             if(name == null || "".equals(name.trim())) {
@@ -315,16 +315,16 @@ public class EvaluationService {
                 IdeaJdbc.save(sample);
             }
             
-            copyrightDao.deleteProductCopyrightFiles(product.getId());
-            List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
-            if(copyrightFiles != null) {
-                for(ProductCopyrightFile cpFile : copyrightFiles) {
-                    cpFile.setProductId(product.getId());
-                    cpFile.setCreatorId(curUser.getId());
-                    cpFile.setCreateTime(curTime);
-                    IdeaJdbc.save(cpFile);
-                }
-            }
+//            copyrightDao.deleteProductCopyrightFiles(product.getId());
+//            List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
+//            if(copyrightFiles != null) {
+//                for(ProductCopyrightFile cpFile : copyrightFiles) {
+//                    cpFile.setProductId(product.getId());
+//                    cpFile.setCreatorId(curUser.getId());
+//                    cpFile.setCreateTime(curTime);
+//                    IdeaJdbc.save(cpFile);
+//                }
+//            }
             
             Task task = new Task();
             task.setCreateTime(curTime);
@@ -386,14 +386,14 @@ public class EvaluationService {
                 IdeaJdbc.save(sample);
             }
             
-            copyrightDao.deleteProductCopyrightFiles(product.getId());
-            List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
-            for(ProductCopyrightFile cpFile : copyrightFiles) {
-                cpFile.setProductId(product.getId());
-                cpFile.setCreatorId(curUser.getId());
-                cpFile.setCreateTime(curTime);
-                IdeaJdbc.save(cpFile);
-            }
+//            copyrightDao.deleteProductCopyrightFiles(product.getId());
+//            List<ProductCopyrightFile> copyrightFiles = product.getCopyrightFiles();
+//            for(ProductCopyrightFile cpFile : copyrightFiles) {
+//                cpFile.setProductId(product.getId());
+//                cpFile.setCreatorId(curUser.getId());
+//                cpFile.setCreateTime(curTime);
+//                IdeaJdbc.save(cpFile);
+//            }
         }
         
         return product;

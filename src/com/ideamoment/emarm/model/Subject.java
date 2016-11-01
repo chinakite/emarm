@@ -26,6 +26,9 @@ public class Subject extends HistoriableEntity {
     @Property(dataItem="C_TYPE", type=DataItemType.VARCHAR)
     private String type = ProductType.TEXT;
     
+    @Property(dataItem="C_RATIO", type=DataItemType.VARCHAR)
+    private String ratio;
+    
     /**
      * @return the name
      */
@@ -81,5 +84,14 @@ public class Subject extends HistoriableEntity {
     public void setDesc(String desc) {
         this.desc = desc;
     }
+
+	public String getRatio() {
+		return ratio;
+	}
+
+	public void setRatio(String ratio) {
+		this.ratio = ratio;
+	}
+    
     
 }

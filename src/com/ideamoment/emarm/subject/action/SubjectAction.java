@@ -61,14 +61,14 @@ public class SubjectAction {
     }
     
     @RequestMapping(value="/system/textSubject", method=RequestMethod.POST)
-    public JsonData createTextSubject(String name, String desc) {
-        Subject subject = subjectService.createTextSubject(name, desc);
+    public JsonData createTextSubject(String name, String desc, String ratio) {
+        Subject subject = subjectService.createTextSubject(name, desc, ratio);
         return JsonData.SUCCESS;
     }
     
     @RequestMapping(value="/system/subject/{id}", method=RequestMethod.POST)
-    public JsonData updateSubject(@PathVariable String id, String name, String desc) {
-        int r = subjectService.updateSubject(id, name, desc);
+    public JsonData updateSubject(@PathVariable String id, String name, String desc, String ratio) {
+        int r = subjectService.updateSubject(id, name, desc, ratio);
         return JsonData.SUCCESS;
     }
     
